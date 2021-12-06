@@ -178,12 +178,8 @@
         </el-form-item>
         <el-form-item label="售后周期" prop="pReturnCycle">
           <el-select v-model="parts.pReturnCycle" placeholder="请选择产品售后周期">
-            <el-option label="7" value="7"></el-option>
-            <el-option label="15" value="15"></el-option>
-            <el-option label="30" value="30"></el-option>
-            <el-option label="60" value="60"></el-option>
-            <el-option label="180" value="180"></el-option>
-            <el-option label="365" value="365"></el-option>
+            <el-option label="原厂无三包" :value="0"></el-option>
+            <el-option :label="item.rcAmount+'天'" :value="item.rcAmount" v-for="item in cycleList"></el-option>
           </el-select>
         </el-form-item>
 
@@ -248,6 +244,7 @@ export default {
       supplierList:[],
       tempObj:{},
       unitList:[],
+      cycleList:[],
       parts: {},
       positionList:[],
       categoryOption:[],
@@ -265,6 +262,10 @@ export default {
         cName:'',
         pageSize: 10,
         pageNum: 1,
+      },
+      cycleQuery:{
+        pageSize: 0,
+        pageNum: 0,
       },
       partQuery: {
         pId: 0,
@@ -408,6 +409,7 @@ export default {
     this.getPositionCat()
     this.getLevelCat()
     this.getPCate()
+    this.getRycle()
   },
   methods: {
     remoteUnit(query){
@@ -567,6 +569,15 @@ export default {
         })
         res.positions=this.parts.positions
       }
+    },
+    getRycle(){
+      PostData('/returnCycle/selectAll',qs.stringify(this.cycleQuery))
+        .then(res=>{
+          this.cycleList = res.list
+        }).catch(err=>{
+        this.$message.error(err.message);
+        console.log(err);
+      })
     },
     handleSubmitInfo(value){
       let tempArray=[]

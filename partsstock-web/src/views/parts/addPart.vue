@@ -334,8 +334,8 @@ export default {
         type:1
       },
       cycleQuery:{
-        pageSize: 10,
-        pageNum: 1,
+        pageSize: 0,
+        pageNum: 0,
       },
       value: [],
       options: [],
