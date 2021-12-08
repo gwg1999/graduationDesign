@@ -1,4 +1,4 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import {  constantRoutes } from '@/router'
 // import sAdministrator from '../../router/modules/sAdministrator'
 // import buyer from '../../router/modules/buyer'
 // import sale from '../../router/modules/sale'

@@ -107,7 +107,7 @@ export default {
         this.queryDetails.odType, this.queryDetails.pageNum, this.queryDetails.pageSize)
         .then(res => {
           this.returnGoodList= res.list.filter((value)=>value.odStatus!=1
-        )
+          )
         })
     },
     addItem () {
@@ -122,10 +122,10 @@ export default {
     saveSalesSlip(){
       let state=-1
       if(this.princeSheetReturn.returnDetailList.length>=0)
-      this.princeSheetReturn.returnDetailList.forEach((item)=>{
-        if(item.number<item.odNumber)  state=1
-        else state=0
-      })
+        this.princeSheetReturn.returnDetailList.forEach((item)=>{
+          if(item.number<item.odNumber)  state=1
+          else state=0
+        })
       if(state===0) {
         this.$refs['princeSheetReturn'].validate(value => {
           if (value) {

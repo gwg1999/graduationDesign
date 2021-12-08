@@ -26,10 +26,8 @@ export default {
   components: {
     AppMain,
     Navbar,
-    RightPanel,
     Settings,
     Sidebar,
-    TagsView
   },
   mixins: [ResizeMixin],
   computed: {

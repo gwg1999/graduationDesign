@@ -445,10 +445,10 @@ export default {
                 }
               })
               if(state===1) {
-                console.log(this.priceSlip)
                 this.priceSlip.oType=3
                 this.priceSlip.oIsPackage=1
                 this.priceSlip.oOrderClosingStatus=2
+                console.log(this.priceSlip)
                 PostData('order/addOrder', this.priceSlip)
                   .then(res => {
                     if (res.result === 'fails') {

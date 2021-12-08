@@ -673,6 +673,35 @@ export const constantRoutes=[
         component: () => import('@/views/Slips/princeSlips/addSlipsManagement/addPrinceDetailsSlips'),
         meta: { title: '新增销售单详情表', icon: 'table',roles:['admin'] },
         hidden: true
+      },
+
+      {
+        path: 'addSlips',
+        name: '新增报价单',
+        component: () => import('@/views/Slips/salesSlips/addSlips/addSlips'),
+        meta: { title: '新增报价单', icon: 'table',roles:['admin'] },
+        hidden: true
+      },
+      {
+        path: 'addSlipsGoods',
+        name: '新增报价单商品',
+        component: () => import('@/views/Slips/salesSlips/addSlips/addSlipsGoods'),
+        meta: { title: '新增报价单商品', icon: 'table',roles:['admin'] },
+        hidden: true
+      },
+      {
+        path: 'addSPriceSlips',
+        name: '新增销售单',
+        component: () => import('@/views/Slips/princeSlips/addPrice/addSPriceSlips'),
+        meta: { title: '新增销售单', icon: 'table',roles:['admin'] },
+        hidden: true
+      },
+      {
+        path: 'addPriceGoods',
+        name: '新增销售单商品',
+        component: () => import('@/views/Slips/princeSlips/addPrice/addPriceGoods'),
+        meta: { title: '新增销售单商品', icon: 'table',roles:['admin'] },
+        hidden: true
       }
     ]
   },
@@ -752,35 +781,35 @@ export const constantRoutes=[
   //     },
   //   ]
   // },
-  // {
-  //   path:'/returnGood',
-  //   component: Layout,
-  //   redirect: '/returnGood/cancelSlipsManagement',
-  //   name:'退货',
-  //   meta:{title: '退货',icon: 'el-icon-s-help'},
-  //   children:[
-  //     {
-  //       path: 'cancelSlipsManagement',
-  //       name: '退货管理',
-  //       component: () => import('@/views/returnGood/cancelSlipsManagement'),
-  //       meta: { title: '退货管理', icon: 'table' ,roles:['admin','editor']}
-  //     },
-  //     {
-  //       path: 'cancelSlipsDetails',
-  //       name: '退货详情表',
-  //       component: () => import('@/views/returnGood/cancelSlipsDetails'),
-  //       meta: { title: '退货详情表', icon: 'table' ,roles:['admin','editor']},
-  //       hidden: true
-  //     },
-  //     {
-  //       path: 'addCancelPriceSlips',
-  //       name: '新增销售单退货单',
-  //       component: () => import('@/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips'),
-  //       meta: { title: '新增销售单退货单', icon: 'table' ,roles:['admin','editor']},
-  //       hidden: true
-  //     }
-  //   ]
-  // },
+  {
+    path:'/returnGood',
+    component: Layout,
+    redirect: '/returnGood/cancelSlipsManagement',
+    name:'退货',
+    meta:{title: '退货',icon: 'el-icon-s-help'},
+    children:[
+      {
+        path: 'cancelSlipsManagement',
+        name: '退货管理',
+        component: () => import('@/views/returnGood/cancelSlipsManagement'),
+        meta: { title: '退货管理', icon: 'table' ,roles:['admin','editor']}
+      },
+      {
+        path: 'cancelSlipsDetails',
+        name: '退货详情表',
+        component: () => import('@/views/returnGood/cancelSlipsDetails'),
+        meta: { title: '退货详情表', icon: 'table' ,roles:['admin','editor']},
+        hidden: true
+      },
+      {
+        path: 'addCancelPriceSlips',
+        name: '新增销售单退货单',
+        component: () => import('@/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips'),
+        meta: { title: '新增销售单退货单', icon: 'table' ,roles:['admin','editor']},
+        hidden: true
+      }
+    ]
+  },
   // {
   //   path: '/form',
   //   component: Layout,

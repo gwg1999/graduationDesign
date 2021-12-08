@@ -13,16 +13,18 @@ export const PostData = (url, body) =>{
     // withCredentials: true,
   })
 }
-export const GetData = (url, body) =>{
+export const GetData = (url, ...body) =>{
   return request({
     // baseURL:`http://www.aishuhong.com:11509`,
     // baseURL:process.env.VUE_APP_BASE_API,
     baseURL:baseURL,
     url: url,
     method: 'post',
-    params:body,
+    params:{...body[0]},
     dataType: "json",
     // withCredentials: true,
   })
 }
+
+
 

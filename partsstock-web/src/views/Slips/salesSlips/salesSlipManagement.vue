@@ -17,7 +17,7 @@
           </el-date-picker>
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" style="position: absolute" @click="getList(1)">查 询</el-button>
-        <router-link to="/Slips/addSalesSlip">
+        <router-link to="/Slips/addSlips">
           <el-button type="primary"
                      icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>
         </router-link>

@@ -13,10 +13,10 @@
           </el-select>
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" style="position: absolute" @click="getList(1)">查 询</el-button>
-        <router-link :to="{path:'/Slips/addSalesSlipDetails',query:{qId:this.$route.query.qId,qCustomerId:this.$route.query.qCustomerId}}">
-          <el-button type="primary"
-                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>
-        </router-link>
+<!--        <router-link :to="{path:'/Slips/addSalesSlipDetails',query:{qId:this.$route.query.qId,qCustomerId:this.$route.query.qCustomerId}}">-->
+<!--          <el-button type="primary"-->
+<!--                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>-->
+<!--        </router-link>-->
       </el-form>
       <!-- 表格 -->
       <el-table

@@ -13,12 +13,12 @@
           </el-col>
           <el-col :span="12"><el-tag>零件数量:{{item.num}}</el-tag></el-col>
         </el-row>
-<!--        <el-form-item :label="'零件'+index" v-for="(item,index) in this.whole.partsMap">-->
-<!--          零件名:-->
-<!--          <el-input v-model="item.pName" disabled style="width: 40%"></el-input>-->
-<!--          零件数量:-->
-<!--          <el-input v-model="item.num" disabled style="width: 40%"></el-input>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item :label="'零件'+index" v-for="(item,index) in this.whole.partsMap">-->
+        <!--          零件名:-->
+        <!--          <el-input v-model="item.pName" disabled style="width: 40%"></el-input>-->
+        <!--          零件数量:-->
+        <!--          <el-input v-model="item.num" disabled style="width: 40%"></el-input>-->
+        <!--        </el-form-item>-->
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -62,9 +62,9 @@
             </template>
           </el-cascader>
         </el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="search()">查 询</el-button>
-          <el-button type="primary" icon="el-icon-view"style="float: right" @click="showSelected">查看已选零件({{computeNum}})</el-button>
-<!--        <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 10px" @click="toInsert()" >添加</el-button>-->
+        <el-button type="primary" icon="el-icon-search" @click="search()">查 询</el-button>
+        <el-button type="primary" icon="el-icon-view"style="float: right" @click="showSelected">查看已选零件({{computeNum}})</el-button>
+        <!--        <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 10px" @click="toInsert()" >添加</el-button>-->
 
       </template>
 
@@ -85,14 +85,14 @@
           {{ (partQuery.pageNum - 1) * partQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-<!--      <el-table-column prop="pId" label="零件号" width="50%" align="center" hidden/>-->
+      <!--      <el-table-column prop="pId" label="零件号" width="50%" align="center" hidden/>-->
       <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />
       <el-table-column prop="pNumber" label="零件号" width="50%" align="center" />
       <el-table-column prop="pName" label="零件名" width="140%" align="center" />
       <el-table-column prop="place.plName" label="产地或品牌" width="70%"  align="center"/>
       <el-table-column prop="factory.fName" label="厂家" width="60%"  align="center"/>
       <el-table-column prop="unit.uName" label="单位" width="40%" align="center"/>
-<!--      <el-table-column prop="supplier.sName" label="供应商" width="60%"  align="center"/>-->
+      <!--      <el-table-column prop="supplier.sName" label="供应商" width="60%"  align="center"/>-->
       <el-table-column prop="pCarName" label="车属性" width="60%"  align="center"/>
       <el-table-column prop="pLowPrice" label="一级价格" width="50%"  align="center"/>
       <el-table-column prop="pMiddlePrice" label="二级价格" width="50%" align="center" />
@@ -106,20 +106,20 @@
 
       <el-table-column prop="pReturnCycle" label="退货周期（天）" width="60%"  align="center"/>
       <el-table-column prop="pId" label="零件数目" align="center">
-      <template slot-scope="scope">
-        <div style="display: flex;justify-content: space-between">
-          <el-input-number v-model = "scope.row.num" label="请输入数量" size="small"></el-input-number>
-          <el-button type="primary" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
-        </div>
-      </template>
+        <template slot-scope="scope">
+          <div style="display: flex;justify-content: space-between">
+            <el-input-number v-model = "scope.row.num" label="请输入数量" size="small"></el-input-number>
+            <el-button type="primary" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
+          </div>
+        </template>
       </el-table-column>
 
 
     </el-table>
 
-<!--    <el-form>-->
-<!--        <el-button :disabled="saveBtnDisabled" type="primary" @click="save" >保存</el-button>-->
-<!--    </el-form>-->
+    <!--    <el-form>-->
+    <!--        <el-button :disabled="saveBtnDisabled" type="primary" @click="save" >保存</el-button>-->
+    <!--    </el-form>-->
 
     <el-pagination
       layout="total, prev, pager, next, jumper"
@@ -301,7 +301,7 @@ export default {
       // this.realInventory = param.pRealInventory;
       this.whole.amount = parseInt(param.pRealInventory) / parseInt(param.num);
       this.whole.amount = parseInt(this.whole.amount)
-       // = num.substring(0,num.indexOf(".")+1);
+      // = num.substring(0,num.indexOf(".")+1);
       if (parseInt(param.pRealInventory) < parseInt(param.num))
       {
         this.whole.amount = this.min = 0
@@ -324,7 +324,7 @@ export default {
         var partsMap = {partsId:param.pId, partsNum:param.num}
         this.whole.partsMap.push(partsMap)
       }
-  },
+    },
     getList() {
       PostData('parts/selectAllByEnabled',this.searchQuery)
         .then(res=>{

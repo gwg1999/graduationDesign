@@ -27,6 +27,7 @@
         <el-dialog :visible.sync="dialogVisible">
           <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog>
+
       </el-upload>
       <h3>外部图片</h3>
       <el-upload

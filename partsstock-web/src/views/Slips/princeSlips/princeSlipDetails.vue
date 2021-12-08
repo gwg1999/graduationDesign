@@ -12,10 +12,10 @@
           </el-select>
         </el-form-item>
         <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="getList()">查 询</el-button>
-        <router-link :to="{path:'/Slips/addPrinceDetailsSlips',query:{oCustomerId:this.$route.query.oCustomerId,oId:this.$route.query.oId}}">
-          <el-button type="primary"
-                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>
-        </router-link>
+<!--        <router-link :to="{path:'/Slips/addPrinceDetailsSlips',query:{oCustomerId:this.$route.query.oCustomerId,oId:this.$route.query.oId}}">-->
+<!--          <el-button type="primary"-->
+<!--                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>-->
+<!--        </router-link>-->
       </el-form>
       <el-table
         :data="princeSheetList"
