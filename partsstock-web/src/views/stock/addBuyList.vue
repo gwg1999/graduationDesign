@@ -35,18 +35,18 @@
             <span slot-scope="{ option }">{{ option.key }} - {{ option.label }}</span>
             <!--        <el-button class="transfer-footer" slot="left-footer" size="small">操作</el-button>-->
             <!--        <el-button class="transfer-footer" slot="right-footer" size="small" @click="option">操作</el-button>-->
-            <div class="transfer-footer" slot="right-footer">
-              <el-select  v-model="cuIdValue" filterable placeholder="选择客户" style="width: 62%">
-                <el-option
-                  v-for="item in customerList"
-                  :label="item.cuUnitName"
-                  :value="item.cuId">
-                  <span style="float: left">{{ item.cuUnitName }}</span>
-                  <!--        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>-->
-                </el-option>
-              </el-select>
+<!--            <div class="transfer-footer" slot="right-footer">-->
+<!--              <el-select  v-model="cuIdValue" filterable placeholder="选择客户" style="width: 62%">-->
+<!--                <el-option-->
+<!--                  v-for="item in customerList"-->
+<!--                  :label="item.cuUnitName"-->
+<!--                  :value="item.cuId">-->
+<!--                  <span style="float: left">{{ item.cuUnitName }}</span>-->
+<!--                  &lt;!&ndash;        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>&ndash;&gt;-->
+<!--                </el-option>-->
+<!--              </el-select>-->
 <!--              <el-button size="small" type="primary" @click="option" style="float: right">操作</el-button>-->
-            </div>
+<!--            </div>-->
           </el-transfer>
         </div>
       </div>
@@ -145,9 +145,61 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="客户" prop="sCustomId">
+            <el-select  v-model="buyList.sCustomId" placeholder="选择客户">
+              <el-option
+                v-for="item in customerList"
+                :label="item.cuUnitName"
+                :value="item.cuId">
+<!--                <span style="float: left">{{ item.cuUnitName }}</span>-->
+                <!--        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>-->
+              </el-option>
+            </el-select>
+          </el-form-item>
           <!--          <el-form-item label="用户ID" prop="aId">-->
           <!--            <el-input v-model="admin.aId" style="width: 300px"s/>-->
           <!--          </el-form-item>-->
+<!--          <el-form-item label="是否已支付" prop="sisPayment">-->
+<!--            <el-select v-model="buyList.sisPayment" filterable placeholder="请选择">-->
+<!--              <el-option label="未支付" :value="0"></el-option>-->
+<!--              <el-option label="已支付" :value="1"></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="订单状态" prop="sstatus">-->
+<!--            <el-select v-model="buyList.sstatus" filterable placeholder="请选择">-->
+<!--              <el-option label="未发货" :value="0"></el-option>-->
+<!--              <el-option label="部分发货" :value="1"></el-option>-->
+<!--              <el-option label="全部发货" :value="2"></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="进货单类型" prop="stype">-->
+<!--            <el-select v-model="buyList.stype" filterable placeholder="请选择">-->
+<!--              <el-option label="部分退货进货单" :value="0"></el-option>-->
+<!--              <el-option label="全部退货进货单" :value="1"></el-option>-->
+<!--              <el-option label="普通进货单" :value="2"></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+        </div>
+        <div style="width: 50%;float: right">
+<!--          <el-form-item label="订单状态" prop="sorderStatus">-->
+<!--            <el-select v-model="buyList.sorderStatus" filterable placeholder="请选择">-->
+<!--              <el-option label="部分结清" :value="0"></el-option>-->
+<!--              <el-option label="全部结清" :value="1"></el-option>-->
+<!--              <el-option label="未结" :value="2"></el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="支付订单编号" prop="sorderNumber">-->
+<!--            <el-input v-model="buyList.sorderNumber"/>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item label="应收价" prop="sprice">-->
+<!--            <el-input v-model="buyList.sprice"/>-->
+<!--          </el-form-item>-->
+          <!--          <el-form-item label="创建时间" prop="aCreateTime">-->
+          <!--            <el-input disabled v-model="admin.aCreateTime" style="width: 300px"/>-->
+          <!--          </el-form-item>-->
+<!--          <el-form-item label="实收价" prop="srealIncome">-->
+<!--            <el-input v-model="buyList.srealIncome"/>-->
+<!--          </el-form-item>-->
           <el-form-item label="付款方式" prop="spaymentWay">
             <el-select v-model="buyList.spaymentWay" filterable placeholder="请选择">
               <el-option
@@ -158,49 +210,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="是否已支付" prop="sisPayment">
-            <el-select v-model="buyList.sisPayment" filterable placeholder="请选择">
-              <el-option label="未支付" :value="0"></el-option>
-              <el-option label="已支付" :value="1"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="订单状态" prop="sstatus">
-            <el-select v-model="buyList.sstatus" filterable placeholder="请选择">
-              <el-option label="未发货" :value="0"></el-option>
-              <el-option label="部分发货" :value="1"></el-option>
-              <el-option label="全部发货" :value="2"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="进货单类型" prop="stype">
-            <el-select v-model="buyList.stype" filterable placeholder="请选择">
-              <el-option label="部分退货进货单" :value="0"></el-option>
-              <el-option label="全部退货进货单" :value="1"></el-option>
-              <el-option label="普通进货单" :value="2"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div style="width: 50%;float: right">
-          <el-form-item label="订单状态" prop="sorderStatus">
-            <el-select v-model="buyList.sorderStatus" filterable placeholder="请选择">
-              <el-option label="部分结清" :value="0"></el-option>
-              <el-option label="全部结清" :value="1"></el-option>
-              <el-option label="未结" :value="2"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="支付订单编号" prop="sorderNumber">
-            <el-input v-model="buyList.sorderNumber"/>
-          </el-form-item>
-<!--          <el-form-item label="应收价" prop="sprice">-->
-<!--            <el-input v-model="buyList.sprice"/>-->
-<!--          </el-form-item>-->
-          <!--          <el-form-item label="创建时间" prop="aCreateTime">-->
-          <!--            <el-input disabled v-model="admin.aCreateTime" style="width: 300px"/>-->
-          <!--          </el-form-item>-->
-          <el-form-item label="实收价" prop="srealIncome">
-            <el-input v-model="buyList.srealIncome"/>
-          </el-form-item>
           <el-form-item label="备注信息" prop="snote">
-            <el-input v-model="buyList.snote"type="textarea"/>
+            <el-input v-model="buyList.snote" type="textarea"/>
           </el-form-item>
           <el-form-item>
             <el-button :disabled="saveBtnDisabled" type="primary" @click="submitOneForm('buyList')" >保存</el-button>
@@ -213,9 +224,10 @@
 <script>
 import ImageCropper from '@/components/ImageCropper'
 import PanThumb from '@/components/PanThumb'
-import {PostData} from "@/api";
+import {GetData,PostData} from "@/api";
 import Cookie from "js-cookie"
 import qs from "qs";
+import part from "@/views/parts/part";
 export default {
   components:{
     ImageCropper,
@@ -278,7 +290,13 @@ export default {
       stepOneVisible:false,
       stepTwoVisible:false,
       wholeVisible:false,
-      buyList: {},
+      buyList: {
+        sisPayment:0,
+        sstatus:0,
+        stype:2,
+        sorderStatus:2,
+        srealIncome:0,
+      },
       houseOperator:[],
       spaymentWay:[
         {
@@ -294,7 +312,9 @@ export default {
           value:'2'
         }
       ],
-      houseOperatorQuery:{},
+      houseOperatorQuery:{
+        type:4
+      },
       editId:'',
       saveBtnDisabled: false,
       imagecropperShow:false,
@@ -323,6 +343,9 @@ export default {
         ],
         sorderStatus:[
           {required:true,message:'请选择订单状态',trigger:'blur'}
+        ],
+        sCustomId:[
+          {required:true,message:'请选择客户',trigger:'change'}
         ],
         sorderNumber:[
           {required:true,message:'请填写支付订单编号',trigger:'blur'}
@@ -376,6 +399,7 @@ export default {
     getCustomer(){
       PostData('/customer/selectAllByLike',this.customerQuery).then((res=>{
         this.customerList=res.list
+        console.log(this.customerList);
       }))
     },
     handleChange(){
@@ -393,7 +417,7 @@ export default {
       })
     },
     option(){
-      if(this.cuIdValue===''){
+      if(false){
         alert('请选择客户')
       }
       else {
@@ -457,7 +481,7 @@ export default {
     },
     oldToNew(){
       for(let i=0;i<this.selectedPart.length;i++){
-        this.selectedPart[i].sdCustomerId=parseInt(this.cuIdValue)
+        this.selectedPart[i].sdCustomerId=parseInt(this.buyList.sCustomId)
         this.selectedPart[i].sdPartsId=parseInt(this.selectedPart[i].pId)
         this.selectedPart[i].sdType=1
         this.selectedPart[i].sdPartsName=this.selectedPart[i].pName
@@ -465,7 +489,7 @@ export default {
         this.selectedPart[i].sdStatus=0
       }
       for(let j=0;j<this.selectedWhole.length;j++){
-        this.selectedWhole[j].sdCustomerId=parseInt(this.cuIdValue)
+        this.selectedWhole[j].sdCustomerId=parseInt(this.buyList.sCustomId)
         this.selectedWhole[j].sdPartsId=parseInt(this.selectedWhole[j].wId)
         this.selectedWhole[j].sdType=0
         this.selectedWhole[j].sdPartsName=this.selectedWhole[j].wName
@@ -474,20 +498,20 @@ export default {
       }
     },
     assignment(){
-      this.submitInfo.sdCustomerId=parseInt(this.cuIdValue)
-      this.submitInfo.sdStatus=0
+      this.submitInfo.sCustomId=parseInt(this.buyList.sCustomId)
+      this.submitInfo.sStatus=0
       this.submitInfo.stockDetailList.splice(0,this.submitInfo.stockDetailList.length)
       this.submitInfo.stockDetailList.push(...this.selectedPart)
       this.submitInfo.stockDetailList.push(...this.selectedWhole)
     },
     getHouseOperator(){
-      PostData('/admin/selectWarehouse',this.houseOperatorQuery).then(res=>{
+      GetData('/admin/selectAdminByType',this.houseOperatorQuery).then(res=>{
         this.houseOperator=res
       })
     },
     voluation(){
       this.buyList.screateOperatorId=Cookie.get('aId')
-      this.buyList.scustomId=0
+      // this.buyList.sCustomId=0
     },
     submitOneForm(formName) {
       this.$refs[formName].validate((valid) => {

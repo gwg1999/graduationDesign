@@ -143,7 +143,7 @@
       <!--      <el-table-column prop="aPassword" label="用户密码" width="120%"  align="center"/>-->
       <el-table-column prop="sOrderStatus" label="订单状态" width="80%"  align="center">
         <template slot-scope="scope">
-          {{oderStatus(scope.row.sOrderStatus)}}
+          {{oderStatus(scope.row.sStatus)}}
         </template>
       </el-table-column>
       <el-table-column label="进货零件" align="center">
@@ -242,6 +242,7 @@ export default {
     },
     oderStatus(){
       return function (status){
+        console.log(status+'9999')
         if(status===0){
           return '未发货'
         }

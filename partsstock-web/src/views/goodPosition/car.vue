@@ -45,6 +45,13 @@
             添加下一层
           </el-button>
           <el-button
+            type="success"
+            size="small"
+            class="posBtn"
+            @click="() => edit(data)">
+            编辑
+          </el-button>
+          <el-button
             type="danger"
             size="small"
             class="posBtn"
@@ -126,6 +133,13 @@ export default {
       this.carForm.userName=Cookie.get('username')
       this.dialogVisible=true
     },
+    edit(data){
+      console.log(data);
+      this.carForm=Object.assign({},data)
+      this.carForm.userName=Cookie.get('username')
+      this.carForm.time=undefined
+      this.dialogVisible=true
+    },
     remove(data) {
       this.deleteQuery.id=data.id
       console.log(this.deleteQuery);
@@ -151,22 +165,42 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          PostData('/position/addCatalogue',qs.stringify(this.carForm)).then((ref)=>{
-            if(ref.code===500){
-              this.$message({
-                type:"warning",
-                message:ref.cause
-              })
-            }
-            else {
-              this.$message({
-                message:'添加成功',
-                type:'success'
-              })
-              this.getCarList()
-              this.dialogVisible=false
-            }
-          })
+          if(this.carForm.id){
+            PostData('/position/updateCatalogue',qs.stringify(this.carForm)).then((ref=>{
+              if(ref.code===500){
+                this.$message({
+                  type:"warning",
+                  message:ref.cause
+                })
+              }
+              else {
+                this.$message({
+                  message:'修改成功',
+                  type:'success'
+                })
+                this.getCarList()
+                this.dialogVisible=false
+              }
+            }))
+          }
+          else {
+            PostData('/position/addCatalogue',qs.stringify(this.carForm)).then((ref)=>{
+              if(ref.code===500){
+                this.$message({
+                  type:"warning",
+                  message:ref.cause
+                })
+              }
+              else {
+                this.$message({
+                  message:'添加成功',
+                  type:'success'
+                })
+                this.getCarList()
+                this.dialogVisible=false
+              }
+            })
+          }
         } else {
           console.log('error submit!!');
           return false;

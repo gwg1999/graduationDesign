@@ -30,11 +30,11 @@
           <el-form-item label="用户权限" prop="aPermission">
 <!--            <el-input v-model="admin.aPermission" style="width: 300px"/>-->
             <el-select v-model="admin.aPermission" placeholder="请选择用户权限">
-<!--              <el-option label="超级管理员" value="0"></el-option>-->
-              <el-option label="销售员" value="1"></el-option>
-              <el-option label="进货员" value="2"></el-option>
-              <el-option label="财务员" value="3"></el-option>
-              <el-option label="仓库管理员" value="4"></el-option>
+              <el-option label="超级管理员" :value="0"></el-option>
+              <el-option label="销售员" :value="1"></el-option>
+              <el-option label="进货员" :value="2"></el-option>
+              <el-option label="财务员" :value="3"></el-option>
+              <el-option label="仓库管理员" :value="4"></el-option>
             </el-select>
           </el-form-item>
 <!--          <el-form-item label="创建时间" prop="aCreateTime">-->

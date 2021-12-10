@@ -44,7 +44,7 @@
         <el-form-item>
           <!--          <el-input v-model="customerQuery.cuUnitName" clearable placeholder="用户名"  style="width: 150px"/>-->
           <el-autocomplete
-            v-model="stockQuery.ICustomName"
+            v-model="stockQuery.iCustomName"
             :fetch-suggestions="querySearch"
             placeholder="请输入客户名"
             :trigger-on-focus="false"
@@ -62,7 +62,7 @@
           <el-select v-model="stockQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员">
             <el-option :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>
           </el-select>
-          <el-select v-model="stockQuery.IStatus" style="margin-left: 3px" placeholder="请选择订单状态">
+          <el-select v-model="stockQuery.iStatus" style="margin-left: 3px" placeholder="请选择订单状态">
             <el-option label="未询价" :value="0"></el-option>
             <el-option label="已询价" :value="1"></el-option>
           </el-select>
@@ -183,7 +183,7 @@
   </div>
 </template>
 <script>
-import {PostData} from "../../api/index"
+import {GetData,PostData} from "../../api/index"
 import qs from 'qs'
 export default {
   name: "staff",
@@ -193,7 +193,9 @@ export default {
       list: [], //查询之后接口返回集合
       buyList: {},
       houseOperator:[],
-      houseOperatorQuery:{},
+      houseOperatorQuery:{
+        type:4
+      },
       adminQuery:{
         pageNum: 0,
         pageSize: 0
@@ -237,9 +239,9 @@ export default {
         name:'/showParts'
       },
       stockQuery:{
-        ICustomName:'',
+        iCustomName:'',
         adminName:'',
-        IStatus:null,
+        iStatus:null,
         pageSize: 10,
         pageNum: 1
       },
@@ -303,6 +305,7 @@ export default {
     },
     search(){
       this.stockQuery.pageNum=1
+      console.log(this.stockQuery);
       this.getList()
     },
     // 跳转详情页
@@ -344,10 +347,10 @@ export default {
       // 调用 callback 返回建议列表的数据
     },
     handleSelect(item) {
-      this.stockQuery.ICustomName=item.cuUnitName
+      this.stockQuery.iCustomName=item.cuUnitName
     },
     getHouseOperator(){
-      PostData('/admin/selectWarehouse',this.houseOperatorQuery).then(res=>{
+      GetData('/admin/selectAdminByType',this.houseOperatorQuery).then(res=>{
         this.houseOperator=res
       })
     },
