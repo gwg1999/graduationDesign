@@ -189,10 +189,10 @@
         <el-table-column prop="odNumber" label="数量" align="center" />
         <el-table-column prop="odRetailPrice" label="价格"  align="center" />
         <el-table-column prop="odSizeType" label="零件大小"  align="center" >
-        <template slot-scope="scope">
-          {{ scope.row.odSizeType===0?'大':'小'}}
-        </template>
-       </el-table-column>
+          <template slot-scope="scope">
+            {{ scope.row.odSizeType===0?'大':'小'}}
+          </template>
+        </el-table-column>
         <el-table-column prop="odCreateTime" label="创建时间"  align="center" />
         <el-table-column prop="odStatus" label="零件状态"  align="center">
           <template slot-scope="scope">
@@ -245,11 +245,9 @@ export default {
   },
   methods: {
     searchList(pId){
-      this.dialogHistoryPrice=true
       let customerId=this.$route.query.priceSlip.oCustomerId
       let type=this.levelIV.odType
-      let partsId=pId
-      queryHistoryPrice(customerId,partsId,type).then(res=>
+      queryHistoryPrice(customerId,pId,type).then(res=>
       {
         for (let i=0;i<res.length;i++){
           res[i].odCreateTime = getTime(res[i].odCreateTime)
