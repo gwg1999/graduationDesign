@@ -286,9 +286,7 @@ export default {
             res.list[i].oCreateTime=this.formatTime(res.list[i].oCreateTime)
             if(res.list[i].oResultTime)
               res.list[i].oResultTime=this.formatTime(res.list[i].oResultTime)
-
           }
-          console.log(res.list)
           this.princeSheetList=res.list
 
         })

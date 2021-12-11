@@ -13,6 +13,21 @@ export const handleArray=  (levelIVDirectoryList)=>{
   return levelIVDirectoryList
 }
 
+export const getTime=(data)=>{
+  let time = new Date(data);
+  let Y = time.getFullYear();
+  let Mon = time.getMonth() + 1;
+  let Day = time.getDate();
+  return `${Y}-${Mon}-${Day}`
+}
+export const stopF5F6=()=>{
+  window.addEventListener("keydown", function(e) {
+    if(e.key==='F5'||e.key==='F6'){
+      e.preventDefault();
+    }
+  }, false);
+}
+
 
 // export const handleArra=  (levelIVDirectoryList)=>{
 //   console.log("enter")

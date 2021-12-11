@@ -123,7 +123,9 @@ export default {
       let state=-1
       if(this.princeSheetReturn.returnDetailList.length>=0)
         this.princeSheetReturn.returnDetailList.forEach((item)=>{
-          if(item.number<item.odNumber)  state=1
+          if(item.number<item.odNumber)  {
+            state=1
+          }
           else state=0
         })
       if(state===0) {

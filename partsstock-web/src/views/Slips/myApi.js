@@ -39,6 +39,14 @@ export function querySerialNumber(querySerialNumber,pageNum,pageSize) {
     params:{pageNum,pageSize},
   })
 }
+export function queryHistoryPrice(customerId,partsId,type) {
+  return request({
+    url: '/OrderDetail/getHistoryOrderDetail',
+    method: 'post',
+    data:querySerialNumber,
+    params:{customerId,partsId,type},
+  })
+}
 
 //测试map和reduce
 // export const levelIVDirec=()=>{

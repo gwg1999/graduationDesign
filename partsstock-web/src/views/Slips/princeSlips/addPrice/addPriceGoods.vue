@@ -44,7 +44,7 @@
       <!--      <el-button  type="primary" @click="next"  style="position: absolute;right: 10px;width: 100px">下一步</el-button>-->
     </el-form>
 
-    <!-- 表格 -->
+    <!-- 零件添加表格 -->
     <el-table use-virtual
               :data="list"
               border
@@ -80,7 +80,7 @@
           <el-form>
             <div style="display: flex;justify-content: space-evenly">
               <el-form-item>
-                数量:<el-input-number v-model = "scope.row.odNumber"  size="small"></el-input-number>
+                数量:<el-input-number @keyup.116.native="searchList(scope.row.pId)" v-model = "scope.row.odNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
                 价格:<el-input  @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width: 150px;" size="small" ></el-input>
@@ -93,7 +93,7 @@
         </template>
       </el-table-column>
     </el-table>
-
+    <!-- 整件添加表格 -->
     <el-table use-virtual
               :data="wholeList"
               border
@@ -115,7 +115,7 @@
       <el-table-column prop="wId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <div style="display: flex;justify-content: space-evenly">
-            数量:<el-input-number v-model = "scope.row.odNumber"  size="small"></el-input-number>
+            数量:<el-input-number  @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
             价格:<el-input @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width: 150px;" size="small" ></el-input>
             <el-button type="primary" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
           </div>
@@ -163,15 +163,62 @@
         </el-footer>
       </el-container>
     </el-dialog>
+    <!-- 历史价格 -->
+    <el-dialog :visible.sync="dialogHistoryPrice"  title="历史价格" width="70%">
+      <el-table
+        :data="historyPriceList"
+        border
+        fit
+        highlight-current-row>
+        <el-table-column
+          label="序号"
+          width="50"
+          align="center">
+          <template slot-scope="scope">
+            {{ (historyPage.pageNum - 1) * historyPage.pageSize + scope.$index + 1 }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="odOrderId" label="订单ID"  align="center" />
+        <el-table-column prop="odCustomerId" label="客户ID"  align="center" />
+        <el-table-column prop="odPartsId" label="零件或整件ID"  align="center"/>
+        <el-table-column prop="odType" label="类型"  align="center">
+          <template slot-scope="scope">
+            {{ scope.row.odType===0?'整件':'零件'}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="odNumber" label="数量" align="center" />
+        <el-table-column prop="odRetailPrice" label="价格"  align="center" />
+        <el-table-column prop="odSizeType" label="零件大小"  align="center" >
+        <template slot-scope="scope">
+          {{ scope.row.odSizeType===0?'大':'小'}}
+        </template>
+       </el-table-column>
+        <el-table-column prop="odCreateTime" label="创建时间"  align="center" />
+        <el-table-column prop="odStatus" label="零件状态"  align="center">
+          <template slot-scope="scope">
+            {{ scope.row.odStatus===0?'正常':scope.row.odStatus===1?'退货':'结束'}}
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
   </div>
 </template>
 <script>
-import {levelIVDirectory} from "@/views/Slips/myApi";
+import {levelIVDirectory,queryHistoryPrice} from "@/views/Slips/myApi";
+import {getTime,stopF5F6} from "@/views/Slips/myUtils"
 import {PostData} from "@/api";
 import Cookie from "js-cookie";
 export default {
   data() {
     return {
+      //历史价格弹框
+      dialogHistoryPrice:false,
+      historyPage:{
+        pageNum:1,
+        pageSize:10
+      },
+      historyPriceList:[],
       whole:{},
       dialogVisible:false,
       customerPrince:null,
@@ -193,9 +240,31 @@ export default {
   created() {
     this.priceSlip=this.$route.query.priceSlip
     this.getList()
-    this.getPrince()
+    this.getPrice()
+    stopF5F6()
   },
   methods: {
+    searchList(pId){
+      this.dialogHistoryPrice=true
+      let customerId=this.$route.query.priceSlip.oCustomerId
+      let type=this.levelIV.odType
+      let partsId=pId
+      queryHistoryPrice(customerId,partsId,type).then(res=>
+      {
+        for (let i=0;i<res.length;i++){
+          res[i].odCreateTime = getTime(res[i].odCreateTime)
+        }
+        this.historyPriceList=res
+        if(this.historyPriceList&&this.historyPriceList.length>0){
+          this.dialogHistoryPrice=true
+        }else {
+          this.$message({
+            type:'info',
+            message:"该客户还没有该订单的历史信息"
+          })
+        }
+      })
+    },
     showSelected(){
       this.dialogVisible=true
     },
@@ -226,7 +295,6 @@ export default {
               oSupposeIncome += partPrince * this.priceSlip.orderDetailList[i].odNumber
             }
             this.priceSlip.oSupposeIncome = oSupposeIncome
-            console.log(this.priceSlip)
             PostData('order/addOrder',this.priceSlip)
               .then(res=>{
                 console.log(res)
@@ -275,7 +343,7 @@ export default {
             }
           }
           if(!flag){
-            temp.odPartsId=temp.pId+''
+            temp.odPartsId=temp.pId
             this.priceSlip.orderDetailList.push(temp)
             this.$message({
               message:'已添加至已选零件库',
@@ -376,7 +444,7 @@ export default {
         this.levelIVDirectoryList=res
       })
     },
-    getPrince(){
+    getPrice(){
       let query={
         cuId:this.$route.query.priceSlip.oCustomerId
       }

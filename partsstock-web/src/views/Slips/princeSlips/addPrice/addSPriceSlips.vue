@@ -63,9 +63,6 @@
 </template>
 
 <script>
-import {PostData} from "@/api";
-import Cookie from "js-cookie";
-import {validatePassCheck,twoPoint} from "@/views/Slips/ruleNumber";
 import {commonList} from "../../myApi"
 export default {
   created() {
