@@ -7,12 +7,14 @@
       <template slot-scope="scoped">
       <el-form-item>
 <!--        <el-input v-model="partQuery.pName" clearable placeholder="零件名"  style="width: 150px"/>-->
+        <el-input v-model="pGoodsNum" placeholder="请输入零件号" style="width: 30%" class="search"></el-input>
         <el-autocomplete
           v-model="state"
           :fetch-suggestions="querySearch"
           placeholder="请输入零件名"
           :trigger-on-focus="false"
-          @select="handleSelect">
+          @select="handleSelect"
+          class="search">
           <!--      <i-->
           <!--        class="el-icon-edit el-input__icon"-->
           <!--        slot="suffix"-->
@@ -23,7 +25,6 @@
             <!--        <span class="addr">{{ item.address }}</span>-->
           </template>
         </el-autocomplete>
-        <el-input v-model="pGoodsNum" placeholder="请输入零件号" style="width: 30%" class="search"></el-input>
         <el-cascader
           ref="pCatCascader"
           :options="categoryOption"
@@ -66,23 +67,23 @@
           {{ (searchQuery.pageNum - 1) * searchQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />
-      <el-table-column prop="pNumber" label="零件号" width="50%" align="center" />
-      <el-table-column prop="pName" label="零件名" width="140%" align="center" />
-      <el-table-column prop="place.plName" label="产地或品牌" width="70%"  align="center"/>
-      <el-table-column prop="factory.fName" label="厂家" width="60%"  align="center"/>
+<!--      <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />-->
+      <el-table-column prop="pNumber" label="零件号" width="170" align="center" />
+      <el-table-column prop="pName" label="零件名" width="250" align="center" />
+      <el-table-column prop="place.plName" label="产地或品牌" width="100"  align="center"/>
+      <el-table-column prop="factory.fName" label="厂家" width="80"  align="center"/>
       <el-table-column prop="unit.uName" label="单位" width="40%" align="center"/>
 <!--      <el-table-column prop="supplier.sName" label="供应商" width="50%"  align="center"/>-->
-      <el-table-column prop="pCarName" label="车属性" width="50%"  align="center"/>
-      <el-table-column prop="pLowPrice" label="一级价格" width="50%"  align="center"/>
-      <el-table-column prop="pMiddlePrice" label="二级价格" width="50%" align="center" />
-      <el-table-column prop="pHighPrice" label="三级价格" width="50%"  align="center"/>
-      <el-table-column prop="pBuyingPrice" label="进价" width="40%"  align="center"/>
-      <el-table-column prop="pHighLimit" label="上限" width="40%"  align="center"/>
-      <el-table-column prop="pLowLimit" label="下限" width="40%"  align="center"/>
+<!--      <el-table-column prop="pCarName" label="车属性" width="50%"  align="center"/>-->
+<!--      <el-table-column prop="pLowPrice" label="一级价格" width="50%"  align="center"/>-->
+<!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="50%" align="center" />-->
+<!--      <el-table-column prop="pHighPrice" label="三级价格" width="50%"  align="center"/>-->
+      <el-table-column prop="pBuyingPrice" label="进价" width="100"  align="center"/>
+      <el-table-column prop="pHighLimit" label="上限" width="80"  align="center"/>
+      <el-table-column prop="pLowLimit" label="下限" width="80"  align="center"/>
       <!--     <el-table-column prop="pNote" label="备注" width="80"  align="center"/>-->
      <!--      <el-table-column prop="pPicture" label="图片" width="120"  align="center"/>-->
-      <el-table-column prop="pRealInventory" label="实际库存数" width="50%"  align="center"/>
+      <el-table-column prop="pRealInventory" label="实际库存数" width="100"  align="center"/>
 <!--      <el-table-column prop="pPartsSizeType" labenpml="零件大小" width="100"  align="center">-->
 <!--        <template slot-scope="scope">-->
 <!--          <tabs  v-if="scope.row.pPartsSizeType===0">小</tabs>-->
@@ -92,7 +93,7 @@
 <!--      </el-table-column>-->
 
 
-      <el-table-column prop="pReturnCycle" label="产品售后周期（三保）" width="60%"  align="center"/>
+<!--      <el-table-column prop="pReturnCycle" label="产品售后周期（三保）" width="60%"  align="center"/>-->
 
       <el-table-column prop="pPartsStatus" label="状态" width="70%" align="center">
         <template slot-scope="scope">
@@ -125,6 +126,7 @@
                           "
                                 @click="editCancel(scope.$index,scope.row)">{{ scope.row.pPartsStatus===1?'注销':'启用'}}
                     </el-button>
+                    <el-button type="danger" icon="el-icon-delete" circle @click="deletePart(scope.row)" v-if="scope.row.pPartsStatus===0"></el-button>
           </template>
       </el-table-column>
 
@@ -143,7 +145,7 @@
           </div>
         </template>
         <script>
-        import {PostData} from "../../api/index"
+        import {GetData,PostData} from "../../api/index"
         import qs from 'qs'
         import request from "@/utils/request";
         // export const PostData = (url, body) =>{
@@ -175,6 +177,7 @@
                 status:1,
                 type:2
               },
+              deleteQuery:{},
               searchQuery:{
                 pName:'',
                 pNumber:'',
@@ -321,12 +324,24 @@
             },
             handleSelect(item) {
               this.state=item.pName
+            },
+            deletePart(data){
+              console.log(data);
+              this.deleteQuery.partsId=data.pId
+              console.log(this.deleteQuery);
+              GetData('/parts/deleteByPartsId',this.deleteQuery).then(ref=>{
+                this.$message({
+                  type:"success",
+                  message:'删除成功'
+                })
+                this.search()
+              })
             }
           }
           }
         </script>
         <style scoped>
         .search{
-          margin-left: 3px;
+          margin-right: 3px;
         }
         </style>

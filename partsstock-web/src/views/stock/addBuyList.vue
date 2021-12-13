@@ -2,6 +2,66 @@
   <div>
     <!--    <div style="width: 300px;height:300px;position:absolute;left:50px;top:80px;background-color: red"></div>-->
     <el-dialog
+      title="历史记录"
+      :visible.sync="historyVisible"
+      width="50%"
+      :before-close="handleClose">
+      <el-table :data="PartHistoryList" border style="width: 100%">
+        <el-table-column
+          prop="sdPartsName"
+          label="零件名"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="sdNumber"
+          label="零件数量"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="sdDeliveryCycle"
+          label="供货周期">
+        </el-table-column>
+        <el-table-column
+          prop="sdPrice"
+          label="单价">
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="historyVisible = false">退 出</el-button>
+<!--    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+  </span>
+    </el-dialog>
+    <el-dialog
+      title="历史记录"
+      :visible.sync="wholeHistoryVisible"
+      width="50%"
+      :before-close="handleClose">
+      <el-table :data="WholeHistoryList" border style="width: 100%">
+        <el-table-column
+          prop="sdPartsName"
+          label="组件名"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="sdNumber"
+          label="组件数量"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="sdDeliveryCycle"
+          label="供货周期">
+        </el-table-column>
+        <el-table-column
+          prop="sdPrice"
+          label="单价">
+        </el-table-column>
+      </el-table>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="wholeHistoryVisible = false">退 出</el-button>
+        <!--    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>-->
+  </span>
+    </el-dialog>
+    <el-dialog
       title="添加零件"
       :visible.sync="stepOneVisible"
       width="70%"
@@ -32,7 +92,26 @@
         hasChecked: '${checked}/${total}'
       }"
             :data="data">
-            <span slot-scope="{ option }">{{ option.key }} - {{ option.label }}</span>
+            <span slot-scope="{ option }">
+              <el-popover placement="left-end" title="零件详情:" width="500" trigger="hover" @show="showStockDetail(option.part)">
+            <div class="partDetail">
+              <el-row :gutter="20">
+                <el-col :span="12"><i class="partLabel">零件名:</i>{{option.part.pName}}</el-col>
+                <el-col :span="12"><i class="partLabel">零件号:</i>{{option.part.pNumber}}</el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12"><i class="partLabel">库存数:</i>{{option.part.pRealInventory}}</el-col>
+                <el-col :span="12"><i class="partLabel">退货周期:</i>{{option.part.pReturnCycle}}</el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12"><i class="partLabel">进价:</i>{{option.part.pBuyingPrice}}</el-col>
+                <el-col :span="12"><i class="partLabel">备注:</i>{{option.part.pNote}}</el-col>
+              </el-row>
+            </div>
+            <i style="font-style: normal" slot="reference">{{ option.label }}</i>
+                <!--                      <el-button slot="reference">hover 激活</el-button>-->
+          </el-popover>
+            </span>
             <!--        <el-button class="transfer-footer" slot="left-footer" size="small">操作</el-button>-->
             <!--        <el-button class="transfer-footer" slot="right-footer" size="small" @click="option">操作</el-button>-->
 <!--            <div class="transfer-footer" slot="right-footer">-->
@@ -51,12 +130,12 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
+<!--    <el-button @click="stepOneVisible = false">取 消</el-button>-->
     <el-button type="primary" @click="option">确 定</el-button>
   </span>
     </el-dialog>
     <el-dialog
-      title="提示2"
+      title="(F5：查看零件历史记录)"
       :visible.sync="stepTwoVisible"
       width="80%"
       :before-close="handleClose">
@@ -78,7 +157,7 @@
             </el-input>
           </el-form-item>
           <el-form-item label="零件数量:" :prop="'selectedPart.'+index+'.sdNumber'" :rules="rules.sdNumber">
-            <el-input-number v-model="item.sdNumber" :min="1" label="描述文字" @change="changeVal($event)"></el-input-number>
+            <el-input-number v-model="item.sdNumber" :min="1" label="描述文字" @change="changeVal($event)" @keydown.native="showPartHistory($event,item)"></el-input-number>
           </el-form-item>
         </div>
         <div v-for="(item,index) in parts.selectedWhole" style="display: flex;justify-content: space-around">
@@ -92,12 +171,12 @@
             <el-input placeholder="请输入数字" v-model="item.sdPrice" style="width: 200px"></el-input>
           </el-form-item>
           <el-form-item label="整件数量:" :prop="'selectedWhole.'+index+'.sdNumber'" :rules="rules.sdNumber">
-            <el-input-number v-model="item.sdNumber" :min="1" label="描述文字" @change="changeVal($event)"></el-input-number>
+            <el-input-number v-model="item.sdNumber" :min="1" label="描述文字" @change="changeVal($event)" @keydown.native="showWholeHistory($event,item)"></el-input-number>
           </el-form-item>
         </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="stepTwoVisible = false">取 消</el-button>
+<!--    <el-button @click="stepTwoVisible = false">取 消</el-button>-->
     <el-button type="primary" @click="submitForm('parts')">提 交</el-button>
   </span>
     </el-dialog>
@@ -156,50 +235,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <!--          <el-form-item label="用户ID" prop="aId">-->
-          <!--            <el-input v-model="admin.aId" style="width: 300px"s/>-->
-          <!--          </el-form-item>-->
-<!--          <el-form-item label="是否已支付" prop="sisPayment">-->
-<!--            <el-select v-model="buyList.sisPayment" filterable placeholder="请选择">-->
-<!--              <el-option label="未支付" :value="0"></el-option>-->
-<!--              <el-option label="已支付" :value="1"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="订单状态" prop="sstatus">-->
-<!--            <el-select v-model="buyList.sstatus" filterable placeholder="请选择">-->
-<!--              <el-option label="未发货" :value="0"></el-option>-->
-<!--              <el-option label="部分发货" :value="1"></el-option>-->
-<!--              <el-option label="全部发货" :value="2"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="进货单类型" prop="stype">-->
-<!--            <el-select v-model="buyList.stype" filterable placeholder="请选择">-->
-<!--              <el-option label="部分退货进货单" :value="0"></el-option>-->
-<!--              <el-option label="全部退货进货单" :value="1"></el-option>-->
-<!--              <el-option label="普通进货单" :value="2"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
         </div>
         <div style="width: 50%;float: right">
-<!--          <el-form-item label="订单状态" prop="sorderStatus">-->
-<!--            <el-select v-model="buyList.sorderStatus" filterable placeholder="请选择">-->
-<!--              <el-option label="部分结清" :value="0"></el-option>-->
-<!--              <el-option label="全部结清" :value="1"></el-option>-->
-<!--              <el-option label="未结" :value="2"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="支付订单编号" prop="sorderNumber">-->
-<!--            <el-input v-model="buyList.sorderNumber"/>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="应收价" prop="sprice">-->
-<!--            <el-input v-model="buyList.sprice"/>-->
-<!--          </el-form-item>-->
-          <!--          <el-form-item label="创建时间" prop="aCreateTime">-->
-          <!--            <el-input disabled v-model="admin.aCreateTime" style="width: 300px"/>-->
-          <!--          </el-form-item>-->
-<!--          <el-form-item label="实收价" prop="srealIncome">-->
-<!--            <el-input v-model="buyList.srealIncome"/>-->
-<!--          </el-form-item>-->
           <el-form-item label="付款方式" prop="spaymentWay">
             <el-select v-model="buyList.spaymentWay" filterable placeholder="请选择">
               <el-option
@@ -224,6 +261,7 @@
 <script>
 import ImageCropper from '@/components/ImageCropper'
 import PanThumb from '@/components/PanThumb'
+import {stopF5F6} from "@/api/stopf5f6";
 import {GetData,PostData} from "@/api";
 import Cookie from "js-cookie"
 import qs from "qs";
@@ -269,6 +307,10 @@ export default {
       factoryList:[],
       customerList:[],
       partList:[],
+      PartHistoryList:[],
+      WholeHistoryList:[],
+      partHistoryQuery:{},
+      wholeHistoryQuery:{},
       selectedPart:[],
       selectedWhole:[],
       partQuery:{
@@ -290,6 +332,8 @@ export default {
       stepOneVisible:false,
       stepTwoVisible:false,
       wholeVisible:false,
+      wholeHistoryVisible:false,
+      historyVisible:false,
       buyList: {
         sisPayment:0,
         sstatus:0,
@@ -378,6 +422,7 @@ export default {
     this.getHouseOperator()
     this.getFactory()
     this.getCustomer()
+    stopF5F6()
   },
   // computed:{
   //   isSubmit(){
@@ -389,12 +434,15 @@ export default {
 
     },
     getFactory(){
-      PostData('/factory/selectAllByLike',qs.stringify(this.factoryQuery)).then((res=>{
+      PostData('/factory/selectAllByLike',this.factoryQuery).then((res=>{
         this.factoryList=res.list
       }))
     },
     changeVal(){
       this.$forceUpdate();
+    },
+    showStockDetail(data){
+      console.log(data);
     },
     getCustomer(){
       PostData('/customer/selectAllByLike',this.customerQuery).then((res=>{
@@ -411,7 +459,8 @@ export default {
         for (let i = 0; i < res.list.length; i++) {
           this.data.push({
             key: i,
-            label:res.list[i].pName
+            label:res.list[i].pName,
+            part:res.list[i]
           });
         }
       })
@@ -555,6 +604,44 @@ export default {
           done();
         })
         .catch(_ => {});
+    },
+    showPartHistory(event,value){
+      console.log(event);
+      console.log(value);
+      if(event.code==="F5"){
+        this.partHistoryQuery.customerId=parseInt(this.buyList.sCustomId)
+        this.partHistoryQuery.partsId=parseInt(value.pId)
+        this.partHistoryQuery.type=1
+        PostData('/stock/getHistoryStockDetail',qs.stringify(this.partHistoryQuery)).then(ref=>{
+          console.log(ref);
+          if(ref.length!==0){
+            this.PartHistoryList=ref
+            this.historyVisible=true
+          }
+          else {
+            this.$message('暂无历史数据')
+          }
+        })
+      }
+    },
+    showWholeHistory(event,value){
+      console.log(event);
+      console.log(value);
+      if(event.code==="F5"){
+        this.wholeHistoryQuery.customerId=parseInt(this.buyList.sCustomId)
+        this.wholeHistoryQuery.partsId=parseInt(value.wId)
+        this.wholeHistoryQuery.type=0
+        PostData('/stock/getHistoryStockDetail',qs.stringify(this.wholeHistoryQuery)).then(ref=>{
+          console.log(ref);
+          if(ref.length!==0){
+            this.WholeHistoryList=ref
+            this.wholeHistoryVisible=true
+          }
+          else {
+            this.$message('暂无历史数据')
+          }
+        })
+      }
     }
   }
 }
@@ -567,6 +654,35 @@ body{
 .transfer-footer {
   margin-left: 20px;
   padding: 6px 5px;
+}
+.partLabel{
+  font-weight: bold;
+  font-style: normal;
+  color: deepskyblue;
+  font-size: large;
+}
+.el-row {
+  margin-bottom: 20px;
+}
+.el-col {
+  border-radius: 4px;
+}
+.bg-purple-dark {
+  background: #99a9bf;
+}
+.bg-purple {
+  background: #d3dce6;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
 }
 
 </style>

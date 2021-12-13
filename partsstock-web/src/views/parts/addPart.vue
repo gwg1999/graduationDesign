@@ -3,6 +3,7 @@
 <!--    <div style="width: 30%;height:30%;float: left">-->
 <!--      <img src="@/assets/404_images/404.png" width="100%" alt="图片无法显示" style="margin-top: 200px">-->
 <!--    </div>-->
+<!--    <h3>{{inPicturePar}}</h3>-->
     <el-dialog
       title="图片上传"
       :visible.sync="upLoadDialog"
@@ -13,9 +14,8 @@
       <h3>内部图片</h3>
       <el-upload
         ref="inUpload"
-        :action="baseURL+'/upload/image'"
+        :action="baseURL+'/upload/image?'+inPicturePar"
         accept="image/png,image/gif,image/jpg,image/jpeg"
-        :data=inPicPar
         list-type="picture-card"
         :limit=limitNum
         :auto-upload="false"
@@ -32,9 +32,8 @@
       <h3>外部图片</h3>
       <el-upload
         ref="outUpload"
-        :action="baseURL+'/upload/image'"
+        :action="baseURL+'/upload/image?'+outPicturePar"
         accept="image/png,image/gif,image/jpg,image/jpeg"
-        :data=outPicPar
         list-type="picture-card"
         :limit=limitNum
         :auto-upload="false"
@@ -55,7 +54,22 @@
   <div class="app-container">
     <el-form  ref="partsa" :model="parts" label-width="120px" :rules="rules">
       <div style="width: 40%;float: left">
-        <el-form-item label="零件名称" prop="pName">
+        <el-form-item label="零件类目" prop="pCategoryId">
+          <el-cascader
+            ref="pCatCascader"
+            :options="categoryOption"
+            :props="{value:'name', label:'name'}"
+            @change="handlePcateChange(pCategoryList)"
+            :show-all-levels="false"
+            v-model="pCategoryList"
+            clearable>
+            <template slot-scope="{ node, data }">
+              <span>{{ data.name }}</span>
+              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+            </template>
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="零件名称" prop="pName" v-if="parts.pName!==''">
           <el-input v-model="parts.pName" style="width: 400px"/>
         </el-form-item>
         <el-form-item label="零件号" prop="pNumber">
@@ -83,6 +97,8 @@
         <el-form-item label="实际库存数" prop="pRealInventory">
           <el-input v-model="parts.pRealInventory" style="width: 400px"/>
         </el-form-item>
+      </div>
+      <div style="width: 50%;float: right">
         <el-form-item label="货物位置" prop="positions">
           <el-cascader
             ref="cascader"
@@ -97,23 +113,7 @@
             </template>
           </el-cascader>
         </el-form-item>
-      </div>
-      <div style="width: 50%;float: right">
-        <el-form-item label="零件类目" prop="pCategoryId">
-          <el-cascader
-            ref="pCatCascader"
-            :options="categoryOption"
-            :props="{value:'name', label:'name'}"
-            @change="handlePcateChange(pCategoryList)"
-            :show-all-levels="false"
-            v-model="pCategoryList"
-            clearable>
-            <template slot-scope="{ node, data }">
-              <span>{{ data.name }}</span>
-              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-            </template>
-          </el-cascader>
-        </el-form-item>
+
 
 
         <el-form-item label="产地或品牌" prop="pPlaceId">
@@ -138,12 +138,7 @@
         <el-form-item label="单位" prop="pUnitId">
           <el-select
             v-model="parts.pUnitId"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入单位"
-            :remote-method="remoteUnit"
-            :loading="loading">
+            placeholder="请输入单位">
             <el-option
               v-for="item in unitList"
               :key="item.uId"
@@ -240,6 +235,7 @@ import PanThumb from '@/components/PanThumb'
 import {PostData} from "@/api/index";
 import qs from 'qs'
 import submitPic from "@/components/submitPic/submitPic";
+import part from "@/views/parts/part";
 export default {
   components:{
     ImageCropper,
@@ -269,12 +265,13 @@ export default {
       unitList:[],
       cycleList:[],
       parts: {
-        pPartsStatus:1
+        pPartsStatus:1,
+        pName:''
       },
       loading: false,
       position:{},
       baseURL:baseURL,
-      dialogImageUrl: '',
+      dialogImageUrl:'',
       upLoadDialog:false,
       dialogVisible: false,
       formLabelWidth: '80px',
@@ -298,8 +295,8 @@ export default {
         plName:''
       },
       unitQuery:{
-        pageSize: 10,
-        pageNum: 1,
+        pageSize: 0,
+        pageNum: 0,
         uName:''
       },
       factoryQuery:{
@@ -424,10 +421,17 @@ export default {
     this.getPositionCat()
     this.getPCate()
     this.getRycle()
+    this.getUnitList()
   },
   computed: {
     partId(){
       return 1
+    },
+    inPicturePar(){
+      return qs.stringify(this.inPicPar)
+    },
+    outPicturePar(){
+      return qs.stringify(this.outPicPar)
     }
   },
   methods: {
@@ -549,13 +553,11 @@ export default {
           this.loading=false
         })
     },
-    getUnitList(queryString){
-      this.unitQuery.uName=queryString
+    getUnitList(){
       PostData('unit/selectAll',qs.stringify(this.unitQuery))
         .then(res =>{
           this.unitList=res.list
           console.log(this.unitList);
-          this.loading=false
         })
     },
     handleChange(value) {
@@ -564,6 +566,7 @@ export default {
     },
     handlePcateChange(value){
       console.log(value);
+      this.parts.pName=value[value.length-1]
       this.parts.pCategoryId=value.join("/")
     },
     handleClose(done) {
@@ -575,7 +578,7 @@ export default {
         .catch(_ => {});
     },
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      console.log(file,fileList);
     },
     handlePreview(file) {
       console.log(file);
@@ -665,9 +668,10 @@ export default {
                 })
               }
               else {
+                console.log('-----------------------------------')
                 console.log(res)
-                this.inPicPar.pId=JSON.parse(res.data).pId
-                this.outPicPar.pId=JSON.parse(res.data).pId
+                this.inPicPar.pId=parseInt(res.data)
+                this.outPicPar.pId=parseInt(res.data)
                 this.upLoadDialog=true
               }
               // this.$router.push({path:'/parts/part'})

@@ -16,33 +16,11 @@
           <el-form-item label="负责人电话" prop="fPhoneNumber">
             <el-input v-model="factory.fPhoneNumber" style="width: 300px"/>
           </el-form-item>
-<!--          <el-form-item label="状态" prop="fIsEnabled">-->
-<!--&lt;!&ndash;            <el-input v-model="factory.fIsEnabled" style="width: 300px"/>&ndash;&gt;-->
-<!--            <el-select v-model="factory.fIsEnabled" placeholder="请选择是否启用该厂商">-->
-<!--              <el-option label="启用" value="1"></el-option>-->
-<!--              <el-option label="不启用" value="0"></el-option>-->
-<!--            </el-select>-->
-<!--          </el-form-item>-->
+        </div>
+        <div style="width: 50%;float: right">
           <el-form-item label="备注信息" prop="aInformation">
             <el-input v-model="factory.fInformation" style="width: 300px" type="textarea"/>
           </el-form-item>
-<!--          <el-form-item label="车模型名" prop="cModelName">-->
-<!--            <el-input v-model="factory.cModelName" style="width: 300px"/>-->
-<!--          </el-form-item>-->
-        </div>
-        <div style="width: 50%;float: right">
-<!--          <el-form-item label="车价格" prop="cPrice">-->
-<!--            <el-input v-model="car.cPrice" style="width: 300px"/>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="车状态" prop="cStatus">-->
-<!--            <el-input v-model="car.cStatus" style="width: 300px"/>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="车类型ID" prop="cTypeId">-->
-<!--            <el-input v-model="car.cTypeId" style="width: 300px"/>-->
-<!--          </el-form-item>-->
-<!--          <el-form-item label="车类型名" prop="cTypeName">-->
-<!--            <el-input v-model="car.cTypeName" style="width: 300px"/>-->
-<!--          </el-form-item>-->
           <el-form-item style="position: absolute; right: 30%;bottom: 5%">
             <el-button :disabled="saveBtnDisabled" type="primary" @click="save" >保存</el-button>
           </el-form-item>

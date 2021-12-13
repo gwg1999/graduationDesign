@@ -120,7 +120,7 @@
     <!--    <el-form>-->
     <!--        <el-button :disabled="saveBtnDisabled" type="primary" @click="save" >保存</el-button>-->
     <!--    </el-form>-->
-
+<!--    <el-button type="primary" @click="backPre">返 回</el-button>-->
     <el-pagination
       layout="total, prev, pager, next, jumper"
       :page-size="partQuery.pageSize"
@@ -239,6 +239,9 @@ export default {
         })
       }
     },
+    // backPre(){
+    //   this.$router.back()
+    // },
     getPCate(){
       PostData('/position/selectCatalogue',qs.stringify(this.pCateQuery)).then((ref)=>{
         this.categoryOption=this.getTreeData(ref)

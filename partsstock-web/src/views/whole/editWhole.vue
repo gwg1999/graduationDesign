@@ -47,6 +47,7 @@
       </template>
     </el-form>
     <!-- 表格 -->
+    <el-button type="primary" @click="backPre" style="margin-bottom: 5px">返 回</el-button>
     <el-table use-virtual
               :data="list"
               border
@@ -131,8 +132,6 @@
         </template>
       </el-table-column>
     </el-table>
-
-
 <!--    <el-pagination-->
 <!--      layout="total, prev, pager, next, jumper"-->
 <!--      :page-size="wholetQuery.pageSize"-->
@@ -232,6 +231,9 @@
     this.flag = false
 
   },
+      backPre(){
+        this.$router.back()
+      },
       updateInfo(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {

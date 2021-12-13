@@ -31,25 +31,55 @@
     <el-dialog
       :title=title
       :visible.sync="dialogVisible"
-      width="30%"
+      width="50%"
       :before-close="handleClose">
       <div>
         <el-form  ref="factory" :model="factory" label-width="120px" :rules="rules">
-            <el-form-item label="厂家名" prop="fName">
-              <el-input v-model="factory.fName" style="width: 200px"/>
-            </el-form-item>
-            <el-form-item label="厂家地址" prop="fAddress">
-              <el-input v-model="factory.fAddress" style="width: 200px"/>
-            </el-form-item>
-            <el-form-item label="负责人" prop="fPersonName">
-              <el-input v-model="factory.fPersonName" style="width: 200px"/>
-            </el-form-item>
-            <el-form-item label="负责人电话" prop="fPhoneNumber">
-              <el-input v-model="factory.fPhoneNumber" style="width: 200px"/>
-            </el-form-item>
-            <el-form-item label="备注信息" prop="fInformation">
-              <el-input v-model="factory.fInformation" style="width: 200px" type="textarea"/>
-            </el-form-item>
+          <div style="display: flex;justify-content: space-around">
+            <div>
+              <el-form-item label="厂家名" prop="fName">
+                <el-input v-model="factory.fName" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="厂家地址" prop="fAddress">
+                <el-input v-model="factory.fAddress" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="负责人" prop="fPersonName">
+                <el-input v-model="factory.fPersonName" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="银行账号" prop="fAccount">
+                <el-input v-model="factory.fAccount" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="默认物流" prop="fCurier">
+                <el-input v-model="factory.fCurier" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="备用物流" prop="fSpareCourier">
+                <el-input v-model="factory.fSpareCourier" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="开户行" prop="fBankName">
+                <el-input v-model="factory.fBankName" style="width: 200px"/>
+              </el-form-item>
+            </div>
+            <div>
+              <el-form-item label="负责人电话" prop="fPhoneNumber">
+                <el-input v-model="factory.fPhoneNumber" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="备用电话" prop="fPhoneNumber2">
+                <el-input v-model="factory.fPhoneNumber2" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="微信号" prop="fWechat">
+                <el-input v-model="factory.fWechat" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="税号" prop="fTaxNumber">
+                <el-input v-model="factory.fTaxNumber" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="三级价格描述" prop="fDiscount">
+                <el-input v-model="factory.fDiscount" style="width: 200px"/>
+              </el-form-item>
+              <el-form-item label="备注信息" prop="fInformation">
+                <el-input v-model="factory.fInformation" style="width: 200px" type="textarea"/>
+              </el-form-item>
+            </div>
+          </div>
         </el-form>
       </div>
       <span slot="footer" class="dialog-footer">
@@ -72,30 +102,17 @@
           {{ (factoryQuery.pageNum - 1) * factoryQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="fName" label="厂家名" width="300%" align="center"/>
-      <el-table-column prop="fAddress" label="厂家地址" width="300%"  align="center"/>
+      <el-table-column prop="fName" label="厂家名" width="120" align="center"/>
+      <el-table-column prop="fAddress" label="厂家地址" width="180"  align="center"/>
 <!--      <el-table-column prop="fImage" label="厂家形象" width="150%"  align="center"/>-->
 <!--      <el-table-column prop="fInformation" label="厂家信息" width="180%"  align="center"/>-->
-      <el-table-column prop="fPersonName" label="负责人" width="180%"  align="center"/>
-      <el-table-column prop="fPhoneNumber" label="负责人电话" width="180%"  align="center"/>
-<!--      <el-table-column prop="fIsEnabled" label="状态" width="80%" align="center">-->
-<!--        <template slot-scope="scope">-->
-<!--          <el-tag-->
-<!--            :type="scope.row.fIsEnabled === 1-->
-<!--                    ? 'success'-->
-<!--                    : scope.row.fIsEnabled === 0-->
-<!--                    ? 'danger'-->
-<!--                    : ''-->
-<!--               "-->
-<!--          >{{scope.row.fIsEnabled===1?'启用':'未启用'}}</el-tag>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-<!--      <el-table-column prop="cStatus" label="车状态" width="110%" align="center"/>-->
-      <!--      <el-table-column prop="cTypeId" label="车类型ID" width="130%" align="center"/>-->
-      <!--      <el-table-column prop="cTypeName" label="车类型名" width="80%"  align="center"/>-->
-      <!--      <el-table-column prop="cuDiscount" label="默认折扣" width="50%" align="center" />-->
-      <!--      <el-table-column prop="cuDefaultPayment" label="默认支付方式" width="80%"  align="center"/>-->
-      <!--      <el-table-column prop="cuName" label="联系人姓名" width="100%" align="center" />-->
+      <el-table-column prop="fPersonName" label="负责人" width="80"  align="center"/>
+      <el-table-column prop="fPhoneNumber" label="负责人电话" width="120"  align="center"/>
+      <el-table-column prop="fPhoneNumber2" label="备用号码" width="120"  align="center"/>
+      <el-table-column prop="fWechat" label="微信号" width="160"  align="center"/>
+      <el-table-column prop="fBankName" label="开户行" width="80"  align="center"/>
+      <el-table-column prop="fAccount" label="银行卡账号" width="180"  align="center"/>
+      <el-table-column prop="fCurier" label="默认物流" width="80"  align="center"/>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="showDetails(scope.row)">查看详情</el-button>
@@ -156,6 +173,12 @@ export default {
         ],
         fPhoneNumber:[
           {required: true, pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,message: '手机号码格式不正确',trigger: "blur"}
+        ],
+        fPhoneNumber2:[
+          {required: true, pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,message: '手机号码格式不正确',trigger: "blur"}
+        ],
+        fAccount:[
+
         ]
       }
     }
@@ -170,10 +193,11 @@ export default {
   },
   methods:{//创建具体的方法
     getList() {
-      PostData('/factory/selectAllByLike',qs.stringify(this.factoryQuery))
+      PostData('/factory/selectAllByLike',this.factoryQuery)
         .then(res=>{
           this.list = res.list
           this.pageTotal=res.total
+          console.log(this.list);
         }).catch(err=>{
         this.$message.error(err.message);
         console.log(err);
@@ -201,7 +225,7 @@ export default {
     getListByLike(){
       this.factoryQuery.fName=this.state
       this.factoryQuery.pageNum=1
-      PostData('/factory/selectAllByLike',qs.stringify(this.factoryQuery))
+      PostData('/factory/selectAllByLike',this.factoryQuery)
         .then(res=>{
           this.list=res.list
           this.pageTotal=res.total
@@ -251,7 +275,7 @@ export default {
     querySearch(queryString, cb) {
       this.factoryQuery.fName=queryString;
       this.factoryQuery.pageNum=1
-      PostData('factory/selectAllByLike',qs.stringify(this.factoryQuery)).then(ref=>{
+      PostData('factory/selectAllByLike',this.factoryQuery).then(ref=>{
         cb(ref.list)
       })
       // 调用 callback 返回建议列表的数据

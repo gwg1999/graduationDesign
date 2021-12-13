@@ -33,6 +33,10 @@
 <!--    </el-form>-->
 
     <!-- 表格 -->
+    <el-select v-model="partQuery.type" placeholder="请选择告警状态" style="margin-bottom: 5px">
+      <el-option label="上限告警" :value="1"  @click.native="filAlert"></el-option>
+      <el-option label="下限告警" :value="0"  @click.native="filAlert"></el-option>
+    </el-select>
     <el-table use-virtual
               :data="list"
               border
@@ -145,11 +149,13 @@ export default {
   data(){//定义变量和初始值
     return{
       list: [], //查询之后接口返回集合
+      filtedList:[],
       state:'',//模糊查询后返回的值
       total:0,//总记录数
       partQuery:{
         pId:null,
         pName:null,
+        type:1,
         pageSize: 10,
         pageNum: 1,
       },
@@ -167,14 +173,19 @@ export default {
   },
   methods:{//创建具体的方法
     getAlertPartsList() {
-      PostData('/parts/selectAllByAlarm',qs.stringify(this.partQuery))
+      PostData('/parts/selectAlarm',qs.stringify(this.partQuery))
         .then(res=>{
           this.list = res.list
           this.pageTotal=res.total
+          console.log(this.list);
         }).catch(err=>{
         this.$message.error(err.message);
         console.log(err);
       })
+    },
+    filAlert(){
+      this.partQuery.pageNum=1
+      this.getAlertPartsList()
     },
     toInsert(){
       this.$router.push('/parts/addPart')

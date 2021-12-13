@@ -12,29 +12,79 @@
 <!--      </el-carousel>-->
 <!--    </div>-->
 <!--    <div style="width:70%;background-color: aquamarine;float: left">零件详情</div>-->
+    <el-dialog
+      title="图片上传"
+      :visible.sync="upLoadDialog"
+      width="70%"
+      top="3%"
+      :before-close="handleClose">
+      <!--      <span>这是一段信息</span>-->
+      <h3>内部图片</h3>
+      <el-upload
+        ref="inUpload"
+        :action="baseURL+'/upload/image?'+inPicturePar"
+        accept="image/png,image/gif,image/jpg,image/jpeg"
+        list-type="picture-card"
+        :limit=limitNum
+        :auto-upload="false"
+        :before-upload="handleBeforeUpload"
+        :on-preview="handlePictureCardPreview"
+        :on-remove="handleRemove">
+        <i class="el-icon-plus"></i>
+        <div slot="tip" class="el-upload__tip">只支持格式为png,gif,jpg,jpeg的图片,且小于2MB</div>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+
+      </el-upload>
+      <h3>外部图片</h3>
+      <el-upload
+        ref="outUpload"
+        :action="baseURL+'/upload/image?'+outPicturePar"
+        accept="image/png,image/gif,image/jpg,image/jpeg"
+        list-type="picture-card"
+        :limit=limitNum
+        :auto-upload="false"
+        :before-upload="handleBeforeUpload"
+        :on-preview="handlePictureCardPreview"
+        :on-remove="handleRemove">
+        <i class="el-icon-plus"></i>
+        <div slot="tip" class="el-upload__tip">只支持格式为png,gif,jpg,jpeg的图片,且小于2MB</div>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="dialogImageUrl" alt="">
+        </el-dialog>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="noUpLoad">取消</el-button>
+    <el-button type="primary" @click="confirmUp">上传</el-button>
+  </span>
+    </el-dialog>
     <div style="width: 25%;float: left">
       <span class="demonstration">内部图片</span>
-      <el-carousel :interval="5000" arrow="always">
+      <el-carousel :interval="2000" arrow="always">
         <el-carousel-item v-for="item in inPic">
+          <i class="el-icon-circle-close" style="z-index: 9;position: absolute;right: 6px;top: 5px;" @click="deletePic(item)"></i>
           <el-image
             style="width: 100%;height: 100%"
-            :src="item.path"></el-image>
+            :src="item.path" :preview-src-list="inPicList"></el-image>
         </el-carousel-item>
       </el-carousel>
       <span class="demonstration">外部图片</span>
-      <el-carousel :interval="5000" arrow="always">
+      <el-carousel :interval="2000" arrow="always">
         <el-carousel-item v-for="item in outPic">
+          <i class="el-icon-circle-close" style="z-index: 9;position: absolute;right: 6px;top: 5px" @click="deletePic(item)"></i>
           <el-image
             style="width: 100%;height: 100%"
-            :src="item.path"></el-image>
+            :src="item.path" :preview-src-list="outPicList"></el-image>
         </el-carousel-item>
       </el-carousel>
+      <el-button type="primary" size="mini" @click="addPic" style="margin-top: 10px;">添加图片</el-button>
     </div>
     <div class="app-container" style="width: 75%;float: right">
       <el-form ref="partsB" :model="parts" label-width="150px" :rules="rules">
         <div style="width: 50%;float: left;background: white">
         <el-form-item label="零件名称" prop="pName">
-          <el-input v-model="parts.pName" style="width: 100%"/>
+          <el-input v-model="parts.pName" style="width: 100%" disabled/>
         </el-form-item>
         <el-form-item label="零件号" prop="pNumber">
           <el-input v-model="parts.pNumber" style="width: 100%"/>
@@ -102,18 +152,14 @@
               <el-form-item label="单位" prop="unit.uName">
                 <el-select
                   v-model="parts.unit.uName"
-                  filterable
-                  remote
-                  reserve-keyword
-                  placeholder="请输入单位"
-                  :remote-method="remoteUnit"
-                  :loading="loading">
+                  placeholder="请选择单位"
+                 >
                   <el-option
                     v-for="item in unitList"
                     :key="item.uId"
                     :label="item.uName"
                     :value="item.uName"
-                    @click.native="handleUnitChange(item)">
+                    >
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -207,8 +253,9 @@
 
 import ImageCropper from '@/components/ImageCropper'
 import qs from 'qs'
+import {baseURL} from '@/api/http'
 import PanThumb from '@/components/PanThumb'
-import {PostData} from "../../api/index"
+import {GetData,PostData} from "../../api/index"
 
 export default {
   components:{
@@ -235,6 +282,8 @@ export default {
 
     return {
       img:['@/assets/parts/luosi.jpeg','@/assets/parts/fengjing.jpeg','@/assets/parts/fengjing1.jpeg'],
+      upLoadDialog:false,
+      limitNum: 3,
       carList:[],
       activeNames: ['1'],
       inPic:[],
@@ -244,16 +293,29 @@ export default {
       supplierList:[],
       tempObj:{},
       unitList:[],
+      inPicList:[],
+      outPicList:[],
       cycleList:[],
       parts: {},
       positionList:[],
       categoryOption:[],
       options: [],
       editId:'',
+      baseURL:baseURL,
       loading: false,
       saveBtnDisabled: false,
       imagecropperShow:false,
       imagecropperKey:0,//唯一标识 上传组件
+      dialogVisible: false,
+      dialogImageUrl:'',
+      inPicPar:{
+        pId:-1,
+        type:0
+      },
+      outPicPar:{
+        pId:-1,
+        type:1
+      },
       levCategoryQuery:{
         status:1,
         type:1
@@ -272,6 +334,7 @@ export default {
         pageNum: 0,
         pageSize: 0,
       },
+      deletePicQuery:{},
       placeQuery:{
         pageSize: 10,
         pageNum: 1,
@@ -279,8 +342,8 @@ export default {
         plId:'',
       },
       unitQuery:{
-        pageSize: 10,
-        pageNum: 1,
+        pageSize: 0,
+        pageNum: 0,
         uName:'',
         uId:''
       },
@@ -410,8 +473,22 @@ export default {
     this.getLevelCat()
     this.getPCate()
     this.getRycle()
+    this.getUnitList()
+  },
+  computed:{
+    inPicturePar(){
+      return qs.stringify(this.inPicPar)
+    },
+    outPicturePar(){
+      return qs.stringify(this.outPicPar)
+    }
   },
   methods: {
+    noUpLoad(){
+      this.upLoadDialog=false
+      this.$refs.inUpload.clearFiles()
+      this.$refs.outUpload.clearFiles()
+    },
     remoteUnit(query){
       if (query!=='') {
         this.loading = true;
@@ -419,6 +496,60 @@ export default {
       } else {
         this.unitList=[]
       }
+    },
+    addPic(){
+      this.inPicPar.pId=localStorage.getItem('pId')
+      this.outPicPar.pId=localStorage.getItem('pId')
+      this.upLoadDialog=true
+      this.$refs.inUpload.clearFiles()
+      this.$refs.outUpload.clearFiles()
+    },
+    handleRemove(file, fileList) {
+      console.log(file,fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleBeforeUpload(file){
+      console.log('before')
+      if(!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
+        this.$notify.warning({
+          title: '警告',
+          message: '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
+        })
+      }
+      let size = file.size / 1024 / 1024 / 2
+      if(size > 2) {
+        this.$notify.warning({
+          title: '警告',
+          message: '图片大小必须小于2M'
+        })
+      }
+    },
+    confirmUp(){
+      this.upLoadDialog=false
+      this.uploadFile()
+      this.$message({
+        type:'success',
+        message:'上传成功'
+      })
+      setTimeout(()=>this.getList(),1000)
+    },
+    uploadFile() {
+      this.$refs.inUpload.submit()
+      this.$refs.outUpload.submit()
+    },
+    deletePic(item){
+      console.log(item);
+      this.deletePicQuery.picId=item.pcId
+      GetData('/upload/deleteImg',this.deletePicQuery).then(ref=>{
+        this.$message({
+          type:'success',
+          message:'删除成功'
+        })
+        this.getList()
+      })
     },
     handlePlaceChange(item){
       console.log(item);
@@ -475,23 +606,29 @@ export default {
           this.loading=false
         })
     },
-    getUnitList(queryString){
-      this.unitQuery.uName=queryString
+    getUnitList(){
       PostData('unit/selectAll',qs.stringify(this.unitQuery))
         .then(res =>{
           this.unitList=res.list
           console.log(this.unitList);
-          this.loading=false
         })
     },
     backPre(){
       this.$router.back()
     },//返回上一页
     filterPic(){
+      this.inPicList.splice(0,this.inPicList.length)
+      this.outPicList.splice(0,this.outPicList.length)
       this.inPic=this.parts.pictureList.filter((picItem)=>{
+        if(picItem.type===0){
+          this.inPicList.push(picItem.path)
+        }
         return picItem.type===0
       })
       this.outPic=this.parts.pictureList.filter((picItem)=>{
+        if(picItem.type===1){
+          this.outPicList.push(picItem.path)
+        }
         return picItem.type===1
       })
     },
@@ -552,6 +689,8 @@ export default {
           }
           console.log(this.parts);
           this.filterPic()
+          console.log(this.outPicList);
+          console.log(this.inPicList);
           // console.log(res.pictureList[0]);
         })
     },
@@ -578,6 +717,16 @@ export default {
         this.$message.error(err.message);
         console.log(err);
       })
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          this.upLoadDialog=false
+          this.$refs.inUpload.clearFiles()
+          this.$refs.outUpload.clearFiles()
+          done();
+        })
+        .catch(_ => {});
     },
     handleSubmitInfo(value){
       let tempArray=[]

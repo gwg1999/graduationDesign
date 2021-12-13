@@ -27,7 +27,26 @@
       }"
         @change="handleTranChange"
         :data="data">
-        <span slot-scope="{ option }">{{ option.key }} - {{ option.label }}</span>
+        <span slot-scope="{ option }">
+          <el-popover placement="left-end" title="零件详情:" width="500" trigger="hover" @show="showStockDetail(option.part)">
+            <div class="partDetail">
+              <el-row :gutter="20">
+                <el-col :span="12"><i class="partLabel">零件名:</i>{{option.part.pName}}</el-col>
+                <el-col :span="12"><i class="partLabel">零件号:</i>{{option.part.pNumber}}</el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12"><i class="partLabel">库存数:</i>{{option.part.pRealInventory}}</el-col>
+                <el-col :span="12"><i class="partLabel">退货周期:</i>{{option.part.pReturnCycle}}</el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12"><i class="partLabel">进价:</i>{{option.part.pBuyingPrice}}</el-col>
+                <el-col :span="12"><i class="partLabel">备注:</i>{{option.part.pNote}}</el-col>
+              </el-row>
+            </div>
+            <i style="font-style: normal" slot="reference">{{ option.label }}</i>
+<!--                      <el-button slot="reference">hover 激活</el-button>-->
+          </el-popover>
+        </span>
 <!--        <el-button class="transfer-footer" slot="left-footer" size="small">操作</el-button>-->
 <!--        <el-button class="transfer-footer" slot="right-footer" size="small" @click="option">操作</el-button>-->
         <div class="transfer-footer" slot="right-footer">
@@ -58,15 +77,15 @@
             </el-form-item>
             <el-form-item label="单价:" :prop="'selectedPart.'+index+'.indPrice'" :rules="rules.indPrice">
               <el-input placeholder="请输入数字" v-model="item.indPrice" style="width: 200px">
-                <el-select v-model="item.indPrice" slot="append" placeholder="请选择" @focus="getPrice(item.pName)">
-                  <el-option :label="partPrice[0].pLowPrice" :value="partPrice[0].pLowPrice"></el-option>
-                  <el-option :label="partPrice[0].pMiddlePrice" :value="partPrice[0].pMiddlePrice"></el-option>
-                  <el-option :label="partPrice[0].pHighPrice" :value="partPrice[0].pHighPrice"></el-option>
-                </el-select>
+<!--                <el-select v-model="item.indPrice" slot="append" placeholder="请选择" @focus="getPrice(item.pName)">-->
+<!--                  <el-option :label="partPrice[0].pLowPrice" :value="partPrice[0].pLowPrice"></el-option>-->
+<!--                  <el-option :label="partPrice[0].pMiddlePrice" :value="partPrice[0].pMiddlePrice"></el-option>-->
+<!--                  <el-option :label="partPrice[0].pHighPrice" :value="partPrice[0].pHighPrice"></el-option>-->
+<!--                </el-select>-->
               </el-input>
             </el-form-item>
             <el-form-item label="零件数量:" :prop="'selectedPart.'+index+'.indNumber'" :rules="rules.indNumber">
-              <el-input-number v-model="item.indNumber" :min="1" label="描述文字" @change="changeVal($event)"></el-input-number>
+              <el-input-number v-model="item.indNumber" :min="1" label="描述文字" @change="changeVal($event)" @keydown.native="showHistory($event)"></el-input-number>
             </el-form-item>
           </div>
           <div v-for="(item,index) in parts.selectedWhole" style="display: flex;justify-content: space-around">
@@ -152,6 +171,7 @@
 <script>
 import {PostData} from "@/api";
 import qs from 'qs'
+import {stopF5F6} from "@/api/stopf5f6"
 import Cookie from "js-cookie";
 export default {
   name: "stockAdd",
@@ -241,13 +261,14 @@ export default {
     console.log(Cookie.get('aId'))
     this.getFactory()
     this.getCustomer()
+    stopF5F6()
   },
   computed:{
 
   },
   methods:{
      getFactory(){
-       PostData('/factory/selectAllByLike',qs.stringify(this.factoryQuery)).then((res=>{
+       PostData('/factory/selectAllByLike',this.factoryQuery).then((res=>{
          this.factoryList=res.list
        }))
      },
@@ -258,6 +279,9 @@ export default {
     },
     changeVal(){
       this.$forceUpdate();
+    },
+    showStockDetail(data){
+      console.log(data);
     },
     showValue(){
       // console.log(this.$refs['select'].value);
@@ -276,7 +300,8 @@ export default {
         for (let i = 0; i < res.list.length; i++) {
           this.data.push({
             key: i,
-            label:res.list[i].pName
+            label:res.list[i].pName,
+            part:res.list[i]
           });
         }
       })
@@ -376,6 +401,9 @@ export default {
       this.dialogVisible=true
       console.log(this.selectedPart);
     },
+    showHistory(event){
+      console.log(event.code);
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -404,5 +432,37 @@ export default {
 .transfer-footer {
   margin-left: 20px;
   padding: 6px 5px;
+}
+.partDetail{
+
+}
+.partLabel{
+  font-weight: bold;
+  font-style: normal;
+  color: deepskyblue;
+  font-size: large;
+}
+.el-row {
+  margin-bottom: 20px;
+}
+.el-col {
+  border-radius: 4px;
+}
+.bg-purple-dark {
+  background: #99a9bf;
+}
+.bg-purple {
+  background: #d3dce6;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
 }
 </style>

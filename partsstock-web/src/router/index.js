@@ -705,82 +705,82 @@ export const constantRoutes=[
       }
     ]
   },
-  // {
-  //   path: '/stock',
-  //   component: Layout,
-  //   name: '进货',
-  //   meta: { title: '进货', icon: 'el-icon-s-shop' },
-  //   children: [
-  //     {
-  //       path: '/stock',
-  //       name: '询价单管理',
-  //       component: () => import('@/views/stock/stock'),
-  //       meta: { title: '询价单管理', icon: 'table' }
-  //     },
-  //     {
-  //       path: '/stockAdd',
-  //       name: '添加询价单',
-  //       component: () => import('@/views/stock/stockAdd'),
-  //       meta: { title: '添加询价单', icon: 'table' },
-  //       hidden: true
-  //     },
-  //     {
-  //       path: '/showParts',
-  //       name: '订单零件详情',
-  //       component: () => import('@/views/stock/showParts'),
-  //       meta: { title: '订单零件详情', icon: 'table' },
-  //       hidden: true
-  //     },
-  //     {
-  //       path: '/editStock',
-  //       name: '询价单详情',
-  //       component: () => import('@/views/stock/editStock'),
-  //       meta: { title: '询价单详情', icon: 'table' },
-  //       hidden: true
-  //     },
-  //     {
-  //       path: '/stock/buy',
-  //       name: '进货单管理',
-  //       component: () => import('@/views/stock/buyList'),
-  //       meta: { title: '进货单管理',  noCache: true,icon:'tree' }
-  //     },
-  //     {
-  //       path: '/stock/addBuy',
-  //       name: '新增进货单',
-  //       component: () => import('@/views/stock/addBuyList'),
-  //       meta: { title: '新增进货单',  noCache: true,icon:'tree' },
-  //       hidden: true
-  //     },
-  //     {
-  //       path: '/stock/editBuy',
-  //       name: '查看进货单详情',
-  //       component: () => import('@/views/stock/editBuyList'),
-  //       meta: { title: '查看进货单详情',  noCache: true,icon:'tree' },
-  //       hidden: true
-  //     },
-  //     {
-  //       path: '/stock/buyPartList',
-  //       name: '查看进货单零件详情',
-  //       component: () => import('@/views/stock/buyPartList'),
-  //       meta: { title: '查看进货单零件详情',  noCache: true,icon:'tree' },
-  //       hidden: true
-  //     },
-  //     {
-  //       path: 'addPart',
-  //       name: '增加零件',
-  //       component: () => import('@/views/parts/addPart'),
-  //       meta: { title: '增加零件',  noCache: true },
-  //       hidden: true
-  //     },
-  //     {
-  //       path: 'listPart/:parts',
-  //       name: 'part',
-  //       component: () => import('@/views/parts/editPart'),
-  //       meta: { title: '修改零件信息',  noCache: true },
-  //       hidden: true
-  //     },
-  //   ]
-  // },
+  {
+    path: '/stock',
+    component: Layout,
+    name: '进货',
+    meta: { title: '进货', icon: 'el-icon-s-shop' },
+    children: [
+      {
+        path: '/stock',
+        name: '询价单管理',
+        component: () => import('@/views/stock/stock'),
+        meta: { title: '询价单管理', icon: 'table' }
+      },
+      {
+        path: '/stockAdd',
+        name: '添加询价单',
+        component: () => import('@/views/stock/stockAdd'),
+        meta: { title: '添加询价单', icon: 'table' },
+        hidden: true
+      },
+      {
+        path: '/showParts',
+        name: '订单零件详情',
+        component: () => import('@/views/stock/showParts'),
+        meta: { title: '订单零件详情', icon: 'table' },
+        hidden: true
+      },
+      {
+        path: '/editStock',
+        name: '询价单详情',
+        component: () => import('@/views/stock/editStock'),
+        meta: { title: '询价单详情', icon: 'table' },
+        hidden: true
+      },
+      {
+        path: '/stock/buy',
+        name: '进货单管理',
+        component: () => import('@/views/stock/buyList'),
+        meta: { title: '进货单管理',  noCache: true,icon:'tree' }
+      },
+      {
+        path: '/stock/addBuy',
+        name: '新增进货单',
+        component: () => import('@/views/stock/addBuyList'),
+        meta: { title: '新增进货单',  noCache: true,icon:'tree' },
+        hidden: true
+      },
+      {
+        path: '/stock/editBuy',
+        name: '查看进货单详情',
+        component: () => import('@/views/stock/editBuyList'),
+        meta: { title: '查看进货单详情',  noCache: true,icon:'tree' },
+        hidden: true
+      },
+      {
+        path: '/stock/buyPartList',
+        name: '查看进货单零件详情',
+        component: () => import('@/views/stock/buyPartList'),
+        meta: { title: '查看进货单零件详情',  noCache: true,icon:'tree' },
+        hidden: true
+      },
+      {
+        path: 'addPart',
+        name: '增加零件',
+        component: () => import('@/views/parts/addPart'),
+        meta: { title: '增加零件',  noCache: true },
+        hidden: true
+      },
+      {
+        path: 'listPart/:parts',
+        name: 'part',
+        component: () => import('@/views/parts/editPart'),
+        meta: { title: '修改零件信息',  noCache: true },
+        hidden: true
+      },
+    ]
+  },
   {
     path:'/returnGood',
     component: Layout,
@@ -810,79 +810,79 @@ export const constantRoutes=[
       }
     ]
   },
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   redirect: '/form/index',
-  //   name:'客户账单',
-  //   meta:{title: '客户账单', icon:'el-icon-menu'},
-  //   children: [
-  //     {
-  //       path:'index',
-  //       name:'账单管理',
-  //       component: ()=> import('@/views/form/index'),
-  //       meta: {title: '账单管理',icon: 'table'}
-  //     },
-  //     {
-  //       path:'index',
-  //       name:'挂账管理',
-  //       component: ()=> import('@/views/form/index'),
-  //       meta: {title: '挂账管理',icon: 'tree'}
-  //     }
-  //   ]
-  //
-  // },
-  // {
-  //   path:'/statistic',
-  //   component: Layout,
-  //   redirect: '',
-  //   name:'统计',
-  //   meta:{title: '统计',icon: 'el-icon-s-promotion'},
-  //   children: [
-  //     {
-  //       path:'',
-  //       name: '额外费用统计',
-  //       component: ()=> import('@/views/form/index'),
-  //       meta: {title: '额外费用统计',icon: 'table'}
-  //     },
-  //     {
-  //       path:'',
-  //       name: '零件销售统计',
-  //       component: ()=> import('@/views/form/index'),
-  //       meta: {title: '零件销售统计',icon: 'table'}
-  //     },
-  //     {
-  //       path:'',
-  //       name: '零件进货统计',
-  //       component: ()=> import('@/views/form/index'),
-  //       meta: {title: '零件进货统计',icon: 'table'}
-  //     },
-  //     {
-  //       path:'',
-  //       name: '零件进销存统计',
-  //       component: ()=> import('@/views/form/index'),
-  //       meta: {title: '零件进销存统计',icon: 'table'}
-  //     },
-  //     {
-  //       path:'',
-  //       name: '财务支出统计',
-  //       component: ()=> import('@/views/form/index'),
-  //       meta: {title: '财务支出统计',icon: 'table'}
-  //     },
-  //     {
-  //       path:'',
-  //       name: '财务入账统计',
-  //       component: ()=> import('@/views/form/index'),
-  //       meta: {title: '财务入账统计',icon: 'table'}
-  //     },
-  //     {
-  //       path:'',
-  //       name: '客户偏好统计',
-  //       component: ()=> import('@/views/form/index'),
-  //       meta: {title: '客户偏好统计',icon: 'table'}
-  //     },
-  //   ]
-  // },
+  {
+    path: '/form',
+    component: Layout,
+    redirect: '/form/index',
+    name:'客户账单',
+    meta:{title: '客户账单', icon:'el-icon-menu'},
+    children: [
+      {
+        path:'index',
+        name:'账单管理',
+        component: ()=> import('@/views/form/index'),
+        meta: {title: '账单管理',icon: 'table'}
+      },
+      {
+        path:'index',
+        name:'挂账管理',
+        component: ()=> import('@/views/form/index'),
+        meta: {title: '挂账管理',icon: 'tree'}
+      }
+    ]
+
+  },
+  {
+    path:'/statistic',
+    component: Layout,
+    redirect: '',
+    name:'统计',
+    meta:{title: '统计',icon: 'el-icon-s-promotion'},
+    children: [
+      {
+        path:'',
+        name: '额外费用统计',
+        component: ()=> import('@/views/form/index'),
+        meta: {title: '额外费用统计',icon: 'table'}
+      },
+      {
+        path:'',
+        name: '零件销售统计',
+        component: ()=> import('@/views/form/index'),
+        meta: {title: '零件销售统计',icon: 'table'}
+      },
+      {
+        path:'',
+        name: '零件进货统计',
+        component: ()=> import('@/views/form/index'),
+        meta: {title: '零件进货统计',icon: 'table'}
+      },
+      {
+        path:'',
+        name: '零件进销存统计',
+        component: ()=> import('@/views/form/index'),
+        meta: {title: '零件进销存统计',icon: 'table'}
+      },
+      {
+        path:'',
+        name: '财务支出统计',
+        component: ()=> import('@/views/form/index'),
+        meta: {title: '财务支出统计',icon: 'table'}
+      },
+      {
+        path:'',
+        name: '财务入账统计',
+        component: ()=> import('@/views/form/index'),
+        meta: {title: '财务入账统计',icon: 'table'}
+      },
+      {
+        path:'',
+        name: '客户偏好统计',
+        component: ()=> import('@/views/form/index'),
+        meta: {title: '客户偏好统计',icon: 'table'}
+      },
+    ]
+  },
   {
     path:'/productMaintain',
     component: Layout,
@@ -907,26 +907,6 @@ export const constantRoutes=[
         name: '修改产地或品牌',
         component: ()=> import('@/views/place/editPlace'),
         meta: {title: '修改产地或品牌',icon: 'table'},
-        hidden: true
-      },
-      {
-        path:'/maintain/factory',
-        name: '厂家维护',
-        component: ()=> import('@/views/factory/factory'),
-        meta: {title: '厂家维护',icon: 'table'},
-      },
-      {
-        path:'/maintain/factory/addFactory',
-        name: '添加厂家',
-        component: ()=> import('@/views/factory/addFactory'),
-        meta: {title: '添加厂家',icon: 'table'},
-        hidden: true
-      },
-      {
-        path:'/maintain/factory/editFactory',
-        name: '修改厂家信息',
-        component: ()=> import('@/views/factory/editFactory'),
-        meta: {title: '修改厂家信息',icon: 'table'},
         hidden: true
       },
       {
@@ -1086,6 +1066,26 @@ export const constantRoutes=[
         name: '个人信息维护',
         component: ()=> import('@/views/personalInformation/personalInformation'),
         meta: {title: '个人信息维护',icon: 'table'},
+        hidden: true
+      },
+      {
+        path:'/maintain/factory',
+        name: '厂家维护',
+        component: ()=> import('@/views/factory/factory'),
+        meta: {title: '厂家维护',icon: 'table'},
+      },
+      {
+        path:'/maintain/factory/addFactory',
+        name: '添加厂家',
+        component: ()=> import('@/views/factory/addFactory'),
+        meta: {title: '添加厂家',icon: 'table'},
+        hidden: true
+      },
+      {
+        path:'/maintain/factory/editFactory',
+        name: '修改厂家信息',
+        component: ()=> import('@/views/factory/editFactory'),
+        meta: {title: '修改厂家信息',icon: 'table'},
         hidden: true
       },
 

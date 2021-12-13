@@ -24,7 +24,6 @@
         :data="pCateList"
         node-key="id"
         accordion
-        default-expand-all
         :expand-on-click-node="false">
       <span class="custom-tree-node" slot-scope="{ node, data }">
         <span>{{ node.data.name }}</span>
@@ -143,13 +142,24 @@ export default {
     remove(data) {
       this.deleteQuery.id=data.id
       console.log(this.deleteQuery);
-      PostData('/position/deleteCatalogue',qs.stringify(this.deleteQuery)).then((ref)=>{
-        this.$message({
-          message:'删除成功',
-          type:"success"
+      this.$confirm('此操作将永久删除该目录, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        PostData('/position/deleteCatalogue',qs.stringify(this.deleteQuery)).then((ref)=>{
+          this.$message({
+            message:'删除成功',
+            type:"success"
+          })
+          this.getPCateList()
         })
-        this.getPCateList()
-      })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     },
     show(node,data){
       console.log(node);
@@ -217,7 +227,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 20px;
+  font-size: 14px;
   color: #c26a3e;
 }
 .posBtn{
@@ -225,6 +235,7 @@ export default {
 }
 .block{
   width: 40%;
-  margin: 80px auto;
+  margin-left: 5%;
+  margin-top: 5%;
 }
 </style>
