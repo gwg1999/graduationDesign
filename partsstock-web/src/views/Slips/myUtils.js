@@ -20,6 +20,13 @@ export const getTime=(data)=>{
   let Day = time.getDate();
   return `${Y}-${Mon}-${Day}`
 }
+export const getYesterdayTime=(data)=>{
+  let time = new Date(data);
+  let Y = time.getFullYear();
+  let Mon = time.getMonth() +1;
+  let Day = time.getDate();
+  return `${Y}-${Mon}-${Day}`
+}
 export const stopF5F6=()=>{
   window.addEventListener("keydown", function(e) {
     if(e.key==='F5'||e.key==='F6'){

@@ -1,21 +1,20 @@
 <template>
   <div class="app-container">
-    <h2 style="text-align: center;">添加报价单</h2>
     <el-steps :active="1" process-status="wait" align-center style="margin-bottom: 40px;">
       <el-step title="填写报价单信息" />
       <el-step title="添加零件或整件" />
-      <!--      <el-step title="提交审核" />-->
     </el-steps>
     <div>
       <div class="app-container">
         <el-form label-width="120px" :rules="rules" :model="salesSlip" ref="salesSlip" >
-          <el-form-item label="客户单位" prop="qCustomerId">
+          <el-form-item label="客户单位" prop="qCustomerId" style="width: 500px">
             <el-select
-              v-model="salesSlip.qCustomerId" filterable placeholder="请选择客户单位">
+              v-model="salesSlip.qCustomerId" filterable placeholder="请选择客户单位"
+              :filter-method="userFilter" style="width: 500px">
               <el-option
-                v-for="customer in customerNameList"
+                v-for="customer in customerList"
                 :key="customer.cuId"
-                :label="customer.cuUnitName"
+                :label="`${customer.cuUnitName}(客户姓名)-${customer.cuPhoneNumber}(客户电话)-${customer.cuAddress}(客户地址)`"
                 :value="customer.cuId"/>
             </el-select>
           </el-form-item>
@@ -28,7 +27,6 @@
         </el-form>
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -41,6 +39,7 @@ export default {
         quotationDetailList:[],
         wholeDetailsList:[]
       },
+      customerList:[],
       customerNameList:[],
       rules:{
         qCustomerId: [
@@ -57,6 +56,16 @@ export default {
     }
   },
   methods: {
+    userFilter(query = '') {
+      let arr = this.customerNameList.filter((item) => {
+        return item.cuUnitName.includes(query)
+      })
+      if (arr.length > 50) {
+        this.customerList = arr.slice(0, 50)
+      } else {
+        this.customerList = arr
+      }
+    },
     getList(){
       commonList("customer/selectAllByLike").then(res=>{
         this.customerNameList=res.list

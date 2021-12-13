@@ -1,22 +1,25 @@
 <template>
   <div>
     <div class="app-container">
-      <h2 style="text-align: center;">添加销售单</h2>
+      <!--      <h2 style="text-align: center;">添加销售单</h2>-->
       <el-steps :active="1" process-status="wait" align-center style="margin-bottom: 40px;">
         <el-step title="填写销售单信息" />
         <el-step title="添加零件或整件" />
       </el-steps>
       <el-form label-width="120px" :rules="rules" :model="priceSlip" ref="priceSlip">
-        <el-form-item label="客户单位" prop="oCustomerId">
+
+        <el-form-item label="客户单位" prop="oCustomerId" style="width: 500px">
           <el-select
-            v-model="priceSlip.oCustomerId" filterable placeholder="请选择客户单位">
+            v-model="priceSlip.oCustomerId" filterable placeholder="请选择客户单位"
+            :filter-method="customerNameListFilter" style="width: 500px" @change="deliverWay($event)">
             <el-option
-              v-for="customer in customerNameList"
+              v-for="customer in customerList"
               :key="customer.cuId"
-              :label="customer.cuUnitName"
+              :label="`${customer.cuUnitName}(客户姓名)-${customer.cuPhoneNumber}(客户电话)-${customer.cuAddress}(客户地址)`"
               :value="customer.cuId"/>
           </el-select>
         </el-form-item>
+
         <el-form-item label="仓库管理员" prop="oWarehouseOperaterId">
           <el-select
             v-model="priceSlip.oWarehouseOperaterId" filterable placeholder="请选择仓库管理员" >
@@ -34,13 +37,24 @@
             <el-option :value="2" label="增值税发票"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="发货方式" prop="oDeliveryWay">
-          <el-select v-model="priceSlip.oDeliveryWay"   clearable placeholder="发货方式" style="width: 200px"  >
-            <el-option value="快递" label="快递"/>
-            <el-option value="托运" label="托运"/>
-            <el-option value="线下交易" label="线下交易"/>
+        <el-form-item label="发货方式" >
+          <el-select  id="selectInput" v-model="value" filterable placeholder="请选择" ref="searchSelect" :filter-method="dataFilter" @visible-change="visibleChange" @focus="selectFocus">
+            <el-option
+              v-for="item in oDeliveryWayList"
+              :key="item.cuCourier"
+              :label="`${item.cuCourier}-${item.way}`"
+              :value="item.cuCourier"/>
           </el-select>
         </el-form-item>
+        <!--        <el-form-item label="发货方式" prop="oDeliveryWay">-->
+        <!--          <el-select v-model="priceSlip.oDeliveryWay"  allow-create filterable  placeholder="发货方式" style="width: 200px"  >-->
+        <!--            <el-option-->
+        <!--              v-for="item in oDeliveryWayList"-->
+        <!--              :key="item.cuCourier"-->
+        <!--              :label="`${item.cuCourier}-${item.way}`"-->
+        <!--              :value="item.cuCourier"/>-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
         <el-form-item label="支付方式" prop="oPaymentWay">
           <el-select v-model="priceSlip.oPaymentWay"   clearable placeholder="支付方式" style="width: 200px"  >
             <el-option value="挂账" label="挂账"/>
@@ -68,15 +82,21 @@ export default {
   created() {
     if(this.$route.query.priceSlip){
       this.priceSlip = Object.assign({}, this.$route.query.priceSlip)
+      this.value=this.$route.query.priceSlip.oDeliveryWay
     }
     this.getList()
   },
   data(){
     return{
+      //发货方式
+      value:'',
+      oDeliveryWayList:[],
+      optionDeliveryWayList:[],
       priceSlip:{
         orderDetailList:[],
         wholeDetailsList:[]
       },
+      customerList:[],
       customerNameList:[],
       WarehouseOperatorList:[],
       rules: {
@@ -99,9 +119,42 @@ export default {
     }
   },
   methods:{
+    deliverWay(event){
+      this.customerNameList.forEach((value)=>{
+        if(value.cuId===event){
+          this.value=value.cuCourier
+          let oDeliveryWayListCopy=[]
+          let obj={
+            cuCourier:value.cuCourier,
+            way:"默认物流"
+          }
+          if(value.cuSpareCourier){
+            let obj2={
+              cuCourier:value.cuSpareCourier,
+              way:"备用"
+            }
+            oDeliveryWayListCopy.push(obj2)
+          }
+          oDeliveryWayListCopy.push(obj)
+          this.oDeliveryWayList=oDeliveryWayListCopy
+          this.optionDeliveryWayList=oDeliveryWayListCopy
+        }
+      })
+    },
+    customerNameListFilter(query = '') {
+      let arr = this.customerNameList.filter((item) => {
+        return item.cuUnitName.includes(query)
+      })
+      if (arr.length > 50) {
+        this.customerList = arr.slice(0, 50)
+      }else {
+        this.customerList = arr
+      }
+    },
     getList(){
       commonList("customer/selectAllByLike").then(res=>{
         this.customerNameList=res.list
+        console.log(res.list)
       })
       commonList('admin/selectAllByLike').then(res=>{
         this.WarehouseOperatorList=res.list
@@ -109,6 +162,8 @@ export default {
     },
     saveSalesSlip(){
       this.$refs['priceSlip'].validate((valid) => {
+        this.priceSlip.oDeliveryWay=this.value
+        console.log(this.priceSlip)
         if (valid) {
           this.$router.push({
             path: '/Slips/addPriceGoods',
@@ -149,6 +204,34 @@ export default {
       str = str.replace(/[^\d^\.]+/g, ""); // 保留数字和小数点
       str = str.replace(/^\D*([0-9]\d*\.?\d{0,2})?.*$/, "$1"); // 小数点后只能输 2 位
       return str;
+    },
+
+
+
+    dataFilter(val) {
+      this.value = val;
+      if (val) {
+        this.oDeliveryWayList = this.optionDeliveryWayList.filter((item) => {
+          if (item.cuCourier.includes(val) || item.cuCourier.toUpperCase().includes(val.toUpperCase())) {
+            return true
+          }
+        })
+      } else {
+        this.oDeliveryWayList = this.optionDeliveryWayList;
+      }
+    },
+    selectFocus(e){
+      let value = e.target.value;
+      setTimeout(() => {
+        let input = this.$refs.searchSelect.$children[0].$refs.input;
+        input.value = value;
+      })
+    },
+    visibleChange(val){
+      if(!val){
+        let input = this.$refs.searchSelect.$children[0].$refs.input;
+        input.blur();
+      }
     }
   }
 }

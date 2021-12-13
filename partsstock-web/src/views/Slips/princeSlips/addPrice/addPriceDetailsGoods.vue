@@ -2,15 +2,9 @@
   <div class="app-container">
     <h6 style="float:right;margin-top:0;color: red">F5查看该零件本客户的历史记录,F6查看进货历史记录,
       在添加整件时F7查看该整件的零件关系,F8查看该零件的订单记录</h6>
-    <!--    步骤条-->
-    <el-steps :active="2" process-status="wait" align-center style="margin-bottom: 40px;margin-top: 40px">
-      <el-step title="填写销售单信息" />
-      <el-step title="添加零件或整件" />
-    </el-steps>
-    <!--    查询表-->
-    <el-form :inline="true" class="demo-form-inline" style="position: relative ">
+    <el-form :inline="true" class="demo-form-inline" style="position: relative;margin-top: 40px ">
       <el-form-item>
-        <el-select   v-model="levelIV.odType"   clearable placeholder="选择商品类型" style="width: 130px"  @change="changeTotal($event)">
+        <el-select   v-model="levelIV.odType"   clearable placeholder="选择商品类型" style="width: 130px"  @change="changeTotal($event)" >
           <el-option :value="1" label="零件"/>
           <el-option :value="0" label="整件"/>
         </el-select>
@@ -41,9 +35,7 @@
         <el-input v-model="levelIV.wName" placeholder="请输入整件名" ></el-input>
       </el-form-item>
       <el-button  type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
-      <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 100px" @click="showSelected">查看已选零件</el-button>
-      <!--      <el-button @click="previous" type="primary" style="position: absolute;right: 10px">上一步</el-button>-->
-      <!--      <el-button  type="primary" @click="next"  style="position: absolute;right: 10px;width: 100px">下一步</el-button>-->
+      <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 10px" @click="showSelected">查看已选零件</el-button>
     </el-form>
     <!-- 零件添加表格 -->
     <el-table :data="list"
@@ -155,7 +147,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--    分页-->
     <el-pagination
       layout="total, prev, pager, next, jumper"
       :page-size="levelIV.pageSize"
@@ -332,7 +323,7 @@
     <el-dialog :visible.sync="dialogPartsVisible" title="修改购物车零件">
       <el-form :model="partsModify" label-width="120px" ref="partsModify" :rules="rules">
         <el-form-item label="零件数量" prop="odNumber">
-          <el-input  v-model="partsModify.odNumber"/>
+          <el-input   v-model="partsModify.odNumber"/>
         </el-form-item>
         <el-form-item label="零件价格" prop="odRetailPrice">
           <el-input  @keyup.native="partsModify.odRetailPrice = oninput(partsModify.odRetailPrice)" v-model="partsModify.odRetailPrice"/>
@@ -461,7 +452,7 @@ export default {
       rules:{
         odNumber: [
           {required: true, message: '请输入数量', trigger: 'change'},
-          {validator:validatePassCheck, trigger: 'change' }
+          {  validator:validatePassCheck, trigger: 'change' }
         ],
         odRetailPrice:[
           {required: true, message: '请输入价格', trigger: 'change'}
@@ -470,7 +461,7 @@ export default {
     }
   },
   created() {
-    this.priceSlip=this.$route.query.priceSlip
+    this.priceSlip.oCustomerId=this.$route.query.oCustomerId
     this.getList()
     this.getPrice()
     stopF5F6()
@@ -549,6 +540,7 @@ export default {
     searchWhole(wId){
       this.queryWholeParts.wId=wId
       PostData("/whole/selectWholeParts",this.queryWholeParts).then(res=>{
+        console.log(res)
         this.wholePartsList=res[0].partsWholeList
       })
       this.dialogWholePartVisible=true
@@ -557,9 +549,9 @@ export default {
     searchHistoryList(pId){
       PurchasePrice(undefined,pId,this.levelIV.odType).then(res=>{
         for (let i=0;i<res.length;i++){
-          res[i].odCreateTime = getTime(res[i].odCreateTime)
+          res[i].sdCreateTime = getTime(res[i].sdCreateTime)
         }
-        console.log(this.historyPurchasePriceList)
+        console.log(res)
         this.historyPurchasePriceList=res
         if(this.historyPurchasePriceList&&this.historyPurchasePriceList.length>0){
           this.dialogGoodPrice=true
@@ -573,7 +565,7 @@ export default {
     },
     //零件售卖记录该客户
     searchList(pId){
-      let customerId=this.$route.query.priceSlip.oCustomerId
+      let customerId=this.$route.query.oCustomerId
       let type=this.levelIV.odType
       queryHistoryPrice(customerId,pId,type).then(res=>
       {
@@ -619,13 +611,13 @@ export default {
       try {
         this.$refs['priceSlip'].validate((valid) => {
           if (valid) {
-            this.priceSlip.oCustomerId=this.$route.query.priceSlip.oCustomerId
-            this.priceSlip.qOrderStatus = 0
+            this.priceSlip.oCustomerId=this.$route.query.oCustomerId
+            this.priceSlip.oId=this.$route.query.oId
+            this.priceSlip.oStatus=1
+            this.priceSlip.oCreatePeopleId = parseInt(Cookie.get('aId'))
             this.priceSlip.oType=3
             this.priceSlip.oIsPackage=1
-            this.priceSlip.oStatus=1
             this.priceSlip.oOrderClosingStatus=2
-            this.priceSlip.oCreatePeopleId = parseInt(Cookie.get('aId'))
             if(this.priceSlip.wholeDetailsList&&this.priceSlip.wholeDetailsList.length>0){
               this.priceSlip.wholeDetailsList.forEach((value)=>{
                 value.pName=value.wName
@@ -635,14 +627,15 @@ export default {
             this.priceSlip.orderDetailList=[...this.priceSlip.orderDetailList,...this.priceSlip.wholeDetailsList]
             let oSupposeIncome = 0
             for (let i = 0; i < this.priceSlip.orderDetailList.length; i++) {
-              this.priceSlip.orderDetailList[i].odCustomerId = this.priceSlip.oCustomerId
+              this.priceSlip.orderDetailList[i].odOrderId=this.$route.query.oId
+              this.priceSlip.orderDetailList[i].odCustomerId = this.$route.query.oCustomerId
               this.priceSlip.orderDetailList[i].odStatus=0
               this.priceSlip.orderDetailList[i].odSizeType= this.priceSlip.orderDetailList[i].pPartsSizeType
               let partPrince = this.priceSlip.orderDetailList[i].odRetailPrice
               oSupposeIncome += partPrince * this.priceSlip.orderDetailList[i].odNumber
             }
             this.priceSlip.oSupposeIncome = oSupposeIncome
-            PostData('order/addOrder',this.priceSlip)
+            PostData('/OrderDetail/addOrderDetail',this.priceSlip)
               .then(res=>{
                 if (res.result === 'fails') {
                   this.priceSlip.orderDetailList=this.priceSlip.orderDetailList.filter(item=>{
@@ -663,15 +656,16 @@ export default {
                     type: 'success',
                     message: '增加销售单成功'
                   })
-                  this.$router.push({path:'/Slips/princeSlipManagement'})
+                  this.$router.back()
                 }
               }).catch(()=>{})
-
           } else {
             return false;
           }
         });
       }catch (e) {
+      }finally {
+
       }
     },
     //添加零件
@@ -780,8 +774,8 @@ export default {
                 value.odRetailPrice=this.customerPrince===0?value.pLowPrice:this.customerPrince===1?value.pMiddlePrice:value.pHighPrice
               })
             }
-            console.log(middleList)
             this.list=middleList
+            console.log(this.list)
             this.wholeList=[]
           })
       }
@@ -793,17 +787,18 @@ export default {
         })
       }
     },
+    //初始数据
     getList(){
       levelIVDirectory().then(res=>{
         this.levelIVDirectoryList=res
       })
     },
+    //该客户推荐价格
     getPrice(){
       let query={
-        cuId:this.$route.query.priceSlip.oCustomerId
+        cuId:this.$route.query.oCustomerId
       }
       PostData('/customer/selectAllByLike',query).then(res=>{
-        console.log(res.list)
         switch (res.list[0].cuDiscount){
           case "一级价格":
             this.customerPrince=0
@@ -817,14 +812,7 @@ export default {
         }
       })
     },
-    previous() {
-      this.$router.push({
-        path: "/Slips/addSPriceSlips" ,
-        query:{
-          priceSlip:this.priceSlip
-        }
-      });
-    },
+    //价格输入限制
     oninput(value) {
       let str = value;
       let len1 = str.substr(0, 1);
@@ -884,8 +872,4 @@ export default {
   margin-bottom: 0;
   width: 50%;
 }
-.my-info-dialog .my-info-container .demo-ruleForm .el-dialog__body{
-  padding: 0;
-}
-
 </style>

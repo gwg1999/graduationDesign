@@ -37,18 +37,13 @@
             {{ (querySalesSlip.pageNum - 1) * querySalesSlip.pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="createPeopleName" label="创建人员" width="80" align="center"/>
+        <el-table-column prop="createPeopleName" label="创建人员" width="100px" align="center"/>
         <el-table-column prop="customerName" label="客户" width="80" align="center"/>
         <el-table-column prop="partNumber" label="零件数量" width="80" align="center"/>
         <el-table-column prop="wholeNumber" label="整件数量" width="80" align="center"/>
-<!--        <el-table-column prop="qOrderStatus" label="订单状态" width="80" align="center">-->
-<!--          <template slot-scope="scope">-->
-<!--            {{ scope.row.qOrderStatus===0?'未销售':scope.row.qOrderStatus===1?'部分销售':'全部销售'}}-->
-<!--          </template>-->
-<!--        </el-table-column>-->
         <el-table-column prop="qPrice" label="应收价" width="80px" align="center"/>
-        <el-table-column prop="qCreateTime" label="创建时间" width="160" align="center"/>
-        <el-table-column prop="qNote" label="备注" width="100px" align="center"/>
+        <el-table-column prop="qCreateTime" label="创建时间" width="100" align="center"/>
+        <el-table-column prop="qNote" label="备注"  align="center"/>
         <el-table-column label="查看详情" width="150px" align="center">
           <template slot-scope="scope">
             <router-link :to="{path:'/Slips/salesSlipDetails',query:{qId:scope.row.qId,qCustomerId:scope.row.qCustomerId}}">
@@ -56,7 +51,7 @@
             </router-link>
           </template>
         </el-table-column>
-        <el-table-column label="操作"  align="center">
+        <el-table-column label="操作" width="300px" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit" @click="openInverseOrder(scope.row.qId)">转成销售单</el-button>
             <el-button type="primary" size="mini" icon="el-icon-edit"  @click="openSalesSheetDialog(scope.row)">修改</el-button>
@@ -85,7 +80,7 @@
                      @click="UpdateSalesSlips()">确 定</el-button>
         </div>
       </el-dialog>
-
+      <!--转销售单-->
       <el-dialog :visible.sync="dialogWarehouseOperatorFormVisible" title="转销售单">
         <el-form :model="warehouseOperatorModify" label-width="120px" :rules="rules" ref="warehouseOperatorModify">
           <el-form-item label="选择仓库管理员" prop="oWarehouseOperaterId">
@@ -111,6 +106,9 @@
               <el-option value="托运" label="托运"/>
             </el-select>
           </el-form-item>
+          <el-form-item label="其他费用">
+            <el-input v-model="warehouseOperatorModify.oOtherCostMoney"/>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogWarehouseOperatorFormVisible = false">取 消</el-button>
@@ -134,8 +132,7 @@
 <script>
 import {PostData} from "@/api";
 import salesSlip from "@/api/slips/salesSlip";
-import {renderTime} from "@/utils/myValidate";
-import {reserveTime } from "../myUtils"
+import {reserveTime,getTime } from "../myUtils"
 import {commonList} from "../myApi"
 export default {
   name: "partSell",
@@ -149,7 +146,7 @@ export default {
       dialogSalesSheetFormVisible:false,
       salesSheetBtnDisabled:false,
       querySalesSlip:{
-        pageSize:5,
+        pageSize:10,
         pageNum:1,
         createTimeSequence:0,
         slipsCreateTime: ''
@@ -226,10 +223,6 @@ export default {
         }
       })
     },
-    //时间转换
-    formatTime(time){
-      return renderTime(time)
-    },
     //拉列表
     getList(pageNum=1){
       this.querySalesSlip.pageNum=pageNum
@@ -247,7 +240,7 @@ export default {
         this.total=res.total
         if(res.list)
           for (let i=0;i<res.list.length;i++){
-            res.list[i].qCreateTime=this.formatTime(res.list[i].qCreateTime)
+            res.list[i].qCreateTime=getTime(res.list[i].qCreateTime)
           }
         console.log(res.list)
         this.salesSlipsList=res.list

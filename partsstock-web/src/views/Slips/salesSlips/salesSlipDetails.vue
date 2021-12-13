@@ -3,20 +3,28 @@
     <div class="app-container" >
       <!--查询表单-->
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
-<!--        <el-form-item>-->
-<!--          <el-input v-model="querySalesSlip.pName"  clearable placeholder="名称" style="width: 150px"></el-input>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item>-->
+        <!--          <el-input v-model="querySalesSlip.pName"  clearable placeholder="名称" style="width: 150px"></el-input>-->
+        <!--        </el-form-item>-->
         <el-form-item>
           <el-select v-model="querySalesSlip.qdType" clearable placeholder="类型" style="width: 200px"  >
             <el-option :value="1" label="零件"/>
             <el-option :value="0" label="整件"/>
           </el-select>
         </el-form-item>
-        <el-button type="primary" icon="el-icon-search" style="position: absolute" @click="getList(1)">查 询</el-button>
-<!--        <router-link :to="{path:'/Slips/addSalesSlipDetails',query:{qId:this.$route.query.qId,qCustomerId:this.$route.query.qCustomerId}}">-->
-<!--          <el-button type="primary"-->
-<!--                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>-->
-<!--        </router-link>-->
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" style="position: absolute" @click="getList(1)">查 询</el-button>
+        </el-form-item>
+        <!--        <router-link :to="{path:'/Slips/addSalesSlipDetails',query:{qId:this.$route.query.qId,qCustomerId:this.$route.query.qCustomerId}}">-->
+        <!--          <el-button type="primary"-->
+        <!--                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>-->
+        <!--        </router-link>-->
+        <el-form-item style="position: absolute;right: 10px">
+          <router-link :to="{path:'/Slips/salesSlipManagement'}">
+            <el-button type="primary"
+                       icon="el-icon-d-arrow-left" style="position: absolute;right: 10px">返回</el-button>
+          </router-link>
+        </el-form-item>
       </el-form>
       <!-- 表格 -->
       <el-table
@@ -41,7 +49,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="qdNumber" label="购买数量" width="110" align="center"/>
-<!--        <el-table-column prop="qdDeliveryNum" label="发货数量" width="200" align="center"/>-->
+        <!--        <el-table-column prop="qdDeliveryNum" label="发货数量" width="200" align="center"/>-->
         <el-table-column prop="qdRealTimePrice" width="110" label="实时售价"  align="center"/>
         <el-table-column prop="qdUpdateTime" width="250"  label="最近修改时间"  align="center"/>
         <el-table-column label="操作"  align="center">
@@ -66,9 +74,9 @@
         <el-form-item label="购买数量" prop="qdNumber">
           <el-input v-model="salesSlipModify.qdNumber"/>
         </el-form-item>
-<!--        <el-form-item label="发货数量" prop="qdDeliveryNum">-->
-<!--          <el-input v-model="salesSlipModify.qdDeliveryNum"/>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="发货数量" prop="qdDeliveryNum">-->
+        <!--          <el-input v-model="salesSlipModify.qdDeliveryNum"/>-->
+        <!--        </el-form-item>-->
         <el-form-item label="实时售价" prop="qdRealTimePrice">
           <el-input v-model="salesSlipModify.qdRealTimePrice"/>
         </el-form-item>
@@ -86,6 +94,7 @@
 import {PostData} from "@/api";
 import salesSlip from "@/api/slips/salesSlip";
 import {renderTime} from "@/utils/myValidate";
+import {getTime} from "@/views/Slips/myUtils"
 import {validatePassCheck,twoPoint} from "../ruleNumber"
 export default {
   data(){
@@ -119,9 +128,6 @@ export default {
     this.getList()
   },
   methods:{
-    formatTime(time){
-      return renderTime(time)
-    },
     getList(pageNum=1){
       this.querySalesSlip.pageNum=pageNum
       this.querySalesSlip.qdOrderId=this.$route.query.qId
@@ -130,9 +136,8 @@ export default {
         .then(res=>{
           this.total=res.total
           for (let i=0;i<res.list.length;i++){
-            res.list[i].qdUpdateTime=this.formatTime(res.list[i].qdUpdateTime)
+            res.list[i].qdUpdateTime=getTime(res.list[i].qdUpdateTime)
           }
-          console.log(res)
           this.salesSlipList=res.list
         })
     },

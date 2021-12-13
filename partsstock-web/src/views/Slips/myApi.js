@@ -43,8 +43,21 @@ export function queryHistoryPrice(customerId,partsId,type) {
   return request({
     url: '/OrderDetail/getHistoryOrderDetail',
     method: 'post',
-    data:querySerialNumber,
     params:{customerId,partsId,type},
+  })
+}
+export function PurchasePrice(customerId,partsId,type){
+  return request({
+    url: '/stock/getHistoryStockDetail',
+    method: 'post',
+    params:{customerId,partsId,type}
+  })
+}
+export function handlePackageGood(orderId,type,note){
+  return request({
+    url:'/upload/uploadOrderImage',
+    method:'post',
+    params:{orderId,type,note}
   })
 }
 
