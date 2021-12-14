@@ -79,7 +79,7 @@ export default {
   methods:{
     getList(pageNum=1){
       this.pageNum=pageNum
-      getReturnDetail(this.$route.query.qId,this.pageNum,this.pageSize).then(async res=>{
+      getReturnDetail(this.$route.query.qId,this.pageNum,this.pageSize).then(res=>{
         this.CancelSlipDetailsList=res.list
         this.total=res.total
       })

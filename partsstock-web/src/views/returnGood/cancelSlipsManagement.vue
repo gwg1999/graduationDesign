@@ -129,7 +129,6 @@
 </template>
 
 <script>
-
 import returnGood from '@/api/returnGood/returnGood'
 import {PostData} from "@/api";
 import {getTime} from '@/views/Slips/myUtils'
@@ -190,8 +189,6 @@ export default {
           this.customList=res.list
         })
     },
-    //时间转换
-
     editIsReceive(id){
       PostData('/return/updateReturn')
     },
