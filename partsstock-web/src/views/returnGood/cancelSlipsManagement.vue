@@ -43,14 +43,14 @@
             {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="rOrderType" label="订单类别" width="80" align="center">
+        <el-table-column prop="rOrderType" label="订单类别" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.orderType===1?'进货单':'销售单'}}
           </template>
         </el-table-column>
-        <el-table-column prop="rCreateTime" label="订单创建时间"  align="center"/>
-        <el-table-column prop="rResultTime" label="订单结束时间"  align="center"/>
-        <el-table-column prop="rType" label="交易属性" width="80" align="center">
+        <el-table-column prop="rCreateTime" width="120px" label="订单创建时间"  align="center"/>
+        <el-table-column prop="rResultTime" width="120px"  label="订单结束时间"  align="center"/>
+        <el-table-column prop="rType" label="交易属性" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.rType===0?'退货退款':scope.row.rType===1?'退换货':'仅退款'}}
           </template>
@@ -74,11 +74,11 @@
             </router-link>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100" align="center">
+        <el-table-column label="操作"  align="center">
           <template slot-scope="scope">
-<!--            <el-button :disabled="scope.row.rIsReceive===0" type="primary" size="mini" icon="el-icon-edit"  @click="openReturnSheetDialog(scope.row)">修改</el-button>-->
-            <el-button type="danger" size="mini" icon="el-icon-edit"  @click="deleteReturnSlip(scope.row.rId)" v-if="scope.row.rIsReceive===1">删除</el-button>
-            <el-button type="danger" size="mini" icon="el-icon-edit"  @click="editIsReceive(scope.row.rId)" v-if="scope.row.rIsReceive===1">删除</el-button>
+            <!--            <el-button :disabled="scope.row.rIsReceive===0" type="primary" size="mini" icon="el-icon-edit"  @click="openReturnSheetDialog(scope.row)">修改</el-button>-->
+            <el-button :disabled="scope.row.rIsReceive===1"  type="danger" size="mini" icon="el-icon-edit"  @click="deleteReturnSlip(scope.row)" >删除</el-button>
+            <!--            <el-button :disabled="scope.row.rIsReceive===1"  type="danger" size="mini" icon="el-icon-edit"  @click="editIsReceive(scope.row.rId)" >删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -132,14 +132,10 @@
 
 import returnGood from '@/api/returnGood/returnGood'
 import {PostData} from "@/api";
-import {renderTime} from "@/utils/myValidate";
+import {getTime} from '@/views/Slips/myUtils'
 export default {
   data(){
     return{
-      state:'',
-      warehouseOperatorBtnDisabled:false,
-      dialogWarehouseOperatorFormVisible:false,
-      warehouseOperatorModify:{},
       warehouseOperatorList:[],
       warehouseOperatorQuery:{},
       dialogSalesSheetFormVisible:false,
@@ -195,21 +191,26 @@ export default {
         })
     },
     //时间转换
-    formatTime(time){
-      return renderTime(time)
-    },
+
     editIsReceive(id){
       PostData('/return/updateReturn')
     },
     //拉列表
     getList(pageNum=1){
       this.pageNum=pageNum
+      if(this.queryCancelSlip.ResultTime){
+        this.queryCancelSlip.beginTime=getTime(this.queryCancelSlip.ResultTime[0])
+        this.queryCancelSlip.endTime=getTime(this.queryCancelSlip.ResultTime[1])
+      }else {
+        this.queryCancelSlip.beginTime=undefined
+        this.queryCancelSlip.endTime=undefined
+      }
       returnGood.queryAll(this.queryCancelSlip,this.pageNum,this.pageSize)
         .then(res=>{
           for (let i=0;i<res.list.length;i++){
-            res.list[i].rCreateTime=this.formatTime(res.list[i].rCreateTime)
+            res.list[i].rCreateTime=getTime(res.list[i].rCreateTime)
             if(res.list[i].oResultTime)
-            res.list[i].rResultTime=this.formatTime(res.list[i].rResultTime)
+              res.list[i].rResultTime=getTime(res.list[i].rResultTime)
           }
           this.CancelSlipList=res.list
           this.total=res.total
@@ -241,20 +242,21 @@ export default {
     },
     //删除退货单成功
     deleteReturnSlip(params){
-      this.$confirm('是否将此退货单删除'+'?','提示',{
+      this.$confirm(`是否将此${params.orderType===1?'进货单':'销售单'}退货单删除?`,'提示',{
         confirmButtonText:'确定',
         cancelButtonText:'取消',
         type:'warning'
       }).then(()=>{
-        returnGood.deleteReturnGood(params)
-          .then(res=>{
+        if(params.orderType===0){
+          returnGood.deleteReturnGood(params)
+            .then(res=>{
               this.$message({
                 type:'success',
                 message:'删除退货单成功'
               })
-            this.getList()
-            }
-          )
+              this.getList()
+            })
+        }
       })
     }
   }
