@@ -73,7 +73,7 @@
               <el-form-item label="打包图片:">
                 <div class="demo-image__placeholder">
                   <div class="block">
-                    <el-image :src="src" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
+                    <el-image  :src="props.row.packageUrl" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
@@ -84,7 +84,7 @@
               <el-form-item label="发货图片:">
                 <div class="demo-image__placeholder">
                   <div class="block">
-                    <el-image :src="src" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
+                    <el-image :src="props.row.deliverUrl" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
@@ -95,10 +95,10 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="customerName" label="客户" width="80" align="center" />
-        <el-table-column prop="oCreateTime" label="创建时间"  width="150px"   align="center"/>
-        <el-table-column prop="oResultTime" label="发货时间" width="160px"  align="center"/>
-        <el-table-column prop="oIsPackage" label="是否打包" width="80" align="center">
+        <el-table-column prop="customerName" label="客户" width="80px" align="center" />
+        <el-table-column prop="oCreateTime" label="创建时间"  width="100px"   align="center"/>
+        <el-table-column prop="oResultTime" label="发货时间" width="100px"  align="center"/>
+        <el-table-column prop="oIsPackage" label="是否打包" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.oIsPackage===0?'打包':'未打包'}}
           </template>
@@ -121,8 +121,8 @@
             <router-link :to="{path:'/returnGood/addCancelPriceSlips',query:{row:scope.row}}" style="margin-right: 10px">
               <el-button v-if="scope.row.isReturn===1" type="primary" size="mini" icon="el-icon-edit" >退货</el-button>
             </router-link>
-            <el-button :disabled="scope.row.oIsPackage===0" type="primary" size="mini" icon="el-icon-bottom" @click="openPackageGood(scope.row.oId)">{{scope.row.oIsPackage===0?'已打包':'打包'}}</el-button>
-            <el-button :disabled="scope.row.oStatus===0" type="primary" size="mini" icon="el-icon-bottom" @click="openDeliverGood(scope.row.oId)">{{scope.row.oStatus===1?'未发货':'已发货'}}</el-button>
+            <el-button  type="primary" size="mini" icon="el-icon-bottom" @click="openPackageGood(scope.row.oId)">{{scope.row.oIsPackage===0?'已打包':'打包'}}</el-button>
+            <el-button :disabled="scope.row.oIsPackage===1||scope.row.oStatus===0" type="primary" size="mini" icon="el-icon-bottom" @click="openDeliverGood(scope.row.oId)">{{scope.row.oStatus===1?'发货':'已发货'}}</el-button>
             <el-button type="primary" size="mini" icon="el-icon-edit" :disabled="!(scope.row.oIsPackage===1&&scope.row.oStatus===1)"  @click="openUpdatePrinceSlips(scope.row)">修改</el-button>
             <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deletePrinceSlips(scope.row.oId)">删除</el-button>
           </template>
@@ -153,7 +153,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="其他费用">
-            <el-input v-model="princeSheetModify.oOtherCostMoney"/>
+            <el-input @keyup.native="princeSheetModify.oOtherCostMoney = oninput(princeSheetModify.oOtherCostMoney)" v-model="princeSheetModify.oOtherCostMoney"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -165,10 +165,10 @@
       <!--      发货弹框-->
       <el-dialog :visible.sync="dialogDeliverGoodsVisible" title="发货">
         <el-form :model="DeliverGoods" label-width="120px" :rules="rules" ref="DeliverGoods">
-          <el-form-item label="打包单上传">
+          <el-form-item label="发货单上传">
             <el-upload
               ref="inDownload"
-              :action="baseURL+'/upload/uploadOrderImage?'+inPicture"
+              :action="baseURL+'/upload/uploadOrderImage?'+DeliverPicture"
               class="upload-demo"
               accept="image/png,image/gif,image/jpg,image/jpeg"
               list-type="picture"
@@ -245,11 +245,11 @@ import {PostData} from "@/api";
 import {getTime} from "../myUtils"
 import {twoPoint} from "@/views/Slips/ruleNumber";
 import {baseURL} from "@/api/http";
-import {handlePackageGood} from "@/views/Slips/myApi";
 export default {
   data(){
     return{
       inPicPar:{},
+      DeliverPicPar:{},
       //图片上传
       limitNum:1,
       baseURL:baseURL,
@@ -324,6 +324,9 @@ export default {
   computed:{
     inPicture(){
       return this.$qs.stringify(this.inPicPar)
+    },
+    DeliverPicture(){
+      return this.$qs.stringify(this.DeliverPicPar)
     }
   },
   methods: {
@@ -337,19 +340,22 @@ export default {
     //处理打包
     handlePackageGoods(){
       this.inPicPar=this.PackageGoods
-      this.$refs.inUpload.submit()
-      this.dialogPackageGoodsVisible=false
-      this.$message({
-        type:'success',
-        message:'打包成功'
-      })
-      let princeSheetModify={}
-      princeSheetModify.oId=this.PackageGoods.orderId
-      princeSheetModify.oIsPackage=0
-      PostData('order/updateOrder', princeSheetModify).then(res=>{
-        this.getList()
-      })
-
+      setTimeout(()=>{
+        this.$refs.inUpload.submit()
+        this.dialogPackageGoodsVisible=false
+        this.$message({
+          type:'success',
+          message:'打包成功'
+        })
+      },0)
+      setTimeout(()=>{
+        let princeSheetModify={}
+        princeSheetModify.oId=this.PackageGoods.orderId
+        princeSheetModify.oIsPackage=0
+        PostData('order/updateOrder', princeSheetModify).then(res=>{
+          this.getList()
+        })
+      },0)
     },
     handleBeforeUpload(file){
       if(!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
@@ -380,23 +386,29 @@ export default {
       this.DeliverGoods.type=1
     },
     //处理发货
-     handleDeliverGoods(){
-      this.inPicPar=this.DeliverGoods
-      this.$refs.inDownload.submit()
-      this.dialogDeliverGoodsVisible=false
-      this.$message({
-        type:'success',
-        message:'发货成功'
-      })
-      let princeSheetModify={}
-      princeSheetModify.oId=this.DeliverGoods.orderId
-      princeSheetModify.oStatus=0
-      PostData('order/updateOrder', princeSheetModify).then(res=>{
-        this.getList()
-      })
-
+    handleDeliverGoods(){
+      this.DeliverPicPar=this.DeliverGoods
+      setTimeout(()=>{
+        this.$refs.inDownload.submit()
+        this.dialogDeliverGoodsVisible=false
+        this.$message({
+          type:'success',
+          message:'发货成功'
+        })
+      },0)
+      setTimeout(()=>{
+        let princeSheetModify={}
+        princeSheetModify.oId=this.DeliverGoods.orderId
+        princeSheetModify.oStatus=0
+        PostData('order/updateOrder', princeSheetModify).then(res=>{
+          this.getList()
+        })
+        PostData('/order/deliverOrder',princeSheetModify).then(res=>{
+          this.getList()
+        })
+      },0)
     },
-    //转销售单
+    //转报价单
     InverseSales(params){
       princeSlips.becomeQuotation(params)
         .then(res=>{
@@ -426,9 +438,17 @@ export default {
             res.list[i].oCreateTime=getTime(res.list[i].oCreateTime)
             if(res.list[i].oResultTime)
               res.list[i].oResultTime=getTime(res.list[i].oResultTime)
+            if(res.list[i].orderPictures){
+              for (let j=0;j<res.list[i].orderPictures.length;j++){
+                if(res.list[i].orderPictures[j].type===0){
+                  res.list[i].packageUrl=res.list[i].orderPictures[j].path
+                }else{
+                  res.list[i].deliverUrl=res.list[i].orderPictures[j].path
+                }
+              }
+            }
           }
           this.princeSheetList=res.list
-
         })
     },
     openUpdatePrinceSlips(params){
@@ -475,6 +495,36 @@ export default {
             this.getList()
           })
       })
+    },
+    oninput(value) {
+      let str = value;
+      let len1 = str.substr(0, 1);
+      let len2 = str.substr(1, 1);
+      //如果第一位是0，第二位不是点，就用数字把点替换掉
+      if (str.length > 1 && len1 == 0 && len2 != ".") {
+        str = str.substr(1, 1);
+      }
+      //第一位不能是.
+      if (len1 == ".") {
+        str = "";
+      }
+      if (len1 == "+") {
+        str = "";
+      }
+      if (len1 == "-") {
+        str = "";
+      }
+      //限制只能输入一个小数点
+      if (str.indexOf(".") != -1) {
+        let str_ = str.substr(str.indexOf(".") + 1);
+        if (str_.indexOf(".") != -1) {
+          str = str.substr(0, str.indexOf(".") + str_.indexOf(".") + 1);
+        }
+      }
+      //正则替换
+      str = str.replace(/[^\d^\.]+/g, ""); // 保留数字和小数点
+      str = str.replace(/^\D*([0-9]\d*\.?\d{0,2})?.*$/, "$1"); // 小数点后只能输 2 位
+      return str;
     }
   }
 }

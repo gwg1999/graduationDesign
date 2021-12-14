@@ -85,10 +85,10 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="customerName" label="客户" width="80" align="center" />
-        <el-table-column prop="oCreateTime" label="创建时间"  width="150px"   align="center"/>
-        <el-table-column prop="oResultTime" label="发货时间" width="160px"  align="center"/>
-        <el-table-column prop="oIsPackage" label="是否打包" width="80" align="center">
+        <el-table-column prop="customerName" label="客户" width="80px" align="center" />
+        <el-table-column prop="oCreateTime" label="创建时间"  width="100px"   align="center"/>
+        <el-table-column prop="oResultTime" label="发货时间" width="100px"  align="center"/>
+        <el-table-column prop="oIsPackage" label="是否打包" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.oIsPackage===0?'打包':'未打包'}}
           </template>
@@ -111,8 +111,9 @@
             <router-link :to="{path:'/returnGood/addCancelPriceSlips',query:{row:scope.row}}" style="margin-right: 10px">
               <el-button v-if="scope.row.isReturn===1" type="primary" size="mini" icon="el-icon-edit" >退货</el-button>
             </router-link>
-            <el-button :disabled="scope.row.oIsPackage===0" type="primary" size="mini" icon="el-icon-bottom" @click="openPackageGood(scope.row.oId)">{{scope.row.oIsPackage===0?'已打包':'打包'}}</el-button>
-            <el-button :disabled="scope.row.oStatus===2||scope.row.oIsPackage===1" type="primary" size="mini" icon="el-icon-bottom" @click="openDeliverGood(scope.row.oId)">{{scope.row.oStatus===1&&scope.row.oIsPackage===0?'已发货':'发货'}}</el-button>
+            <el-button  type="primary" size="mini" icon="el-icon-bottom" @click="openPackageGood(scope.row.oId)">{{scope.row.oIsPackage===0?'已打包':'打包'}}</el-button>
+            <el-button :disabled="scope.row.oIsPackage===1||scope.row.oStatus===0" type="primary" size="mini" icon="el-icon-bottom" @click="openDeliverGood(scope.row.oId)">{{scope.row.oStatus===1?'发货':'已发货'}}</el-button>
+            <el-button  :disabled="!(scope.row.oIsPackage===0&&scope.row.oStatus===0)" size="small" plain type="primary" @click="handlePrint(scope.row)">打印销售单</el-button>
             <el-button type="primary" size="mini" icon="el-icon-edit" :disabled="!(scope.row.oIsPackage===1&&scope.row.oStatus===1)"  @click="openUpdatePrinceSlips(scope.row)">修改</el-button>
             <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deletePrinceSlips(scope.row.oId)">删除</el-button>
           </template>
@@ -155,44 +156,27 @@
       <!--      发货弹框-->
       <el-dialog :visible.sync="dialogDeliverGoodsVisible" title="发货">
         <el-form :model="DeliverGoods" label-width="120px" :rules="rules" ref="DeliverGoods">
-          <el-form-item label="物流单上传" prop="DeliverGoodsPicture">
+          <el-form-item label="打包单上传" >
             <el-upload
-              action="#"
-              list-type="picture-card"
-              :auto-upload="false">
-              <i slot="default" class="el-icon-plus"></i>
-              <div slot="file" slot-scope="{file}">
-                <img
-                  class="el-upload-list__item-thumbnail"
-                  :src="file.url" alt=""
-                >
-                <span class="el-upload-list__item-actions">
-                      <span
-                        class="el-upload-list__item-preview"
-                        @click="handlePictureCardPreview(file)"
-                      >
-                  <i class="el-icon-zoom-in"></i>
-                </span>
-                <span
-                  v-if="!disabled"
-                  class="el-upload-list__item-delete"
-                  @click="handleDownload(file)"
-                >
-                  <i class="el-icon-download"></i>
-                </span>
-                <span
-                  v-if="!disabled"
-                  class="el-upload-list__item-delete"
-                  @click="handleRemove(file)"
-                >
-                  <i class="el-icon-delete"></i>
-                </span>
-              </span>
-              </div>
+              ref="inDownload"
+              :action="baseURL+'/upload/uploadOrderImage?'+DeliverPicPar"
+              class="upload-demo"
+              accept="image/png,image/gif,image/jpg,image/jpeg"
+              list-type="picture"
+              :auto-upload="false"
+              :limit=limitNum
+              :before-upload="handleBeforeUpload"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只支持格式为png,gif,jpg,jpeg的图片,且小于2MB</div>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
             </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="DeliverGoods.note" style="width: 90%" rows="5" type="textarea"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -204,45 +188,27 @@
       <!--      打包弹框-->
       <el-dialog :visible.sync="dialogPackageGoodsVisible" title="打包">
         <el-form :model="PackageGoods" label-width="120px" :rules="rules" ref="PackageGoods">
-          <el-form-item label="打包单上传">
+          <el-form-item label="打包单上传" prop="file">
             <el-upload
+              ref="inUpload"
               :action="baseURL+'/upload/uploadOrderImage'"
+              class="upload-demo"
               accept="image/png,image/gif,image/jpg,image/jpeg"
-              list-type="picture-card"
-              :auto-upload="false">
-              <i slot="default" class="el-icon-plus"></i>
-              <div slot="file" slot-scope="{file}">
-                <img
-                  class="el-upload-list__item-thumbnail"
-                  :src="file.url" alt=""
-                >
-                <span class="el-upload-list__item-actions">
-                      <span
-                        class="el-upload-list__item-preview"
-                        @click="handlePictureCardPreview(file)"
-                      >
-                  <i class="el-icon-zoom-in"></i>
-                </span>
-                <span
-                  v-if="!disabled"
-                  class="el-upload-list__item-delete"
-                  @click="handleDownload(file)"
-                >
-                  <i class="el-icon-download"></i>
-                </span>
-                <span
-                  v-if="!disabled"
-                  class="el-upload-list__item-delete"
-                  @click="handleRemove(file)"
-                >
-                  <i class="el-icon-delete"></i>
-                </span>
-              </span>
-              </div>
+              list-type="picture"
+              :auto-upload="false"
+              :limit=limitNum
+              :before-upload="handleBeforeUpload"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只支持格式为png,gif,jpg,jpeg的图片,且小于2MB</div>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt="">
+              </el-dialog>
             </el-upload>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
+          </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="PackageGoods.note" style="width: 90%" rows="5" type="textarea"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -260,6 +226,7 @@
         layout="total, prev, pager, next, jumper"
         @current-change="getList"
       />
+      <printTable v-show="false" ref="mychild"></printTable>
     </div>
   </div>
 </template>
@@ -270,9 +237,15 @@ import {PostData} from "@/api";
 import {getTime} from "../myUtils"
 import {twoPoint} from "@/views/Slips/ruleNumber";
 import {baseURL} from "@/api/http";
+import print from "print-js";
+import printTable from "@/views/Slips/princeSlips/printTable/printTable";
 export default {
   data(){
     return{
+      DeliverPicPar:{},
+      inPicPar:{},
+      //图片上传
+      limitNum:1,
       baseURL:baseURL,
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       //打包
@@ -281,7 +254,6 @@ export default {
       //图片上传
       dialogImageUrl: '',
       dialogVisible: false,
-      disabled: false,
       //发货弹框
       dialogDeliverGoodsVisible:false,
       DeliverGoods:{},
@@ -336,49 +308,108 @@ export default {
         ],
         DeliverGoodsPicture:[
           { required: true, message: '请上传图片', trigger: 'change' },
+        ],
+        file: [
+          { required: true, message: '请上传图片' }
         ]
       }
     }
   },
   created() {
     this.getList()
+    this.time=getTime(new Date())
+  },
+  components:{
+    printTable
+  },
+  computed:{
+    inPicture(){
+      return this.$qs.stringify(this.inPicPar)
+    },
+    DeliverPicture(){
+      return this.$qs.stringify(this.DeliverPicPar)
+    }
   },
   methods: {
     //打包
     openPackageGood(oId){
+      this.PackageGoods={}
       this.dialogPackageGoodsVisible=true
-      this.DeliverGoods.oId=oId
+      this.PackageGoods.orderId=oId
+      this.PackageGoods.type=0
     },
     //处理打包
     handlePackageGoods(){
-
+      this.inPicPar=this.PackageGoods
+      setTimeout(()=>{
+        this.$refs.inUpload.submit()
+        this.dialogPackageGoodsVisible=false
+        this.$message({
+          type:'success',
+          message:'打包成功'
+        })
+      },0)
+      setTimeout(()=>{
+        let princeSheetModify={}
+        princeSheetModify.oId=this.PackageGoods.orderId
+        princeSheetModify.oIsPackage=0
+        PostData('order/updateOrder', princeSheetModify).then(res=>{
+          this.getList()
+        })
+      },0)
+    },
+    handleBeforeUpload(file){
+      if(!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
+        this.$notify.warning({
+          title: '警告',
+          message: '请上传格式为image/png, image/gif, image/jpg, image/jpeg的图片'
+        })
+      }
+      let size = file.size / 1024 / 1024 / 2
+      if(size > 2) {
+        this.$notify.warning({
+          title: '警告',
+          message: '图片大小必须小于2M'
+        })
+      }
     },
     handleRemove(file) {
-      console.log(file);
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-    handleDownload(file) {
-      console.log(file);
-    },
     //发货处理
     openDeliverGood(oId){
+      this.DeliverGoods={}
       this.dialogDeliverGoodsVisible=true
-      this.DeliverGoods.oId=oId
-      this.oStatus=2
+      this.DeliverGoods.orderId=oId
+      this.DeliverGoods.type=1
     },
+    //处理发货
     handleDeliverGoods(){
-      PostData("/order/deliverOrder",this.DeliverGoods).then(res=>{
+      this.DeliverPicPar=this.DeliverGoods
+      setTimeout(()=>{
+        this.$refs.inDownload.submit()
+        this.dialogDeliverGoodsVisible=false
         this.$message({
           type:'success',
           message:'发货成功'
         })
-        this.getList()
-      })
+      },0)
+      setTimeout(()=>{
+        let princeSheetModify={}
+        princeSheetModify.oId=this.DeliverGoods.orderId
+        princeSheetModify.oStatus=0
+        PostData('order/updateOrder', princeSheetModify).then(res=>{
+          this.getList()
+        })
+        PostData('/order/deliverOrder',princeSheetModify).then(res=>{
+          this.getList()
+        })
+      },0)
     },
-    //转销售单
+    //转报价单
     InverseSales(params){
       princeSlips.becomeQuotation(params)
         .then(res=>{
@@ -391,16 +422,19 @@ export default {
     },
     getList(pageNum=1){
       this.queryPrinceSheet.pageNum=pageNum
-      this.queryPrinceSheet.beginTime=getTime(new Date())
-      this.queryPrinceSheet.endTime=getTime(new Date())
-      console.log(this.queryPrinceSheet.beginTime)
-      console.log(this.queryPrinceSheet.endTime)
+      var day2 = new Date();
+      day2.setTime(day2.getTime());
+      var s2 = day2.getFullYear() + "-" + (day2.getMonth() + 1) + "-" + day2.getDate();
+      var day3 = new Date();
+      day3.setTime(day3.getTime() + 24 * 60 * 60 * 1000); //加上一天的秒数
+      var s3 = day3.getFullYear() + "-" + (day3.getMonth() + 1) + "-" + day3.getDate();
+      this.queryPrinceSheet.beginTime=s2
+      this.queryPrinceSheet.endTime=s3
       princeSlips.queryAll(this.queryPrinceSheet.name,this.queryPrinceSheet.beginTime
         ,this.queryPrinceSheet.endTime,this.queryPrinceSheet.createTimeSequence,
         this.queryPrinceSheet.endTimeSequence, this.queryPrinceSheet.pageNum,
         this.queryPrinceSheet.pageSize)
         .then(res=>{
-          console.log(res.list)
           this.total=res.total
           for (let i=0;i<res.list.length;i++){
             res.list[i].oCreateTime=getTime(res.list[i].oCreateTime)
@@ -455,6 +489,10 @@ export default {
             this.getList()
           })
       })
+    },
+    //打印销售单
+    handlePrint(row) {
+      this.$refs.mychild.CreateOneFormPage(row)
     }
   }
 }

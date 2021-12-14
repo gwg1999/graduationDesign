@@ -74,9 +74,6 @@
         <el-form-item label="购买数量" prop="qdNumber">
           <el-input v-model="salesSlipModify.qdNumber"/>
         </el-form-item>
-        <!--        <el-form-item label="发货数量" prop="qdDeliveryNum">-->
-        <!--          <el-input v-model="salesSlipModify.qdDeliveryNum"/>-->
-        <!--        </el-form-item>-->
         <el-form-item label="实时售价" prop="qdRealTimePrice">
           <el-input v-model="salesSlipModify.qdRealTimePrice"/>
         </el-form-item>
