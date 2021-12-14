@@ -709,17 +709,17 @@ export const constantRoutes=[
         meta: { title: '今日销售单', icon: 'table',roles:['admin'] },
       },
       {
-        path: 'printTable',
-        name: '打印单',
-        component: () => import('@/views/Slips/princeSlips/printTable/printTable'),
-        meta: { title: '打印单', icon: 'table',roles:['admin'] },
-        hidden: true
-      },
-      {
         path: 'addPriceDetailsGoods',
         name: '新增销售单商品',
         component: () => import('@/views/Slips/princeSlips/addPrice/addPriceDetailsGoods'),
         meta: { title: '新增销售单商品', icon: 'table',roles:['admin'] },
+        hidden: true
+      },
+      {
+        path: 'printTable',
+        name: '打印单',
+        component: () => import('@/views/Slips/princeSlips/printTable/printTable'),
+        meta: { title: '打印单', icon: 'table',roles:['admin'] },
         hidden: true
       }
     ]
