@@ -801,6 +801,21 @@ export const constantRoutes=[
     ]
   },
   {
+    path:'/memorandum',
+    component: Layout,
+    redirect: '/memorandum/memorandumManagement',
+    name:'备忘录',
+    meta:{title: '备忘录',icon: 'el-icon-s-help'},
+    children:[
+      {
+        path: 'memorandumManagement',
+        name: '备忘录管理',
+        component: () => import('@/views/memorandum/memorandumManagement'),
+        meta: { title: '备忘录管理', icon: 'table' ,roles:['admin','editor']}
+      }
+    ]
+  },
+  {
     path:'/returnGood',
     component: Layout,
     redirect: '/returnGood/cancelSlipsManagement',
@@ -809,15 +824,28 @@ export const constantRoutes=[
     children:[
       {
         path: 'cancelSlipsManagement',
-        name: '退货管理',
-        component: () => import('@/views/returnGood/cancelSlipsManagement'),
-        meta: { title: '退货管理', icon: 'table' ,roles:['admin','editor']}
+        name: '销售单退货管理',
+        component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsManagement'),
+        meta: { title: '销售单退货管理', icon: 'table' ,roles:['admin','editor']}
       },
       {
         path: 'cancelSlipsDetails',
-        name: '退货详情表',
-        component: () => import('@/views/returnGood/cancelSlipsDetails'),
-        meta: { title: '退货详情表', icon: 'table' ,roles:['admin','editor']},
+        name: '销售单退货详情表',
+        component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsDetails'),
+        meta: { title: '销售单退货详情表', icon: 'table' ,roles:['admin','editor']},
+        hidden: true
+      },
+      {
+        path: 'cancelStocksManagement',
+        name: '进货单退货管理',
+        component: () => import('@/views/returnGood/cancelStockManagement/cancelStocksManagement'),
+        meta: { title: '进货单退货管理', icon: 'table' ,roles:['admin','editor']}
+      },
+      {
+        path: 'cancelStocksDetails',
+        name: '进货单退货详情表',
+        component: () => import('@/views/returnGood/cancelStockManagement/cancelStocksDetails'),
+        meta: { title: '进货单退货详情表', icon: 'table' ,roles:['admin','editor']},
         hidden: true
       },
       {
