@@ -428,7 +428,6 @@ export default {
         pageNum:1,
         pageSize:10,
       },
-      src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       dialogGoodPrice:false,
       historyPurchasePriceList:[],
       historyPurchasePriceQuery:{
@@ -762,10 +761,9 @@ export default {
           })
       } else {
         PostData('/whole/selectAll', this.levelIV).then(res => {
-          this.wholeList = res
-          this.partTotal=res.length
+          this.wholeList=res.list
+          this.partTotal=res.total
           this.list=[]
-
         })
       }
 

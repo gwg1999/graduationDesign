@@ -1,18 +1,18 @@
 <template>
   <div>
     <div class="app-container" >
-      <el-form :inline="true" class="demo-form-inline" style="position: relative ">
-        <el-form-item>
-          <el-input v-model="queryCancelSlip.pName"  clearable placeholder="商品名称" style="width: 150px"/>
-        </el-form-item>
-        <el-form-item>
-          <el-select v-model="queryCancelSlip.qdType" clearable placeholder="商品类型" style="width: 200px">
-            <el-option :value="1" label="零件"/>
-            <el-option :value="0" label="整件"/>
-          </el-select>
-        </el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="getList(1)">查 询</el-button>
-      </el-form>
+      <!--      <el-form :inline="true" class="demo-form-inline" style="position: relative ">-->
+      <!--        <el-form-item>-->
+      <!--          <el-input v-model="queryCancelSlip.pName"  clearable placeholder="商品名称" style="width: 150px"/>-->
+      <!--        </el-form-item>-->
+      <!--        <el-form-item>-->
+      <!--          <el-select v-model="queryCancelSlip.qdType" clearable placeholder="商品类型" style="width: 200px">-->
+      <!--            <el-option :value="1" label="零件"/>-->
+      <!--            <el-option :value="0" label="整件"/>-->
+      <!--          </el-select>-->
+      <!--        </el-form-item>-->
+      <!--        <el-button type="primary" icon="el-icon-search" @click="getList(1)">查 询</el-button>-->
+      <!--      </el-form>-->
       <el-table
         :data="CancelSlipDetailsList"
         border
@@ -27,21 +27,25 @@
             {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="partName" label="名称"  width="100" align="center"/>
-        <el-table-column prop="rdPartsType" label="类型" width="80" align="center">
+        <el-table-column prop="partName" label="名称"  width="200px" align="center"/>
+        <el-table-column prop="rdPartsType" label="类型" width="100px" align="center">
           <template slot-scope="scope">
             {{ scope.row.qdType===0?'整件':'零件'}}
           </template>
         </el-table-column>
-        <el-table-column prop="rdType" width="200" label="退货单类型"  align="center">
+        <el-table-column prop="rdType" width="150px" label="退货单类型"  align="center">
           <template slot-scope="scope">
             {{ scope.row.Type===0?'销售单退货单':'进货单退货单'}}
           </template>
         </el-table-column>
-        <el-table-column prop="logistics" label="物流名称" width="200" align="center"/>
+        <el-table-column prop="rdPartsType" width="100px" label="零件大小"  align="center">
+          <template slot-scope="scope">
+            {{ scope.row.rdPartsType===0?'大':'小'}}
+          </template>
+        </el-table-column>
         <el-table-column prop="rdRetailPrice" label="退货价格"  align="center"/>
         <el-table-column prop="rdPartsNum" label="数量"  align="center"/>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="操作" width="200px" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit"  @click="deleteSalesSlip(scope.row.qdId)">删除</el-button>
           </template>
@@ -61,7 +65,7 @@
 </template>
 
 <script>
-import {getReturnDetail} from "./myApi"
+import {getReturnDetail} from "../myApi"
 import {PostData} from "@/api";
 export default {
   data(){

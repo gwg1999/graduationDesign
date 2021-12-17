@@ -37,7 +37,7 @@
             <el-option :value="2" label="增值税发票"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="发货方式" >
+        <el-form-item label="发货方式">
           <el-select  id="selectInput" v-model="value" filterable placeholder="请选择" ref="searchSelect" :filter-method="dataFilter" @visible-change="visibleChange" @focus="selectFocus">
             <el-option
               v-for="item in oDeliveryWayList"

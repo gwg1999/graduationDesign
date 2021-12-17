@@ -20,9 +20,14 @@
                 <el-input v-model="itemList.odNumber"  :placeholder="numberPlaceholder"/>
               </el-form-item>
             </el-col>
-            <el-col :span="5" style="width: 230px;">
-              <el-form-item v-show="itemList.odId" label="当前数量:" label-width="80px"  style="width: 240px;">
+            <el-col :span="3" style="width: 100px;">
+              <el-form-item v-show="itemList.odId" label="当前数量:" label-width="80px"  style="width: 100px;">
                 {{itemList.number}}
+              </el-form-item>
+            </el-col>
+            <el-col :span="3">
+              <el-form-item>
+                <i class="el-icon-delete" @click="deleteItem(itemList, index)"></i>
               </el-form-item>
             </el-col>
           </el-form-item>
@@ -121,7 +126,7 @@ export default {
       this.princeSheetReturn.returnDetailList.splice(index, 1)
     },
     saveSalesSlip(){
-      let state=-1
+      let state=undefined
       if(this.princeSheetReturn.returnDetailList.length>=0)
         this.princeSheetReturn.returnDetailList.forEach((item)=>{
           if(item.number<item.odNumber)  {

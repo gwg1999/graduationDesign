@@ -145,7 +145,6 @@ export default {
   name: "addSalesSlip",
   created() {
     this.getList()
-
   },
   computed:{
     ...mapGetters({

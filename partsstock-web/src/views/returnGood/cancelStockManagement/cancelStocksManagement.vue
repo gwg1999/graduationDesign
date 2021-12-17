@@ -3,9 +3,9 @@
     <div class="app-container" >
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
         <el-form-item>
-          <el-select v-model="queryCancelSlip.IsPayment"  clearable placeholder="是否已打款" style="width: 120px">
-            <el-option label="已打款" :value="0"/>
-            <el-option label="未打款" :value="1"/>
+          <el-select v-model="queryCancelSlip.rIsPayment"  clearable placeholder="是否已打款" style="width: 120px">
+            <el-option label="已打款" :value="1"/>
+            <el-option label="未打款" :value="0"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -132,33 +132,21 @@
 import returnGood from '@/api/returnGood/returnGood'
 import {PostData} from "@/api";
 import {getTime} from '@/views/Slips/myUtils'
+import {commonList} from "@/views/Slips/myApi";
 export default {
   data(){
     return{
-      warehouseOperatorList:[],
-      warehouseOperatorQuery:{},
-      dialogSalesSheetFormVisible:false,
-      salesSheetBtnDisabled:false,
       pageSize:5,
       pageNum:1,
-      createTimeSequence:0,
-      beginTime:'',
-      endTime:'',
+      dialogSalesSheetFormVisible:false,
+      salesSheetBtnDisabled:false,
       queryCancelSlip:{
-        rOrderType:0
-      },
-      editIsReceivQuery: {
-
+        rOrderType:1
       },
       CancelSlipList:[],
       total:0,
       //退货单修改
       returnGoodSlipsModify:{},
-      customList:[],
-      queryCustom:{
-        pageNum:0,
-        pageSize:0,
-      },
       rules:{
         qdNumber: [
           {required: true, message: '请选填入快递单号', trigger: 'change'}
@@ -171,27 +159,8 @@ export default {
   },
   created() {
     this.getList()
-    this.getCustomList()
-    this.getWarehouseOperatorList()
   },
   methods:{
-    //获取仓库管理员
-    getWarehouseOperatorList(){
-      PostData('admin/selectAllByLike',this.$qs.stringify(this.warehouseOperatorQuery))
-        .then(res=>{
-          this.warehouseOperatorList=res.list
-        })
-    },
-    //客户列表
-    getCustomList(){
-      PostData('customer/selectAllByLike',this.queryCustom)
-        .then(res=>{
-          this.customList=res.list
-        })
-    },
-    editIsReceive(id){
-      PostData('/return/updateReturn')
-    },
     //拉列表
     getList(pageNum=1){
       this.pageNum=pageNum
@@ -244,7 +213,7 @@ export default {
         cancelButtonText:'取消',
         type:'warning'
       }).then(()=>{
-        if(params.orderType===0){
+        if(params.orderType===1){
           returnGood.deleteReturnGood(params)
             .then(res=>{
               this.$message({

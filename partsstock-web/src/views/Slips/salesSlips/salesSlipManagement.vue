@@ -22,7 +22,6 @@
                      icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>
         </router-link>
       </el-form>
-
       <el-table
         :data="salesSlipsList"
         border
@@ -59,7 +58,6 @@
           </template>
         </el-table-column>
       </el-table>
-
       <el-dialog :visible.sync="dialogSalesSheetFormVisible" title="修改报价单">
         <el-form :model="salesSlipsModify" label-width="120px" :rules="rules" ref="salesSlipsModify">
           <el-form-item label="客户名称" prop="customerName">
@@ -116,7 +114,6 @@
                      @click="inverseOrder()">确 定</el-button>
         </div>
       </el-dialog>
-
       <el-pagination
         :current-page="querySalesSlip.pageNum"
         :page-size="querySalesSlip.pageSize"
@@ -195,7 +192,6 @@ export default {
     getCommonList(){
       commonList('customer/selectAllByLike').then(res=>{
         this.customList=res.list
-        console.log(res)
       })
       commonList('admin/selectAllByLike').then(res=>{
         this.warehouseOperatorList=res.list
@@ -223,7 +219,7 @@ export default {
                   number = +value.lackNumber - (2 * value.lackNumber)
                   alert('由于' + value.pName + '数量不足,添加销售单失败,目前' + value.pName + '的数量为'
                     + value.pRealInventory + '还缺少' + number)
-                  note += `${value.pName}+'缺'+${number}.`
+                  note += `${value.pName}'缺'${number}个.`
                 })
                 let Note = {}
                 Note.status = 0
@@ -281,7 +277,6 @@ export default {
           for (let i=0;i<res.list.length;i++){
             res.list[i].qCreateTime=getTime(res.list[i].qCreateTime)
           }
-        console.log(res.list)
         this.salesSlipsList=res.list
       })
     },
@@ -304,7 +299,7 @@ export default {
         if(valid) {
           this.salesSheetBtnDisabled = true
           this.enable();
-          this.salesSlipsModify.qCreateTime = null,
+          this.salesSlipsModify.qCreateTime = null
             this.salesSlipsModify.qCustomerId=this.salesSlipsModify.customerName
           PostData('quotation/updateQuotation', this.salesSlipsModify)
             .then(res => {

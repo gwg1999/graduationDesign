@@ -445,7 +445,6 @@ export default {
         pageNum:1,
         pageSize:10,
       },
-      src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       dialogGoodPrice:false,
       historyPurchasePriceList:[],
       historyPurchasePriceQuery:{
@@ -666,7 +665,7 @@ export default {
                     number = +value.lackNumber - (2 * value.lackNumber)
                     alert('由于' + value.pName + '数量不足,添加销售单失败,目前' + value.pName + '的数量为'
                       + value.pRealInventory + '还缺少' + number)
-                    note += `${value.pName}+'缺'+${number}.`
+                    note += `${value.pName}'缺'${number}个.`
                   })
                   let Note = {}
                   Note.status = 0
@@ -703,7 +702,7 @@ export default {
               type: 'success',
               message: '增加销售单成功'
             })
-            this.$router.back()
+            this.$router.push({path:'/Slips/princeSlipManagement'})
           })
         }
       })
@@ -814,15 +813,14 @@ export default {
                 value.odRetailPrice=this.customerPrince===0?value.pLowPrice:this.customerPrince===1?value.pMiddlePrice:value.pHighPrice
               })
             }
-            console.log(middleList)
             this.list=middleList
             this.wholeList=[]
           })
       }
       else {
         PostData('/whole/selectAll', this.levelIV).then(res => {
-          this.wholeList=res
-          this.total=res.length
+          this.wholeList=res.list
+          this.total=res.total
           this.list=[]
         })
       }

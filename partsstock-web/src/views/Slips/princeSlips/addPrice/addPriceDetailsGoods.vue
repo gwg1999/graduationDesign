@@ -665,7 +665,7 @@ export default {
                     number = +value.lackNumber - (2 * value.lackNumber)
                     alert('由于' + value.pName + '数量不足,添加销售单失败,目前' + value.pName + '的数量为'
                       + value.pRealInventory + '还缺少' + number)
-                    note += `${value.pName}+'缺'+${number}.`
+                    note += `${value.pName}'缺'${number}个.`
                   })
                   let Note = {}
                   Note.status = 0
@@ -816,14 +816,13 @@ export default {
               })
             }
             this.list=middleList
-            console.log(this.list)
             this.wholeList=[]
           })
       }
       else {
         PostData('/whole/selectAll', this.levelIV).then(res => {
-          this.wholeList=res
-          this.total=res.length
+          this.wholeList=res.list
+          this.total=res.total
           this.list=[]
         })
       }
