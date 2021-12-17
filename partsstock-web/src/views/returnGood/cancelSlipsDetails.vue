@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import {renderTime} from "@/utils/myValidate";
 import {getReturnDetail} from "./myApi"
 import {PostData} from "@/api";
 export default {
@@ -78,15 +77,12 @@ export default {
     this.getList()
   },
   methods:{
-    formatTime(time){
-      return renderTime(time)
-    },
     getList(pageNum=1){
       this.pageNum=pageNum
-      getReturnDetail(this.$route.query.qId,this.pageNum,this.pageSize).then(async res=>{
+      getReturnDetail(this.$route.query.qId,this.pageNum,this.pageSize).then(res=>{
         this.CancelSlipDetailsList=res.list
         this.total=res.total
-    })
+      })
     },
     deleteSalesSlip(params){
       this.$confirm('是否将退货单详情表删除'+'?','提示',{

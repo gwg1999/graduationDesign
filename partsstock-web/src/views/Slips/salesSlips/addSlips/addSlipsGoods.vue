@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <h6 style="float:right;margin-top:0;color: red">F5查看该零件本客户的历史记录,F6查看进货历史记录,
-      在添加整件时F7查看该整件的零件关系,F8查看该零件的订单记录</h6>
+    <h6 style="float:right;margin-top:0;color: red">F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,
+      在添加整件时F7查看该整件的零件关系</h6>
     <el-steps :active="2" process-status="wait" align-center style="margin-bottom: 40px;margin-top: 40px">
       <el-step title="填写报价单信息" />
       <el-step title="添加零件或整件" />
@@ -819,13 +819,9 @@ export default {
       if (len1 == "-") {
         str = "";
       }
-
       //限制只能输入一个小数点
       if (str.indexOf(".") != -1) {
-        console.log(str.indexOf("."))
-        console.log(str.indexOf(".") + 1)
         let str_ = str.substr(str.indexOf(".") + 1);
-        console.log(str_)
         if (str_.indexOf(".") != -1) {
           str = str.substr(0, str.indexOf(".") + str_.indexOf(".") + 1);
         }

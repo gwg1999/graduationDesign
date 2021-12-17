@@ -612,7 +612,6 @@ export const constantRoutes=[
     name: '销售',
     meta: { title: '销售', icon: 'el-icon-s-help',roles:['admin','editor'] },
     children: [
-
       {
         path: 'salesSlipManagement',
         name: '报价单管理',
@@ -701,6 +700,26 @@ export const constantRoutes=[
         name: '新增销售单商品',
         component: () => import('@/views/Slips/princeSlips/addPrice/addPriceGoods'),
         meta: { title: '新增销售单商品', icon: 'table',roles:['admin'] },
+        hidden: true
+      },
+      {
+        path: 'todayPriceSlips',
+        name: '今日销售单',
+        component: () => import('@/views/Slips/princeSlips/todayPriceSlips'),
+        meta: { title: '今日销售单', icon: 'table',roles:['admin'] },
+      },
+      {
+        path: 'addPriceDetailsGoods',
+        name: '新增销售单商品',
+        component: () => import('@/views/Slips/princeSlips/addPrice/addPriceDetailsGoods'),
+        meta: { title: '新增销售单商品', icon: 'table',roles:['admin'] },
+        hidden: true
+      },
+      {
+        path: 'printTable',
+        name: '打印单',
+        component: () => import('@/views/Slips/princeSlips/printTable/printTable'),
+        meta: { title: '打印单', icon: 'table',roles:['admin'] },
         hidden: true
       }
     ]
@@ -832,103 +851,103 @@ export const constantRoutes=[
     ]
 
   },
-  {
-    path:'/statistic',
-    component: Layout,
-    redirect: '',
-    name:'统计',
-    meta:{title: '统计',icon: 'el-icon-s-promotion'},
-    children: [
-      {
-        path:'',
-        name: '额外费用统计',
-        component: ()=> import('@/views/form/index'),
-        meta: {title: '额外费用统计',icon: 'table'}
-      },
-      {
-        path:'',
-        name: '零件销售统计',
-        component: ()=> import('@/views/form/index'),
-        meta: {title: '零件销售统计',icon: 'table'}
-      },
-      {
-        path:'',
-        name: '零件进货统计',
-        component: ()=> import('@/views/form/index'),
-        meta: {title: '零件进货统计',icon: 'table'}
-      },
-      {
-        path:'',
-        name: '零件进销存统计',
-        component: ()=> import('@/views/form/index'),
-        meta: {title: '零件进销存统计',icon: 'table'}
-      },
-      {
-        path:'',
-        name: '财务支出统计',
-        component: ()=> import('@/views/form/index'),
-        meta: {title: '财务支出统计',icon: 'table'}
-      },
-      {
-        path:'',
-        name: '财务入账统计',
-        component: ()=> import('@/views/form/index'),
-        meta: {title: '财务入账统计',icon: 'table'}
-      },
-      {
-        path:'',
-        name: '客户偏好统计',
-        component: ()=> import('@/views/form/index'),
-        meta: {title: '客户偏好统计',icon: 'table'}
-      },
-    ]
-  },
-  {
-    path:'/productMaintain',
-    component: Layout,
-    name:'产品维护',
-    meta:{title: '产品维护',icon: 'el-icon-s-promotion'},
-    children: [
-      {
-        path:'/maintain/place',
-        name: '产地或品牌维护',
-        component: ()=> import('@/views/place/place'),
-        meta: {title: '产地或品牌维护',icon: 'table'},
-      },
-      {
-        path:'/maintain/place/addPlace',
-        name: '添加产地或品牌',
-        component: ()=> import('@/views/place/addPlace'),
-        meta: {title: '添加产地或品牌',icon: 'table'},
-        hidden: true
-      },
-      {
-        path:'/maintain/place/editPlace',
-        name: '修改产地或品牌',
-        component: ()=> import('@/views/place/editPlace'),
-        meta: {title: '修改产地或品牌',icon: 'table'},
-        hidden: true
-      },
-      {
-        path:'/maintain/unite',
-        name: '零件属性单位维护',
-        component: ()=> import('@/views/unit/unit'),
-        meta: {title: '零件属性单位维护',icon: 'table'}
-      },
-      {
-        path:'/maintain/returnCycle',
-        name: '售后周期维护',
-        component: ()=> import('@/views/returnCycle/returnCycle'),
-        meta: {title: '售后周期维护',icon: 'table'}
-      },
-      {
-        path:'/maintain/goodPosition',
-        name:'目录维护',
-        component: ()=> import('@/views/goodPosition/addGoodPosition'),
-        meta:{title: '目录维护',icon: 'table'}
-      }
-    ]
-  },
+  // {
+  //   path:'/statistic',
+  //   component: Layout,
+  //   redirect: '',
+  //   name:'统计',
+  //   meta:{title: '统计',icon: 'el-icon-s-promotion'},
+  //   children: [
+  //     {
+  //       path:'',
+  //       name: '额外费用统计',
+  //       component: ()=> import('@/views/form/index'),
+  //       meta: {title: '额外费用统计',icon: 'table'}
+  //     },
+  //     {
+  //       path:'',
+  //       name: '零件销售统计',
+  //       component: ()=> import('@/views/form/index'),
+  //       meta: {title: '零件销售统计',icon: 'table'}
+  //     },
+  //     {
+  //       path:'',
+  //       name: '零件进货统计',
+  //       component: ()=> import('@/views/form/index'),
+  //       meta: {title: '零件进货统计',icon: 'table'}
+  //     },
+  //     {
+  //       path:'',
+  //       name: '零件进销存统计',
+  //       component: ()=> import('@/views/form/index'),
+  //       meta: {title: '零件进销存统计',icon: 'table'}
+  //     },
+  //     {
+  //       path:'',
+  //       name: '财务支出统计',
+  //       component: ()=> import('@/views/form/index'),
+  //       meta: {title: '财务支出统计',icon: 'table'}
+  //     },
+  //     {
+  //       path:'',
+  //       name: '财务入账统计',
+  //       component: ()=> import('@/views/form/index'),
+  //       meta: {title: '财务入账统计',icon: 'table'}
+  //     },
+  //     {
+  //       path:'',
+  //       name: '客户偏好统计',
+  //       component: ()=> import('@/views/form/index'),
+  //       meta: {title: '客户偏好统计',icon: 'table'}
+  //     },
+  //   ]
+  // },
+  // {
+  //   path:'/productMaintain',
+  //   component: Layout,
+  //   name:'产品维护',
+  //   meta:{title: '产品维护',icon: 'el-icon-s-promotion'},
+  //   children: [
+  //     {
+  //       path:'/maintain/place',
+  //       name: '产地或品牌维护',
+  //       component: ()=> import('@/views/place/place'),
+  //       meta: {title: '产地或品牌维护',icon: 'table'},
+  //     },
+  //     {
+  //       path:'/maintain/place/addPlace',
+  //       name: '添加产地或品牌',
+  //       component: ()=> import('@/views/place/addPlace'),
+  //       meta: {title: '添加产地或品牌',icon: 'table'},
+  //       hidden: true
+  //     },
+  //     {
+  //       path:'/maintain/place/editPlace',
+  //       name: '修改产地或品牌',
+  //       component: ()=> import('@/views/place/editPlace'),
+  //       meta: {title: '修改产地或品牌',icon: 'table'},
+  //       hidden: true
+  //     },
+  //     {
+  //       path:'/maintain/unite',
+  //       name: '零件属性单位维护',
+  //       component: ()=> import('@/views/unit/unit'),
+  //       meta: {title: '零件属性单位维护',icon: 'table'}
+  //     },
+  //     {
+  //       path:'/maintain/returnCycle',
+  //       name: '售后周期维护',
+  //       component: ()=> import('@/views/returnCycle/returnCycle'),
+  //       meta: {title: '售后周期维护',icon: 'table'}
+  //     },
+  //     {
+  //       path:'/maintain/goodPosition',
+  //       name:'目录维护',
+  //       component: ()=> import('@/views/goodPosition/addGoodPosition'),
+  //       meta:{title: '目录维护',icon: 'table'}
+  //     }
+  //   ]
+  // },
   {
     path: '/parts',
     component: Layout,

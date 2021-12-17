@@ -93,12 +93,13 @@ export default {
       princeSlips.queryAllDetails(this.queryDetails.odOrderId, this.queryDetails.pName,
         this.queryDetails.odType, this.queryDetails.pageNum, this.queryDetails.pageSize)
         .then(res => {
-          let returnList= res.list.filter((value)=>value.odStatus!=1)
-          let number
+          let returnList= res.list.filter((value)=>value.odStatus!==1)
           for (let returnListKey of returnList) {
-            if(returnListKey.odId=event) number=returnListKey.odNumber
+            if(returnListKey.odId===event) {
+              returnListKey.number = returnListKey.odNumber
+              this.$set(this.princeSheetReturn.returnDetailList,index,returnListKey)
+            }
           }
-          this.princeSheetReturn.returnDetailList[index].number=number
         })
     },
     getList(){
@@ -106,7 +107,7 @@ export default {
       princeSlips.queryAllDetails(this.queryDetails.odOrderId, this.queryDetails.pName,
         this.queryDetails.odType, this.queryDetails.pageNum, this.queryDetails.pageSize)
         .then(res => {
-          this.returnGoodList= res.list.filter((value)=>value.odStatus!=1
+          this.returnGoodList= res.list.filter((value)=>value.odStatus!==1
           )
         })
     },

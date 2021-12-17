@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <h6 style="float:right;margin-top:0;color: red">F5查看该零件本客户的历史记录,F6查看进货历史记录,
-      在添加整件时F7查看该整件的零件关系,F8查看该零件的订单记录</h6>
+    <h6 style="float:right;margin-top:0;color: red">F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,
+      在添加整件时F7查看该整件的零件关系</h6>
     <el-form :inline="true" class="demo-form-inline" style="position: relative;margin-top: 40px ">
       <el-form-item>
         <el-select   v-model="levelIV.odType"   clearable placeholder="选择商品类型" style="width: 130px"  @change="changeTotal($event)" >
@@ -62,7 +62,7 @@
               <span>{{ props.row.factory.fName }}</span>
             </el-form-item>
             <el-form-item label="货物位置:">
-              <span>{{ props.row.oSupposeIncome }}</span>
+              <span>{{ props.row.pCategoryId }}</span>
             </el-form-item>
             <el-form-item label="图片:">
             </el-form-item>
@@ -72,7 +72,7 @@
             <el-form-item>
               <div class="demo-image__placeholder">
                 <div class="block">
-                  <el-image :src="src" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
+                  <el-image :src="props.row.pictures[0].path" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
                     <div slot="placeholder" class="image-slot">
                       加载中<span class="dot">...</span>
                     </div>
@@ -389,6 +389,20 @@
         </el-table-column>
       </el-table>
     </el-dialog>
+    <!--缺货备注提醒-->
+    <el-dialog :visible.sync="dialogNote"  title="缺货备注提醒" width="70%">
+      <el-form :model="priceNote" label-width="120px" ref="priceNote" :rules="rules">
+        <el-form-item label="备注" prop="note">
+          <el-input v-model="priceNote.note" style="width: 90%" rows="5" type="textarea"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogNote = false">取 消</el-button>
+        <el-button  type="primary"
+                    @click="UpdateNote()">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -400,6 +414,9 @@ import {validatePassCheck} from "@/views/Slips/ruleNumber";
 export default {
   data() {
     return {
+      //零件负数添加备注
+      dialogNote:false,
+      priceNote:{},
       //该零件历史记录
       dialogNoCustomerHistoryPrice:false,
       historyNoCustomerPriceList:[],
@@ -420,7 +437,6 @@ export default {
         pageNum:1,
         pageSize:10,
       },
-      src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       dialogGoodPrice:false,
       historyPurchasePriceList:[],
       historyPurchasePriceQuery:{
@@ -456,6 +472,9 @@ export default {
         ],
         odRetailPrice:[
           {required: true, message: '请输入价格', trigger: 'change'}
+        ],
+        note:[
+          {required: true, message: '请输入备注', trigger: 'change'}
         ]
       }
     }
@@ -607,8 +626,10 @@ export default {
     showSelected(){
       this.dialogVisible=true
     },
+    //提交销售单
     submitForm(){
       try {
+        this.priceNote={}
         this.$refs['priceSlip'].validate((valid) => {
           if (valid) {
             this.priceSlip.oCustomerId=this.$route.query.oCustomerId
@@ -638,20 +659,24 @@ export default {
             PostData('/OrderDetail/addOrderDetail',this.priceSlip)
               .then(res=>{
                 if (res.result === 'fails') {
-                  this.priceSlip.orderDetailList=this.priceSlip.orderDetailList.filter(item=>{
-                    return !item.wId
-                  })
+                  let note=''
                   res.lackPartList.forEach((value) => {
                     let number = null
                     number = +value.lackNumber - (2 * value.lackNumber)
                     alert('由于' + value.pName + '数量不足,添加销售单失败,目前' + value.pName + '的数量为'
                       + value.pRealInventory + '还缺少' + number)
-                    this.priceSlip.orderDetailList=this.priceSlip.orderDetailList.filter(item=>{
-                      return item.pId!==value.pId
-                    })
+                    note += `${value.pName}+'缺'+${number}.`
                   })
+                  let Note = {}
+                  Note.status = 0
+                  Note.operateId = parseInt(Cookie.get('aId'))
+                  Note.type = 0
+                  Note.note = note
+                  this.priceNote=Note
+                  this.dialogNote=true
+                  this.UpdateNote()
+                }else{
                   this.dialogVisible=false
-                } else {
                   this.$message({
                     type: 'success',
                     message: '增加销售单成功'
@@ -667,6 +692,22 @@ export default {
       }finally {
 
       }
+    },
+    //负数零件备注增加
+    UpdateNote(){
+      this.$refs.priceNote.validate((valid)=>{
+        if(valid){
+          PostData('/note/insert', this.priceNote).then(res => {
+            this.dialogNote=false
+            this.dialogVisible=false
+            this.$message({
+              type: 'success',
+              message: '增加销售单成功'
+            })
+            this.$router.back()
+          })
+        }
+      })
     },
     //添加零件
     addPart(item){

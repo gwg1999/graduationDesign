@@ -45,7 +45,6 @@
             {{ scope.row.odType===0?'整件':'零件'}}
           </template>
         </el-table-column>
-        <el-table-column prop="Logistics_id" label="物流名称" align="center" />
         <el-table-column prop="odNumber" label="数量"  align="center" />
         <el-table-column prop="odRetailPrice" label="实时售价"  align="center" />
         <el-table-column prop="odStatus" label="零件状态"  align="center">
@@ -55,7 +54,7 @@
         </el-table-column>
         <el-table-column label="贵重物品序列号"  align="center" width="200">
           <template slot-scope="scope">
-            <el-button  v-if="scope.row.odType===1&&parseInt(flag)===2"  type="primary" size="mini" icon="el-icon-folder" @click="openSerialNumber(scope.row.odId)">查看贵重物品序列号</el-button>
+            <el-button  v-if="scope.row.odType===1"  type="primary" size="mini" icon="el-icon-folder" @click="openSerialNumber(scope.row.odId)">查看贵重物品序列号</el-button>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
@@ -156,6 +155,7 @@ export default {
   },
   created() {
     this.getList()
+    console.log(this.$route.query.oStatus)
     this.flag=this.$route.query.oStatus
   },
   methods:{
@@ -163,11 +163,12 @@ export default {
     openSerialNumber(odId){
       this.querySerialNumber.orderId=this.$route.query.oId
       this.querySerialNumber.detailId=odId
-      querySerialNumber(this.querySerialNumber,this.pageNum=0,this.pageSize=0).then(res=>{
+      querySerialNumber(this.querySerialNumber,this.pageNum=1,this.pageSize=10).then(res=>{
         if(res.list&&res.list.length>0)
           res.list.forEach((item) => {
             item.updateDate = getTime(item.updateDate)
           })
+        console.log(res.list)
         this.serialNumberList=res.list
       })
       this.dialogSerialNumberVisible=true
@@ -178,6 +179,7 @@ export default {
       princeSlips.queryAllDetails(this.queryPrinceSheet.odOrderId,this.queryPrinceSheet.pName,
         this.queryPrinceSheet.odType,this.queryPrinceSheet.pageNum,this.queryPrinceSheet.pageSize)
         .then(res=>{
+          console.log(res.list)
           this.princeSheetList=res.list
           this.total=res.total
         })

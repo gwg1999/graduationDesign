@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import qs from 'qs'
 import {baseURL} from "@/api/http";
 export default {
   queryAll(name,beginTime,endTime,createTimeSequence,endTimeSequence,pageNum,pageSize) {
@@ -18,12 +17,12 @@ export default {
       params:{qdOrderId,pName,qdType,pageNum,pageSize}
     })
   },
-  becomeOrder(oWarehouseOperaterId,qId,paymentWay,deliveryWay) {
+  becomeOrder(oWarehouseOperaterId,qId,paymentWay,deliveryWay,otherCast) {
     return request({
       baseURL:baseURL,
       url: '/quotation/becomeOrder',
       method: 'post',
-      params:{oWarehouseOperaterId,qId,paymentWay,deliveryWay}
+      params:{oWarehouseOperaterId,qId,paymentWay,deliveryWay,otherCast}
     })
   },
   deleteQuotation(qId) {
