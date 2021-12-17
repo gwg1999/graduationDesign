@@ -998,7 +998,13 @@ export const constantRoutes=[
         component: () => import('@/views/parts/addPart'),
         meta: { title: '增加零件',  noCache: true },
         hidden: true
-      }
+      },
+      {
+        path: '/knowledge',
+        name: '知识库管理',
+        component: () => import('@/views/knowledgeBase/part'),
+        meta: { title: '知识库管理',  icon:'tree',noCache: true },
+      },
     ]
   },
   {
