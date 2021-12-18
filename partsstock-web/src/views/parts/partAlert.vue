@@ -155,7 +155,7 @@ export default {
       partQuery:{
         pId:null,
         pName:null,
-        type:1,
+        type:0,
         pageSize: 10,
         pageNum: 1,
       },

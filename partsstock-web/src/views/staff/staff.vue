@@ -10,7 +10,8 @@
             :fetch-suggestions="querySearch"
             placeholder="请输入用户名"
             :trigger-on-focus="false"
-            @select="handleSelect">
+            @select="handleSelect"
+            clearable>
             <!--      <i-->
             <!--        class="el-icon-edit el-input__icon"-->
             <!--        slot="suffix"-->
@@ -21,7 +22,7 @@
               <!--        <span class="addr">{{ item.address }}</span>-->
             </template>
           </el-autocomplete>
-          <el-input type="text" v-model="adminQuery.aPhoneNumber" placeholder="请输入手机号" style="width: 45%;left: 10px"></el-input>
+          <el-input type="text" v-model="adminQuery.aPhoneNumber" placeholder="请输入手机号" style="width: 45%;left: 10px" clearable></el-input>
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="search">查 询</el-button>
 

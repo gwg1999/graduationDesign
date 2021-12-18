@@ -124,7 +124,8 @@
             reserve-keyword
             placeholder="请输入产地或品牌"
             :remote-method="remotePlace"
-            :loading="loading">
+            :loading="loading"
+             @focus="getPlace">
             <el-option
               v-for="item in placeList"
               :key="item.plId"
@@ -163,7 +164,8 @@
             reserve-keyword
             placeholder="请输入厂家"
             :remote-method="remoteFactory"
-            :loading="loading">
+            :loading="loading"
+            @focus="getFactory">
             <el-option
               v-for="item in factoryList"
               :key="item.fId"
@@ -331,12 +333,15 @@ export default {
         status:1,
         type:1
       },
+      highFiveQuery:{},
       cycleQuery:{
         pageSize: 0,
         pageNum: 0,
       },
       value: [],
       options: [],
+      highFactory:[],
+      highPlace:[],
       categoryOption:[],
       query:{
         pageSize: 10,
@@ -422,6 +427,7 @@ export default {
     this.getPCate()
     this.getRycle()
     this.getUnitList()
+    this.getHighFive()
   },
   computed: {
     partId(){
@@ -457,6 +463,13 @@ export default {
         }).catch(err=>{
         this.$message.error(err.message);
         console.log(err);
+      })
+    },
+    getHighFive(){
+      PostData('/parts/selectHighFive',this.highFiveQuery).then((ref)=>{
+        console.log(ref);
+        this.highFactory=ref.factories
+        this.highPlace=ref.places
       })
     },
     backPre(){
@@ -513,12 +526,18 @@ export default {
     },
     getFactoryList(queryString){
       this.factoryQuery.fName = queryString;
-      PostData('factory/selectAllByLike',qs.stringify(this.factoryQuery))
+      PostData('factory/selectAllByLike',this.factoryQuery)
         .then(res =>{
           this.factoryList=res.list
           console.log(this.factoryList);
           this.loading=false
         })
+    },
+    getPlace(){
+      this.placeList=this.highPlace
+    },
+    getFactory(){
+      this.factoryList=this.highFactory
     },
     remoteFactory(query) {
       console.log(query);

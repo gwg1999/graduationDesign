@@ -10,7 +10,8 @@
             :fetch-suggestions="querySearch"
             placeholder="输入客户名称"
             :trigger-on-focus="false"
-            @select="handleSelect">
+            @select="handleSelect"
+            clearable>
             <!--      <i-->
             <!--        class="el-icon-edit el-input__icon"-->
             <!--        slot="suffix"-->
@@ -21,8 +22,8 @@
               <!--        <span class="addr">{{ item.address }}</span>-->
             </template>
           </el-autocomplete>
-          <el-input placeholder="请输入客户地址" type="text" v-model="customerQuery.cuAddress" style="width: 25%;left: 5px"></el-input>
-          <el-input placeholder="请输入电话号码" type="text" v-model="customerQuery.cuPhoneNumber" style="width: 25%;left: 10px"></el-input>
+          <el-input placeholder="请输入客户地址" type="text" v-model="customerQuery.cuAddress" style="width: 25%;left: 5px" clearable></el-input>
+          <el-input placeholder="请输入电话号码" type="text" v-model="customerQuery.cuPhoneNumber" style="width: 25%;left: 10px" clearable></el-input>
           <el-button type="primary" icon="el-icon-search" @click="search" style="position: relative;left: 15px">查 询</el-button>
         </el-form-item>
         <el-select v-model="value" placeholder="选择用户权限" @change="selectChang" style="position: relative;left: 1%">
@@ -72,11 +73,11 @@
             <el-form-item label="银行卡账号" prop="cuAccount">
               <el-input v-model="customer.cuAccount" style="width: 300px"/>
             </el-form-item>
+          </div>
+          <div style="width: 50%;float: right">
             <el-form-item label="联系人名称" prop="cuPersonId">
               <el-input v-model="customer.cuPersonId" style="width: 300px"/>
             </el-form-item>
-          </div>
-          <div style="width: 50%;float: right">
             <el-form-item label="开户行" prop="cuBankName">
               <el-input v-model="customer.cuBankName" style="width: 300px"/>
             </el-form-item>
@@ -122,14 +123,14 @@
                 <el-option label="信用卡" value="2"></el-option>
               </el-select>
             </el-form-item >
-            <el-form-item label="用户权限" prop="cuPermission">
-              <!--            <el-input v-model="admin.aPermission" style="width: 300px"/>-->
-              <el-select v-model="customer.cuPermission" placeholder="请选择用户权限">
-                <el-option label="进货员" :value="0"></el-option>
-                <el-option label="销售员" :value="1"></el-option>
-                <el-option label="进货销售员" :value="2"></el-option>
-              </el-select>
-            </el-form-item>
+<!--            <el-form-item label="用户权限" prop="cuPermission">-->
+<!--              &lt;!&ndash;            <el-input v-model="admin.aPermission" style="width: 300px"/>&ndash;&gt;-->
+<!--              <el-select v-model="customer.cuPermission" placeholder="请选择用户权限">-->
+<!--                <el-option label="进货员" :value="0"></el-option>-->
+<!--                <el-option label="销售员" :value="1"></el-option>-->
+<!--                <el-option label="进货销售员" :value="2"></el-option>-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
 <!--            <el-form-item>-->
 <!--              <el-button :disabled="saveBtnDisabled" type="primary" @click="submitForm('customer')" >保存</el-button>-->
 <!--            </el-form-item>-->
@@ -161,10 +162,10 @@
       <el-table-column prop="cuPhoneNumber" label="电话号码" width="110%"  align="center"/>
 <!--      <el-table-column prop="cuPhoneNumber1" label="备用电话1" width="110%" align="center" />-->
 <!--      <el-table-column prop="cuPhoneNumber2" label="备用电话2" width="110%"  align="center"/>-->
-      <el-table-column prop="cuAddress" label="客户地址" width="130%"  align="center"/>
+      <el-table-column prop="cuAddress" label="客户地址" width="200"  align="center"/>
 <!--      <el-table-column prop="cuAccount" label="银行卡账号" width="120%" align="center"/>-->
 <!--      <el-table-column prop="cuBankName" label="开户行" width="80%"  align="center"/>-->
-      <el-table-column prop="cuTaxNumber" label="税号" width="120%"  align="center"/>
+      <el-table-column prop="cuTaxNumber" label="税号" width="200"  align="center"/>
       <el-table-column prop="cuCourier" label="默认物流" width="80%"  align="center"/>
 <!--      <el-table-column prop="cuSpareCourier" label="备用物流" width="50%"  align="center"/>-->
       <el-table-column prop="cuDiscount" label="默认折扣" width="60%" align="center" />
@@ -176,13 +177,13 @@
         </template>
       </el-table-column>
 <!--      <el-table-column prop="cuName" label="联系人姓名" width="80%" align="center" />-->
-      <el-table-column prop="cuPermission" label="用户权限" width="110%"  align="center">
-        <template slot-scope="scope">
-          <h3 v-if="scope.row.cuPermission===0">进货客户</h3>
-          <h3 v-if="scope.row.cuPermission===1">销售客户</h3>
-          <h3 v-if="scope.row.cuPermission===2">进货销售客户</h3>
-        </template>
-      </el-table-column>
+<!--      <el-table-column prop="cuPermission" label="用户权限" width="110%"  align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          <h3 v-if="scope.row.cuPermission===0">进货客户</h3>-->
+<!--          <h3 v-if="scope.row.cuPermission===1">销售客户</h3>-->
+<!--          <h3 v-if="scope.row.cuPermission===2">进货销售客户</h3>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="归属业务员" width="120%" align="center" >
         <template slot-scope="scope">
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="showStaff(scope.row.cuId)">查看</el-button>
@@ -438,6 +439,7 @@ export default {
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
+        this.customer.cuPermission=0
         if (valid) {
           if(this.customer.cuId){
             PostData('/customer/update',this.customer)

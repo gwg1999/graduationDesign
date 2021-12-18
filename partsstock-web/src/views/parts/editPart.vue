@@ -138,7 +138,8 @@
                 reserve-keyword
                 placeholder="请输入产地或品牌"
                 :remote-method="remotePlace"
-                :loading="loading">
+                :loading="loading"
+                @focus="getPlace">
                 <el-option
                   v-for="item in placeList"
                   :key="item.plId"
@@ -212,7 +213,8 @@
             reserve-keyword
             placeholder="请输入厂家"
             :remote-method="remoteFactory"
-            :loading="loading">
+            :loading="loading"
+            @focus="getFactory">
             <el-option
               v-for="item in factoryList"
               :key="item.fId"
@@ -369,6 +371,9 @@ export default {
         cName:'',
         cId:''
       },
+      highFiveQuery:{},
+      highFactory:[],
+      highPlace:[],
       positionQuery:{
         status:1,
         type:0
@@ -474,6 +479,7 @@ export default {
     this.getPCate()
     this.getRycle()
     this.getUnitList()
+    this.getHighFive()
   },
   computed:{
     inPicturePar(){
@@ -484,6 +490,19 @@ export default {
     }
   },
   methods: {
+    getHighFive(){
+      PostData('/parts/selectHighFive',this.highFiveQuery).then((ref)=>{
+        console.log(ref);
+        this.highFactory=ref.factories
+        this.highPlace=ref.places
+      })
+    },
+    getPlace(){
+      this.placeList=this.highPlace
+    },
+    getFactory(){
+      this.factoryList=this.highFactory
+    },
     noUpLoad(){
       this.upLoadDialog=false
       this.$refs.inUpload.clearFiles()

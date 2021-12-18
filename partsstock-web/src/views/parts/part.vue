@@ -7,14 +7,15 @@
       <template slot-scope="scoped">
       <el-form-item>
 <!--        <el-input v-model="partQuery.pName" clearable placeholder="零件名"  style="width: 150px"/>-->
-        <el-input v-model="pGoodsNum" placeholder="请输入零件号" style="width: 30%" class="search"></el-input>
+        <el-input v-model="pGoodsNum" placeholder="请输入零件号" style="width: 30%" class="search" clearable></el-input>
         <el-autocomplete
           v-model="state"
           :fetch-suggestions="querySearch"
           placeholder="请输入零件名"
           :trigger-on-focus="false"
           @select="handleSelect"
-          class="search">
+          class="search"
+          clearable>
           <!--      <i-->
           <!--        class="el-icon-edit el-input__icon"-->
           <!--        slot="suffix"-->
@@ -67,7 +68,7 @@
           {{ (searchQuery.pageNum - 1) * searchQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-<!--      <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />-->
+      <el-table-column prop="pId" label="序列号" width="100" align="center" />
       <el-table-column prop="pNumber" label="零件号" width="170" align="center" />
       <el-table-column prop="pName" label="零件名" width="250" align="center" />
       <el-table-column prop="place.plName" label="产地或品牌" width="100"  align="center"/>

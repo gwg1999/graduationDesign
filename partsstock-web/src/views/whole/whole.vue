@@ -11,9 +11,10 @@
           <el-autocomplete
             v-model="state"
             :fetch-suggestions="querySearch"
-            placeholder="请输入内容"
+            placeholder="请输入整件名称"
             :trigger-on-focus="false"
-            @select="handleSelect">
+            @select="handleSelect"
+            clearable>
             <!--      <i-->
             <!--        class="el-icon-edit el-input__icon"-->
             <!--        slot="suffix"-->
@@ -24,6 +25,10 @@
               <!--        <span class="addr">{{ item.address }}</span>-->
             </template>
           </el-autocomplete>
+          <el-select v-model="wholeQuery.wIsUse" placeholder="整件状态" style="margin-left: 18px">
+            <el-option :value="1" label="上架"></el-option>
+            <el-option :value="0" label="下架"></el-option>
+          </el-select>
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="search()">查 询</el-button>
 
@@ -86,7 +91,16 @@
           <!--       </router-link>   -->
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="insert(scope.row.wId)">添加零件</el-button>
 
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="deleteWhole(scope.$index)">删除整件</el-button>
+<!--          <el-button type="primary" size="mini" icon="el-icon-edit" @click="deleteWhole(scope.$index)">删除整件</el-button>-->
+          <el-button  size="mini" icon="el-icon-edit"
+                      :type="scope.row.wIsUse === 1
+                                ? 'danger'
+                                : scope.row.wIsUse === 0
+                                ? 'success'
+                                : ''
+                          "
+                      @click="editCancel(scope.row)">{{ scope.row.wIsUse===1?'注销':'启用'}}
+          </el-button>
           <!--<el-button  size="mini" icon="el-icon-edit"
                       :type="scope.row.pPartsStatus === 1
                                 ? 'danger'
@@ -160,8 +174,10 @@ export default {
       total:0,//总记录数
       wholeQuery:{
         pageSize: 10,
-        pageNum: 1
+        pageNum: 1,
+        wIsUse:1
       },
+      deleteQuery:{},
       whole:{
         pageSize: 10,
         pageNum: 1
@@ -236,7 +252,7 @@ export default {
         }).catch(()=>{})
     },
     getList() {
-      PostData('/whole/selectAllByLike',this.wholeQuery)
+      PostData('/whole/selectAllByLike',qs.stringify(this.wholeQuery))
         .then(res=>{
           this.list = res.list
           this.pageTotal=res.total
@@ -265,23 +281,6 @@ export default {
       localStorage.setItem('wId',wId)
       this.$router.push('/whole/partsWhole')
     },
-    editCancel(index,param){
-      this.$confirm('是否将此零件'+(param.pPartsStatus===0?'上架':'下架')+'?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.list[index].pPartsStatus = 1 - this.list[index].pPartsStatus
-        PostData('parts/update',this.list[index])
-          .then(res=>{
-            this.getList()
-            this.$message({
-              type: 'success',
-              message: '修改成功!'
-            })
-          })
-      })
-    },
     querySearch(queryString, cb) {
       this.wholeQuery.wName=queryString;
       PostData('/whole/selectAllByLike',qs.stringify(this.wholeQuery)).then(ref=>{
@@ -298,6 +297,21 @@ export default {
           done();
         })
         .catch(_ => {});
+    },
+    editCancel(param){
+      this.deleteQuery.wId=param.wId
+      this.deleteQuery.wIsUse=1-param.wIsUse
+      console.log(this.deleteQuery);
+      PostData('/whole/updateWhole',this.deleteQuery).then(res=>{
+        this.getList()
+        this.$message({
+          type:"success",
+          message:'删除成功'
+        })
+      }).catch(err=>{
+        this.$message.error(err.message);
+        console.log(err);
+      })
     },
     deleteWhole(index){
       localStorage.setItem('wId',this.list[index].wId)

@@ -10,7 +10,8 @@
             :fetch-suggestions="querySearch"
             placeholder="请输入零件单位名"
             :trigger-on-focus="false"
-            @select="handleSelect">
+            @select="handleSelect"
+            clearable>
             <!--      <i-->
             <!--        class="el-icon-edit el-input__icon"-->
             <!--        slot="suffix"-->
