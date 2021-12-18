@@ -123,14 +123,14 @@
       <el-dialog :visible.sync="dialogPrinceSheetFormVisible" title="修改销售单">
         <el-form :model="princeSheetModify" label-width="120px" :rules="rules" ref="princeSheetModify">
           <el-form-item label="发票类型" prop="oInvoiceTypeId">
-            <el-select v-model="princeSheetModify.oInvoiceTypeId"    placeholder="发票类型" style="width: 200px"  >
+            <el-select v-model="princeSheetModify.oInvoiceTypeId"   clearable placeholder="发票类型" style="width: 200px"  >
               <el-option :value="0" label="无"/>
               <el-option :value="1" label="普通发票"/>
               <el-option :value="2" label="增值税发票"/>
             </el-select>
           </el-form-item>
           <el-form-item label="发货方式" prop="oDeliveryWay">
-            <el-select v-model="princeSheetModify.oDeliveryWay"  placeholder="发货方式" style="width: 200px"  >
+            <el-select v-model="princeSheetModify.oDeliveryWay" clearable placeholder="发货方式" style="width: 200px"  >
               <el-option value="线下交易" label="线下交易"/>
               <el-option value="快递" label="快递"/>
               <el-option value="托运" label="托运"/>

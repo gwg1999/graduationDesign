@@ -17,7 +17,7 @@
           </router-link>
         </el-form-item >
 
-        <el-form-item style="position: absolute ;right: 10px">
+        <el-form-item v-show="parseInt(flag)!==parseInt('0')" style="position: absolute ;right: 10px">
           <router-link :to="{path:'/Slips/addPriceDetailsGoods',query:{oCustomerId:this.$route.query.oCustomerId,oId:this.$route.query.oId}}">
             <el-button type="primary"
                        icon="el-icon-circle-plus">添加</el-button>
@@ -59,8 +59,8 @@
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope" >
-            <el-button  :disabled="!(scope.row.odStatus===0)" type="primary" size="mini" icon="el-icon-edit"  @click="openInquirySheetDialog(scope.row)">修改</el-button>
-            <el-button  :disabled="!(scope.row.odStatus===0)" type="primary" size="mini" icon="el-icon-delete"  @click="deleteInquirySheet(scope.row.odId)">删除</el-button>
+            <el-button  :disabled="!(scope.row.odStatus===0)||parseInt(flag)===0" type="primary" size="mini" icon="el-icon-edit"  @click="openInquirySheetDialog(scope.row)">修改</el-button>
+            <el-button  :disabled="!(scope.row.odStatus===0)||parseInt(flag)===0" type="primary" size="mini" icon="el-icon-delete"  @click="deleteInquirySheet(scope.row.odId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -10,7 +10,7 @@
 
         <el-form-item label="客户单位" prop="oCustomerId" style="width: 500px">
           <el-select
-            v-model="priceSlip.oCustomerId" filterable placeholder="请选择客户单位"
+            v-model="priceSlip.oCustomerId" filterable clearable placeholder="请选择客户单位"
             :filter-method="customerNameListFilter" style="width: 500px" @change="deliverWay($event)">
             <el-option
               v-for="customer in customerList"
@@ -22,7 +22,7 @@
 
         <el-form-item label="仓库管理员" prop="oWarehouseOperaterId">
           <el-select
-            v-model="priceSlip.oWarehouseOperaterId" filterable placeholder="请选择仓库管理员" >
+            v-model="priceSlip.oWarehouseOperaterId" clearable filterable placeholder="请选择仓库管理员" >
             <el-option
               v-for="WarehouseOperator in WarehouseOperatorList"
               :key="WarehouseOperator.aId"
@@ -38,7 +38,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="发货方式">
-          <el-select  id="selectInput" v-model="value" filterable placeholder="请选择" ref="searchSelect" :filter-method="dataFilter" @visible-change="visibleChange" @focus="selectFocus">
+          <el-select  id="selectInput" v-model="value" clearable filterable placeholder="请选择" ref="searchSelect" :filter-method="dataFilter" @visible-change="visibleChange" @focus="selectFocus">
             <el-option
               v-for="item in oDeliveryWayList"
               :key="item.cuCourier"

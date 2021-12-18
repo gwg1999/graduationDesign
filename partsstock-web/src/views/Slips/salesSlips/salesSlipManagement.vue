@@ -82,7 +82,7 @@
       <el-dialog :visible.sync="dialogWarehouseOperatorFormVisible" title="转销售单">
         <el-form :model="warehouseOperatorModify" label-width="120px" :rules="rules" ref="warehouseOperatorModify">
           <el-form-item label="选择仓库管理员" prop="oWarehouseOperaterId">
-            <el-select v-model="warehouseOperatorModify.oWarehouseOperaterId" filterable placeholder="选择仓库管理员" >
+            <el-select v-model="warehouseOperatorModify.oWarehouseOperaterId"  clearable filterable placeholder="选择仓库管理员" >
               <el-option
                 v-for="warehouseOperator in warehouseOperatorList"
                 :key="warehouseOperator.aId"
@@ -98,7 +98,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="发货方式" prop="deliveryWay">
-            <el-select v-model="warehouseOperatorModify.deliveryWay"  placeholder="发货方式" style="width: 200px"  >
+            <el-select v-model="warehouseOperatorModify.deliveryWay" clearable  placeholder="发货方式" style="width: 200px"  >
               <el-option value="线下交易" label="线下交易"/>
               <el-option value="快递" label="快递"/>
               <el-option value="托运" label="托运"/>
@@ -219,7 +219,7 @@ export default {
                   number = +value.lackNumber - (2 * value.lackNumber)
                   alert('由于' + value.pName + '数量不足,添加销售单失败,目前' + value.pName + '的数量为'
                     + value.pRealInventory + '还缺少' + number)
-                  note += `${value.pName}'缺'${number}个.`
+                  note += `${value.pName}缺${number}个.`
                 })
                 let Note = {}
                 Note.status = 0

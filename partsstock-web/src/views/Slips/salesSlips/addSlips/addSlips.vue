@@ -9,7 +9,7 @@
         <el-form label-width="120px" :rules="rules" :model="salesSlip" ref="salesSlip" >
           <el-form-item label="客户单位" prop="qCustomerId" style="width: 500px">
             <el-select
-              v-model="salesSlip.qCustomerId" filterable placeholder="请选择客户单位"
+              v-model="salesSlip.qCustomerId" filterable clearable placeholder="请选择客户单位"
               :filter-method="userFilter" style="width: 500px">
               <el-option
                 v-for="customer in customerList"
