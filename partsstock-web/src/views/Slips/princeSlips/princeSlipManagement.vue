@@ -170,7 +170,7 @@
               ref="inDownload"
               :action="baseURL+'/upload/uploadOrderImage?'+DeliverPicture"
               class="upload-demo"
-              accept="image/png,image/gif,image/jpg,image/jpeg" 
+              accept="image/png,image/gif,image/jpg,image/jpeg"
               list-type="picture"
               :auto-upload="false"
               :limit=limitNum

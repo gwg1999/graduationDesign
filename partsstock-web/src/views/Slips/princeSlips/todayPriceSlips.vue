@@ -7,10 +7,10 @@
           <el-input v-model="queryPrinceSheet.name"  clearable placeholder="客户名称" style="width: 150px"></el-input>
         </el-form-item>
         <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="getList(1)">查 询</el-button>
-        <router-link to="/Slips/addSPriceSlips">
-          <el-button type="primary"
-                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>
-        </router-link>
+<!--        <router-link to="/Slips/addSPriceSlips">-->
+<!--          <el-button type="primary"-->
+<!--                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>-->
+<!--        </router-link>-->
       </el-form>
       <!--      销售单管理列表-->
       <el-table
@@ -159,7 +159,7 @@
           <el-form-item label="打包单上传" >
             <el-upload
               ref="inDownload"
-              :action="baseURL+'/upload/uploadOrderImage?'+DeliverPicPar"
+              :action="baseURL+'/upload/uploadOrderImage?'+DeliverPicture"
               class="upload-demo"
               accept="image/png,image/gif,image/jpg,image/jpeg"
               list-type="picture"
@@ -191,7 +191,7 @@
           <el-form-item label="打包单上传" prop="file">
             <el-upload
               ref="inUpload"
-              :action="baseURL+'/upload/uploadOrderImage?'+inPicPar"
+              :action="baseURL+'/upload/uploadOrderImage?'+inPicture"
               class="upload-demo"
               accept="image/png,image/gif,image/jpg,image/jpeg"
               list-type="picture"
