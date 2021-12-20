@@ -170,7 +170,7 @@
               ref="inDownload"
               :action="baseURL+'/upload/uploadOrderImage?'+DeliverPicture"
               class="upload-demo"
-              accept="image/png,image/gif,image/jpg,image/jpeg"
+              accept="image/png,image/gif,image/jpg,image/jpeg" 
               list-type="picture"
               :auto-upload="false"
               :limit=limitNum
@@ -352,9 +352,11 @@ export default {
         princeSheetModify.oId=this.PackageGoods.orderId
         princeSheetModify.oIsPackage=0
         PostData('order/updateOrder', princeSheetModify).then(res=>{
-          this.getList()
         })
       },0)
+      setTimeout(()=>{
+        this.getList()
+      },1000)
     },
     handleBeforeUpload(file){
       if(!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
@@ -400,12 +402,13 @@ export default {
         princeSheetModify.oId=this.DeliverGoods.orderId
         princeSheetModify.oStatus=0
         PostData('order/updateOrder', princeSheetModify).then(res=>{
-          this.getList()
         })
         PostData('/order/deliverOrder',princeSheetModify).then(res=>{
-          this.getList()
         })
       },0)
+      setTimeout(()=>{
+        this.getList()
+      },1000)
     },
     //转报价单
     InverseSales(params){

@@ -63,7 +63,7 @@
               <el-form-item label="打包图片:">
                 <div class="demo-image__placeholder">
                   <div class="block">
-                    <el-image :src="src" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
+                    <el-image :src="props.row.packageUrl" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
@@ -74,7 +74,7 @@
               <el-form-item label="发货图片:">
                 <div class="demo-image__placeholder">
                   <div class="block">
-                    <el-image :src="src" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
+                    <el-image  :src="props.row.deliverUrl" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
@@ -191,7 +191,7 @@
           <el-form-item label="打包单上传" prop="file">
             <el-upload
               ref="inUpload"
-              :action="baseURL+'/upload/uploadOrderImage'"
+              :action="baseURL+'/upload/uploadOrderImage?'+inPicPar"
               class="upload-demo"
               accept="image/png,image/gif,image/jpg,image/jpeg"
               list-type="picture"
@@ -353,9 +353,11 @@ export default {
         princeSheetModify.oId=this.PackageGoods.orderId
         princeSheetModify.oIsPackage=0
         PostData('order/updateOrder', princeSheetModify).then(res=>{
-          this.getList()
         })
       },0)
+      setTimeout(()=>{
+        this.getList()
+      },1000)
     },
     handleBeforeUpload(file){
       if(!(file.type === 'image/png' || file.type === 'image/gif' || file.type === 'image/jpg' || file.type === 'image/jpeg')) {
@@ -401,12 +403,13 @@ export default {
         princeSheetModify.oId=this.DeliverGoods.orderId
         princeSheetModify.oStatus=0
         PostData('order/updateOrder', princeSheetModify).then(res=>{
-          this.getList()
         })
         PostData('/order/deliverOrder',princeSheetModify).then(res=>{
-          this.getList()
         })
       },0)
+      setTimeout(()=>{
+        this.getList()
+      },1000)
     },
     //转报价单
     InverseSales(params){
@@ -439,6 +442,15 @@ export default {
             res.list[i].oCreateTime=getTime(res.list[i].oCreateTime)
             if(res.list[i].oResultTime)
               res.list[i].oResultTime=getTime(res.list[i].oResultTime)
+            if(res.list[i].orderPictures){
+              for (let j=0;j<res.list[i].orderPictures.length;j++){
+                if(res.list[i].orderPictures[j].type===0){
+                  res.list[i].packageUrl=res.list[i].orderPictures[j].path
+                }else{
+                  res.list[i].deliverUrl=res.list[i].orderPictures[j].path
+                }
+              }
+            }
           }
           this.princeSheetList=res.list
 

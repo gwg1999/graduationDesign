@@ -39,7 +39,7 @@
       <el-form-item   v-if="levelIV.qdType===0" style="width: 210px">
         <el-input v-model="levelIV.wName" placeholder="请输入整件名" ></el-input>
       </el-form-item>
-      <el-button  type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
+      <el-button :disabled="!(levelIV.qdType===0||levelIV.qdType===1)" type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
       <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 100px" @click="showSelected">查看已选零件</el-button>
 <!--      <el-button @click="previous" type="primary" style="position: absolute;right: 10px">上一步</el-button>-->
       <!--      <el-button  type="primary" @click="next"  style="position: absolute;right: 10px;width: 100px">下一步</el-button>-->
@@ -760,7 +760,7 @@ export default {
             this.wholeList=[]
           })
       } else {
-        PostData('/whole/selectAll', this.levelIV).then(res => {
+        PostData('/whole/selectAllByLike', this.levelIV).then(res => {
           this.wholeList=res.list
           this.partTotal=res.total
           this.list=[]
