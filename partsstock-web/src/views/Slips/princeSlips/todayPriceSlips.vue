@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column type="expand" label="详情" width="60px">
           <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
+            <el-form label-position="left" inline class="demo-table-expand" label-width="150px" :label-position="right">
               <el-form-item label="创建人员:">
                 <span>{{ props.row.createPeopleName }}</span>
               </el-form-item>
@@ -230,14 +230,12 @@
     </div>
   </div>
 </template>
-
 <script>
 import princeSlips from "@/api/slips/princeSlips";
 import {PostData} from "@/api";
 import {getTime} from "../myUtils"
 import {twoPoint} from "@/views/Slips/ruleNumber";
 import {baseURL} from "@/api/http";
-import print from "print-js";
 import printTable from "@/views/Slips/princeSlips/printTable/printTable";
 export default {
   data(){
@@ -527,5 +525,4 @@ export default {
   margin-bottom: 0;
   width: 50%;
 }
-
 </style>

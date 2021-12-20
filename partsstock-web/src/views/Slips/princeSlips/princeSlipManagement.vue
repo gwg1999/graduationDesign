@@ -39,7 +39,7 @@
         </el-table-column>
         <el-table-column type="expand" label="详情" width="60px">
           <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
+            <el-form label-position="left" inline class="demo-table-expand" label-width="150px" :label-position="right">
               <el-form-item label="创建人员:">
                 <span>{{ props.row.createPeopleName }}</span>
               </el-form-item>
