@@ -39,7 +39,7 @@
         </el-table-column>
         <el-table-column type="expand" label="详情" width="60px">
           <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand" label-width="150px" :label-position="right">
+            <el-form label-position="right" inline class="demo-table-expand" label-width="150px" >
               <el-form-item label="创建人员:">
                 <span>{{ props.row.createPeopleName }}</span>
               </el-form-item>
@@ -70,10 +70,10 @@
               <el-form-item label="支付订单编号:">
                 <span>{{ props.row.oOrderNumber }}</span>
               </el-form-item>
-              <el-form-item label="打包图片:">
-                <div class="demo-image__placeholder">
-                  <div class="block">
-                    <el-image  :src="props.row.packageUrl" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
+              <el-form-item label="打包图片:" style="width: 50%;height: 150px">
+                <div class="demo-image__placeholder"  style="width: 300px;height: 150px">
+                  <div class="block" style="width: 280px;height: 150px">
+                    <el-image  :src="props.row.packageUrl" style="height:80%;width: 80%;padding-top: 10px;margin-left: 20px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
@@ -81,10 +81,10 @@
                   </div>
                 </div>
               </el-form-item>
-              <el-form-item label="发货图片:">
-                <div class="demo-image__placeholder">
-                  <div class="block">
-                    <el-image :src="props.row.deliverUrl" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 90px">
+              <el-form-item label="发货图片:" style="width: 50%;height: 150px">
+                <div class="demo-image__placeholder" style="width: 300px;height: 150px">
+                  <div class="block" style="width: 280px;height: 150px">
+                    <el-image :src="props.row.deliverUrl" style="height:80%;width: 80%;padding-top: 10px;margin-left: 20px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
@@ -451,6 +451,7 @@ export default {
             }
           }
           this.princeSheetList=res.list
+          console.log(this.princeSheetList)
         })
     },
     openUpdatePrinceSlips(params){

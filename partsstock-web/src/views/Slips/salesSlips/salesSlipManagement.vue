@@ -3,7 +3,7 @@
     <div class="app-container" >
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
         <el-form-item>
-          <el-input v-model="querySalesSlip.name"   placeholder="客户" style="width: 150px"></el-input>
+          <el-input v-model="querySalesSlip.name"  clearable placeholder="客户" style="width: 150px"></el-input>
         </el-form-item>
         <el-form-item >
           <el-date-picker
@@ -141,6 +141,7 @@
 
 <script>
 import {PostData} from "@/api";
+import Cookie from "js-cookie";
 import salesSlip from "@/api/slips/salesSlip";
 import {reserveTime,getTime } from "../myUtils"
 import {commonList} from "../myApi"
@@ -201,7 +202,7 @@ export default {
       this.dialogWarehouseOperatorFormVisible=true
       if (this.$refs['warehouseOperatorModify'] !== undefined)
         this.$refs['warehouseOperatorModify'].resetFields();
-      this.warehouseOperatorModify.pId=JSON.parse(JSON.stringify(params))
+      this.warehouseOperatorModify.qId=JSON.parse(JSON.stringify(params))
     },
     //报价单转销售单
     inverseOrder(){
@@ -209,49 +210,51 @@ export default {
         if(valid) {
           this.warehouseOperatorBtnDisabled = true
           this.enable();
-          salesSlip.becomeOrder(this.warehouseOperatorModify.oWarehouseOperaterId,
-            this.warehouseOperatorModify.pId,this.warehouseOperatorModify.paymentWay,this.warehouseOperatorModify.deliveryWay,this.warehouseOperatorModify.oOtherCostMoney)
-            .then(res => {
-              if (res.result === 'fails') {
-                let note=''
-                res.lackPartList.forEach((value) => {
-                  let number = null
-                  number = +value.lackNumber - (2 * value.lackNumber)
-                  alert('由于' + value.pName + '数量不足,添加销售单失败,目前' + value.pName + '的数量为'
-                    + value.pRealInventory + '还缺少' + number)
-                  note += `${value.pName}缺${number}个.`
-                })
-                let Note = {}
-                Note.status = 0
-                Note.operateId = parseInt(Cookie.get('aId'))
-                Note.type = 0
-                Note.note = note
-                this.priceNote=Note
-                this.UpdateNote()
-              }else{
-                this.$message({
-                  type: 'success',
-                  message: '转销售单成功'
-                })
-                this.dialogWarehouseOperatorFormVisible = false
-                this.warehouseOperatorBtnDisabled=false
-                this.getList()
-              }
-            })
+          PostData("quotation/becomeOrder",this.warehouseOperatorModify).then(res=>{
+            let note=''
+            if(res.lackPartList&&res.lackPartList.length>0){
+              console.log(res)
+              res.lackPartList.forEach((value) => {
+                let number = null
+                number = +value.lackNumber - (2 * value.lackNumber)
+                alert('由于' + value.pName + '数量不足,添加销售单失败,目前' + value.pName + '的数量为'
+                  + value.pRealInventory + '还缺少' + number)
+                note += `${value.pName}缺${number}个.`
+              })
+
+              let Note = {}
+              Note.status = 0
+              Note.operateId = parseInt(Cookie.get('aId'))
+              Note.type = 0
+              Note.note = note
+              this.dialogNote=true
+              this.priceNote=Note
+              this.UpdateNote()
+            }else {
+              this.$message({
+                type: 'success',
+                message: '转销售单成功'
+              })
+              this.dialogWarehouseOperatorFormVisible = false
+              this.warehouseOperatorBtnDisabled=false
+              this.getList()
+            }
+          })
         }
       })
     },
     //负数零件备注增加
     UpdateNote(){
-      this.$refs.priceNote.validate((valid)=>{
+      this.$refs['priceNote'].validate((valid)=>{
         if(valid){
-          PostData('/note/insert', this.priceNote).then(res => {
+          PostData('note/insert', this.priceNote).then(res => {
             this.dialogNote=false
             this.$message({
               type: 'success',
               message: '转销售单成功'
             })
             this.dialogWarehouseOperatorFormVisible = false
+            this.dialogNote=false
             this.warehouseOperatorBtnDisabled=false
             this.getList()
           })
@@ -300,7 +303,7 @@ export default {
           this.salesSheetBtnDisabled = true
           this.enable();
           this.salesSlipsModify.qCreateTime = null
-            this.salesSlipsModify.qCustomerId=this.salesSlipsModify.customerName
+          this.salesSlipsModify.qCustomerId=this.salesSlipsModify.customerName
           PostData('quotation/updateQuotation', this.salesSlipsModify)
             .then(res => {
               this.$message({

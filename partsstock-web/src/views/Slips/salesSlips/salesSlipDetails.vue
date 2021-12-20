@@ -15,11 +15,11 @@
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" style="position: absolute" @click="getList(1)">查 询</el-button>
         </el-form-item>
-        <!--        <router-link :to="{path:'/Slips/addSalesSlipDetails',query:{qId:this.$route.query.qId,qCustomerId:this.$route.query.qCustomerId}}">-->
-        <!--          <el-button type="primary"-->
-        <!--                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>-->
-        <!--        </router-link>-->
-        <el-form-item style="position: absolute;right: 10px">
+        <router-link :to="{path:'/Slips/addSlipsDetailsGoods',query:{qId:this.$route.query.qId,qCustomerId:this.$route.query.qCustomerId}}">
+          <el-button type="primary"
+                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>
+        </router-link>
+        <el-form-item style="position: absolute;right: 90px">
           <router-link :to="{path:'/Slips/salesSlipManagement'}">
             <el-button type="primary"
                        icon="el-icon-d-arrow-left" style="position: absolute;right: 10px">返回</el-button>
@@ -41,18 +41,18 @@
             {{ (querySalesSlip.pageNum - 1) * querySalesSlip.pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="pname" label="名称"  width="120" align="center"/>
-        <el-table-column prop="cname" label="客户名称" width="120" align="center" />
-        <el-table-column prop="qdType" label="类型" width="110" align="center">
+        <el-table-column prop="pname" label="名称"   align="center"/>
+        <el-table-column prop="cname" label="客户名称" width="100px" align="center" />
+        <el-table-column prop="qdType" label="类型" width="70px" align="center">
           <template slot-scope="scope">
             {{ scope.row.qdType===0?'整件':'零件'}}
           </template>
         </el-table-column>
-        <el-table-column prop="qdNumber" label="购买数量" width="110" align="center"/>
+        <el-table-column prop="qdNumber" label="购买数量" width="110px" align="center"/>
         <!--        <el-table-column prop="qdDeliveryNum" label="发货数量" width="200" align="center"/>-->
-        <el-table-column prop="qdRealTimePrice" width="110" label="实时售价"  align="center"/>
-        <el-table-column prop="qdUpdateTime" width="250"  label="最近修改时间"  align="center"/>
-        <el-table-column label="操作"  align="center">
+        <el-table-column prop="qdRealTimePrice" width="110px" label="实时售价"  align="center"/>
+        <el-table-column prop="qdUpdateTime" width="110px"  label="最近修改时间"  align="center"/>
+        <el-table-column label="操作"  align="center" width="200px">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit"  @click="openSalesSlipDialog(scope.row)">修改</el-button>
             <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteSalesSlip(scope.row.qdId)">删除</el-button>
@@ -100,7 +100,7 @@ export default {
       dialogSalesSlipFormVisible:false,
       salesSlipBtnDisabled:false,
       querySalesSlip:{
-        pageSize:5,
+        pageSize:10,
         pageNum:1
       },
       salesSlipList:[],

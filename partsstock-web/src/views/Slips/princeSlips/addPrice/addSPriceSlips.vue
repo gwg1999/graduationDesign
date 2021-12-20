@@ -20,13 +20,13 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="仓库管理员" prop="oWarehouseOperaterId">
+        <el-form-item label="仓库管理员" prop="oWarehouseOperaterId" style="width: 500px">
           <el-select
-            v-model="priceSlip.oWarehouseOperaterId" clearable filterable placeholder="请选择仓库管理员" >
+            v-model="priceSlip.oWarehouseOperaterId" clearable filterable placeholder="请选择仓库管理员" style="width: 500px">
             <el-option
               v-for="WarehouseOperator in WarehouseOperatorList"
               :key="WarehouseOperator.aId"
-              :label="WarehouseOperator.aName"
+              :label="`${WarehouseOperator.aName}(仓库管理员姓名)-${WarehouseOperator.aUsername}(仓库管理员账号)`"
               :value="WarehouseOperator.aId"/>
           </el-select>
         </el-form-item>
@@ -158,6 +158,7 @@ export default {
       })
       commonList('admin/selectAllByLike').then(res=>{
         this.WarehouseOperatorList=res.list
+        console.log(res.list)
       })
     },
     saveSalesSlip(){

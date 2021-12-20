@@ -558,9 +558,8 @@ export default {
     //整件零件关系
     searchWhole(wId){
       this.queryWholeParts.wId=wId
-      PostData("/whole/selectWholeParts",this.queryWholeParts).then(res=>{
-        console.log(res)
-        this.wholePartsList=res[0].partsWholeList
+      PostData("partsWhole/selectWholeParts",this.queryWholeParts).then(res=>{
+        this.wholePartsList=res
       })
       this.dialogWholePartVisible=true
     },
@@ -806,6 +805,7 @@ export default {
           }
           levelIVCopy.pCategoryId=categoryList
         }
+        levelIVCopy.pPartsStatus=1
         PostData('parts/selectAllByEnabled',levelIVCopy)
           .then(res=>{
             let middleList=res.list
@@ -816,10 +816,12 @@ export default {
               })
             }
             this.list=middleList
+            console.log( this.list)
             this.wholeList=[]
           })
       }
       else {
+        this.levelIV.wIsUse=1
         PostData('/whole/selectAllByLike', this.levelIV).then(res => {
           this.wholeList=res.list
           this.total=res.total
