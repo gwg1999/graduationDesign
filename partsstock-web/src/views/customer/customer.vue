@@ -26,16 +26,16 @@
           <el-input placeholder="请输入电话号码" type="text" v-model="customerQuery.cuPhoneNumber" style="width: 25%;left: 10px" clearable></el-input>
           <el-button type="primary" icon="el-icon-search" @click="search" style="position: relative;left: 15px">查 询</el-button>
         </el-form-item>
-        <el-select v-model="value" placeholder="选择用户权限" @change="selectChang" style="position: relative;left: 1%">
-          <el-option
-            v-for="item in permissions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-            <span>{{ item.label }}</span>
-<!--            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>-->
-          </el-option>
-        </el-select>
+<!--        <el-select v-model="value" placeholder="选择用户权限" @change="selectChang" style="position: relative;left: 1%">-->
+<!--          <el-option-->
+<!--            v-for="item in permissions"-->
+<!--            :key="item.value"-->
+<!--            :label="item.label"-->
+<!--            :value="item.value">-->
+<!--            <span>{{ item.label }}</span>-->
+<!--&lt;!&ndash;            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>&ndash;&gt;-->
+<!--          </el-option>-->
+<!--        </el-select>-->
 
 
         <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 10px" @click="toInsert()">添加</el-button>

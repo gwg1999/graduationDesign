@@ -5,22 +5,40 @@
       <template slot-scope="scoped">
         <el-form-item>
           <!--          <el-input v-model="factoryQuery.fName" clearable placeholder="厂家名"  style="width: 150px"/>-->
+          <el-input v-model="knowQuery.KNumber" placeholder="请输入零件号" style="width: 30%" class="search" clearable></el-input>
           <el-autocomplete
-            v-model="state"
+            v-model="knowQuery.KName"
             :fetch-suggestions="querySearch"
-            placeholder="请输入厂家名"
+            placeholder="请输入零件名"
             :trigger-on-focus="false"
-            @select="handleSelect">
+            @select="handleSelect"
+            class="search"
+            clearable>
             <!--      <i-->
             <!--        class="el-icon-edit el-input__icon"-->
             <!--        slot="suffix"-->
             <!--        @click="handleIconClick">-->
             <!--      </i>-->
             <template slot-scope="{ item }">
-              <div>{{ item.fName }}</div>
+              <div>{{ item.kName }}</div>
               <!--        <span class="addr">{{ item.address }}</span>-->
             </template>
           </el-autocomplete>
+          <el-cascader
+            ref="pCatCascader"
+            :options="categoryOption"
+            placeholder="请选择零件类目"
+            :props="{value:'name', label:'name'}"
+            @change="handleChange(pCategoryList)"
+            :show-all-levels="false"
+            v-model="kCategoryList"
+            class="search"
+            clearable>
+            <template slot-scope="{ node, data }">
+              <span>{{ data.name }}</span>
+              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+            </template>
+          </el-cascader>
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="search">查 询</el-button>
 
@@ -42,9 +60,9 @@
                   ref="pCatCascader"
                   :options="categoryOption"
                   :props="{value:'name', label:'name'}"
-                  @change="handlePcateChange(pCategoryList)"
+                  @change="handlePcateChange(knowledge.kCategoryName)"
                   :show-all-levels="false"
-                  v-model="pCategoryList"
+                  v-model="knowledge.kCategoryName"
                   clearable>
                   <template slot-scope="{ node, data }">
                     <span>{{ data.name }}</span>
@@ -87,7 +105,7 @@
                   reserve-keyword
                   placeholder="请输入产地或品牌"
                   :remote-method="remotePlace"
-                  :loading="loading" @focus.once="getIntroList">
+                   @focus.once="getIntroList">
                   <el-option
                     v-for="item in placeList"
                     :key="item.plId"
@@ -191,9 +209,8 @@ export default {
   data() {//定义变量和初始值
     return {
       knowledge: {
-        place: {},
-        unit: {},
-        kName:''
+        kName:'',
+        kNumber:''
       },
       title: '',
       pCateQuery: {
@@ -212,9 +229,11 @@ export default {
         pageNum: 1,
         plName:''
       },
+      pGoodsNum:'',
       dialogImageUrl:'',
       categoryOption: [],
       pCategoryList: [],
+      kCategoryList:[],
       unitList: [],
       isEnable: false,
       limitNum:1,
@@ -244,6 +263,12 @@ export default {
         ],
         kCategoryName: [
           {required: true, message: "请选择零件类目", trigger: "blur"}
+        ],
+        kPlaceId:[
+          {required: true, message: "产地名不能为空", trigger: "blur"}
+        ],
+        kUnitId:[
+          {required: true, message: "单位不能为空", trigger: "blur"}
         ]
       }
     }
@@ -274,6 +299,10 @@ export default {
         this.$message.error(err.message);
         console.log(err);
       })
+    },
+    handleChange(value) {
+      this.parts.pCarName=value.join("/")
+      console.log(this.parts.pCarName);
     },
     deletePart(data){
       console.log(data);
@@ -320,7 +349,6 @@ export default {
     handlePcateChange(value) {
       console.log(value);
       this.knowledge.kName = value[value.length - 1]
-      this.knowledge.kCategoryName = value.join("/")
     },
     getPCate() {
       PostData('/position/selectCatalogue', qs.stringify(this.pCateQuery)).then((ref) => {
@@ -349,11 +377,11 @@ export default {
         });
     },
     openAdd() {
-      this.knowledge = {
-        place: {},
-        unit: {},
-        kName:''
-      }
+      this.knowledge = Object.assign({},{
+        kName:'',
+        kNumber:''
+      })
+      this.title='添加零件'
       this.partDialogVisible = true
       // this.$refs['factory'].resetFields()
 
@@ -383,7 +411,9 @@ export default {
     },
     search() {
       // this.factoryQuery.pageNum = 1
+      this.knowQuery.KCategoryName=this.kCategoryList.join("/")
       this.knowQuery.pageNum=1
+      console.log(this.knowQuery);
       this.getList()
       // this.getPageTotal()
       // alert(111)
@@ -392,6 +422,9 @@ export default {
     showDetails(data) {
       console.log(data);
       this.inPicPar.kId=data.kId
+      data.kCategoryName=data.kCategoryName.split("/")
+      console.log(888);
+      console.log(data);
       this.knowledge = Object.assign({}, data)
       this.title = '修改零件信息'
       this.partDialogVisible = true
@@ -401,13 +434,14 @@ export default {
     querySearch(queryString, cb) {
       this.knowQuery.kName = queryString;
       this.knowQuery.pageNum = 1
-      PostData('factory/selectAllByLike', this.knowQuery).then(ref => {
+      PostData('/knowledge/selectAllByLike', qs.stringify(this.knowQuery)).then(ref => {
+        console.log(ref.list);
         cb(ref.list)
       })
       // 调用 callback 返回建议列表的数据
     },
     handleSelect(item) {
-      this.state = item.fName
+      this.state = item.kName
     },
     enable() {
       setTimeout(() => {
@@ -440,11 +474,11 @@ export default {
     submitForm(formName) {
       this.$refs.knowledge.validate((valid) => {
         if (valid) {
-          this.knowledge.kCreateTime = undefined
-          this.knowledge.place.plCreatetime = undefined
           console.log(this.knowledge);
           this.isEnable = true
           if (this.knowledge.kId) {
+            this.knowledge.kCategoryName=this.knowledge.kCategoryName.join("/")
+            this.knowledge.kCreateTime = undefined
             this.$refs.inDownload.submit()
             PostData('/knowledge/update', this.knowledge)
               .then(res => {
@@ -456,21 +490,23 @@ export default {
                   })
                   this.enable()
                 } else {
-                  this.$message({
-                    type: 'success',
-                    message: '修改成功'
-                  })
                   this.partDialogVisible = false
                   this.enable()
                   setTimeout(()=>{
                     this.getList()
-                  },2000)
+                    this.$message({
+                      type: 'success',
+                      message: '修改成功'
+                    })
+                  },500)
 
                 }
               }).catch(() => {
             })
           } else {
             this.isEnable = true
+            console.log(this.knowledge);
+            this.knowledge.kCategoryName=this.knowledge.kCategoryName.join("/")
             PostData('/knowledge/insert', this.knowledge)
               .then(res => {
                 console.log(res);
@@ -482,16 +518,16 @@ export default {
                   this.enable()
                 } else {
                   this.inPicPar.kId=res.data
-                  this.$refs.inDownload.submit()
-                  this.$message({
-                    type: 'success',
-                    message: '添加成功'
-                  })
                   this.partDialogVisible = false
                   this.enable()
                   setTimeout(()=>{
+                    this.$refs.inDownload.submit()
                     this.getList()
-                  },2000)
+                    this.$message({
+                      type: 'success',
+                      message: '添加成功'
+                    })
+                  },500)
                 }
               }).catch(() => {
             })
@@ -522,5 +558,8 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+.search{
+  margin-right: 3px
 }
 </style>

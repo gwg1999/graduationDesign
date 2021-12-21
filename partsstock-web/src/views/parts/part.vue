@@ -43,7 +43,7 @@
         </el-cascader>
       </el-form-item>
       <el-button type="primary" icon="el-icon-search" @click="search()">查 询</el-button>
-      <el-select v-model="searchQuery.pPartsStatus" placeholder="零件状态" @change="handleStatusChange" style="margin-left: 18px">
+      <el-select v-model="searchQuery.pPartsStatus" placeholder="零件状态" @change="handleStatusChange" style="margin-left: 18px" clearable>
         <el-option :value="1" label="上架"></el-option>
         <el-option :value="0" label="下架"></el-option>
       </el-select>

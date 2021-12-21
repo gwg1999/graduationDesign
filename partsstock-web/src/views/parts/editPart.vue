@@ -449,7 +449,7 @@ export default {
         ],
         pRetailPrice:[
           {required: true, message: "请输入零售价", trigger: "blur"},
-          {required: true, pattern: /^[0-9]+(\.[0-9]?[0-9]?)?$/,message: '零售价只能为数字',trigger: "blur"},
+          {required: true, pattern: /^[0-9]+(\.[0-9]?[0-9]?)?$/,message: '最多填入两位小数',trigger: "blur"},
         ],
         pFloorPrice:[
           {required: true, message: "请输入底价", trigger: "blur"},
