@@ -73,7 +73,9 @@
               <el-form-item label="打包图片:" style="width: 50%;height: 150px">
                 <div class="demo-image__placeholder"  style="width: 300px;height: 150px">
                   <div class="block" style="width: 280px;height: 150px">
-                    <el-image  :src="props.row.packageUrl" style="height:80%;width: 80%;padding-top: 10px;margin-left: 20px">
+                    <el-image  :src="props.row.packageUrl"
+                               :preview-src-list="[props.row.packageUrl]"
+                               style="height:80%;width: 80%;padding-top: 10px;margin-left: 20px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
@@ -84,7 +86,9 @@
               <el-form-item label="发货图片:" style="width: 50%;height: 150px">
                 <div class="demo-image__placeholder" style="width: 300px;height: 150px">
                   <div class="block" style="width: 280px;height: 150px">
-                    <el-image :src="props.row.deliverUrl" style="height:80%;width: 80%;padding-top: 10px;margin-left: 20px">
+                    <el-image :src="props.row.deliverUrl"
+                              :preview-src-list="[props.row.deliverUrl]"
+                              style="height:80%;width: 80%;padding-top: 10px;margin-left: 20px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
@@ -277,7 +281,6 @@ export default {
       total:0,
       dialogPrinceSheetFormVisible:false,
       princeSheetBtnDisabled:false,
-
       queryPrinceSheet:{
         pageSize:10,
         pageNum:1,
@@ -435,6 +438,7 @@ export default {
         this.queryPrinceSheet.endTimeSequence, this.queryPrinceSheet.pageNum,
         this.queryPrinceSheet.pageSize)
         .then(res=>{
+          console.log(res)
           this.total=res.total
           for (let i=0;i<res.list.length;i++){
             res.list[i].oCreateTime=getTime(res.list[i].oCreateTime)
@@ -451,7 +455,6 @@ export default {
             }
           }
           this.princeSheetList=res.list
-          console.log(this.princeSheetList)
         })
     },
     openUpdatePrinceSlips(params){

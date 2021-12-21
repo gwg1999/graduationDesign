@@ -10,10 +10,10 @@
         </el-select>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===1" style="width: 200px" >
-        <el-input   v-model="levelIV.pNumber" placeholder="请输入零件号" ></el-input>
+        <el-input   v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===1" style="width: 210px">
-        <el-input v-model="levelIV.pName" placeholder="请输入零件名" ></el-input>
+        <el-input v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===1" style="width: 200px" >
         <el-cascader
@@ -32,7 +32,7 @@
         </el-cascader>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===0" style="width: 210px">
-        <el-input v-model="levelIV.wName" placeholder="请输入整件名" ></el-input>
+        <el-input v-model="levelIV.wName" clearable placeholder="请输入整件名" ></el-input>
       </el-form-item>
       <el-button :disabled="!(levelIV.odType===0||levelIV.odType===1)" type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
       <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 10px" @click="showSelected">查看已选零件</el-button>
@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column type="expand" label="详情" width="50px">
         <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand" label-width="80px" :label-position="right">
+          <el-form label-position="right" inline class="demo-table-expand" label-width="80px" >
             <el-form-item label="零件类目:">
               <span>{{ props.row.pCategoryId }}</span>
             </el-form-item>
@@ -72,7 +72,9 @@
             <el-form-item>
               <div class="demo-image__placeholder">
                 <div class="block">
-                  <el-image :src="props.row.pictures[0].path" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
+                  <el-image :src="props.row.pictures[0].path"
+                            :preview-src-list="[props.row.pictures[0].path]"
+                            style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
                     <div slot="placeholder" class="image-slot">
                       加载中<span class="dot">...</span>
                     </div>
@@ -538,7 +540,6 @@ export default {
     UpdateWhole(){
       this.$refs['wholesModify'].validate((valid)=>{
         if(valid){
-          console.log(valid)
           for(let i=0;i<this.priceSlip.wholeDetailsList.length;i++){
             if(this.priceSlip.wholeDetailsList[i].wId===this.wholesModify.wId){
               this.priceSlip.wholeDetailsList[i].odNumber=this.wholesModify.odNumber
@@ -604,7 +605,6 @@ export default {
     //零件售卖记录所有客户
     searchNoCustomerList(pId){
       let type=this.levelIV.odType
-      console.log(pId)
       queryHistoryPrice(undefined,pId,type).then(res=>
       {
         for (let i=0;i<res.length;i++){
@@ -694,7 +694,7 @@ export default {
     },
     //负数零件备注增加
     UpdateNote(){
-      this.$refs.priceNote.validate((valid)=>{
+      this.$refs['priceNote'].validate((valid)=>{
         if(valid){
           PostData('/note/insert', this.priceNote).then(res => {
             this.dialogNote=false
@@ -816,7 +816,6 @@ export default {
               })
             }
             this.list=middleList
-            console.log( this.list)
             this.wholeList=[]
           })
       }

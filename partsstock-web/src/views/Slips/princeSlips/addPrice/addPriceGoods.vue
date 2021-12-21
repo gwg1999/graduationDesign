@@ -62,7 +62,7 @@
       </el-table-column>
       <el-table-column type="expand" label="详情" width="50px">
         <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand" label-width="80px" :label-position="right" >
+          <el-form label-position="right" inline class="demo-table-expand" label-width="80px">
             <el-form-item label="零件类目:">
               <span>{{ props.row.pCategoryId }}</span>
             </el-form-item>
@@ -80,7 +80,9 @@
             <el-form-item>
               <div class="demo-image__placeholder">
                 <div class="block">
-                  <el-image :src="props.row.pictures[0].path" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
+                  <el-image :src="props.row.pictures[0].path"
+                            :preview-src-list="[props.row.pictures[0].path]"
+                            style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
                     <div slot="placeholder" class="image-slot">
                       加载中<span class="dot">...</span>
                     </div>
@@ -693,7 +695,7 @@ export default {
     },
     //负数零件备注增加
     UpdateNote(){
-      this.$refs.priceNote.validate((valid)=>{
+      this.$refs['priceNote'].validate((valid)=>{
         if(valid){
           PostData('/note/insert', this.priceNote).then(res => {
             this.dialogNote=false

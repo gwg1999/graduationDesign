@@ -75,7 +75,9 @@
             <el-form-item>
               <div class="demo-image__placeholder">
                 <div class="block">
-                  <el-image :src="src" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
+                  <el-image :src="props.row.pictures[0].path"
+                            :preview-src-list="[props.row.pictures[0].path]"
+                            style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
                     <div slot="placeholder" class="image-slot">
                       加载中<span class="dot">...</span>
                     </div>
