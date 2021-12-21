@@ -61,7 +61,7 @@
       </el-table-column>
       <el-table-column type="expand" label="详情" width="50px">
         <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand" >
+          <el-form label-position="left" inline class="demo-table-expand" label-width="80px" :label-position="right">
             <el-form-item label="零件类目:">
               <span>{{ props.row.pCategoryId }}</span>
             </el-form-item>
@@ -544,8 +544,8 @@ export default {
     //整件零件关系
     searchWhole(wId){
       this.queryWholeParts.wId=wId
-      PostData("/whole/selectWholeParts",this.queryWholeParts).then(res=>{
-        this.wholePartsList=res[0].partsWholeList
+      PostData("partsWhole/selectWholeParts",this.queryWholeParts).then(res=>{
+        this.wholePartsList=res
       })
       this.dialogWholePartVisible=true
     },
@@ -747,6 +747,7 @@ export default {
           }
           levelIVCopy.pCategoryId = categoryList
         }
+        levelIVCopy.pPartsStatus=1
         PostData('parts/selectAllByEnabled', levelIVCopy)
           .then(res => {
             let middleList = res.list
@@ -760,6 +761,7 @@ export default {
             this.wholeList=[]
           })
       } else {
+        this.levelIV.wIsUse=1
         PostData('/whole/selectAllByLike', this.levelIV).then(res => {
           this.wholeList=res.list
           this.partTotal=res.total

@@ -39,25 +39,25 @@
           </template>
         </el-table-column>
         <el-table-column prop="partName" label="名称"  align="center" />
-        <el-table-column prop="customerName" label="客户名称"  align="center" />
-        <el-table-column prop="odType" label="零件类型"  align="center">
+        <el-table-column prop="customerName" label="客户名称" width="150px" align="center" />
+        <el-table-column prop="odType" label="零件类型" width="100px"  align="center">
           <template slot-scope="scope">
             {{ scope.row.odType===0?'整件':'零件'}}
           </template>
         </el-table-column>
-        <el-table-column prop="odNumber" label="数量"  align="center" />
-        <el-table-column prop="odRetailPrice" label="实时售价"  align="center" />
-        <el-table-column prop="odStatus" label="零件状态"  align="center">
+        <el-table-column prop="odNumber" label="数量" width="80px" align="center" />
+        <el-table-column prop="odRetailPrice" label="实时售价" width="100px" align="center" />
+        <el-table-column prop="odStatus" label="零件状态" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.odStatus===0?'正常':scope.row.odStatus===1?'退货':'结束'}}
           </template>
         </el-table-column>
-        <el-table-column label="贵重物品序列号"  align="center" width="200">
+        <el-table-column label="贵重物品序列号"  align="center" width="180px">
           <template slot-scope="scope">
             <el-button  v-if="scope.row.odType===1"  type="primary" size="mini" icon="el-icon-folder" @click="openSerialNumber(scope.row.odId)">查看贵重物品序列号</el-button>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200" align="center">
+        <el-table-column label="操作" width="180px" align="center">
           <template slot-scope="scope" >
             <el-button  :disabled="!(scope.row.odStatus===0)||parseInt(flag)===0" type="primary" size="mini" icon="el-icon-edit"  @click="openInquirySheetDialog(scope.row)">修改</el-button>
             <el-button  :disabled="!(scope.row.odStatus===0)||parseInt(flag)===0" type="primary" size="mini" icon="el-icon-delete"  @click="deleteInquirySheet(scope.row.odId)">删除</el-button>
@@ -135,7 +135,7 @@ export default {
       princeSheetBtnDisabled:false,
       queryPrinceSheet:{
         pageNum:1,
-        pageSize:8
+        pageSize:10
       },
       princeSheetList:[],
       princeSheetModify:{},

@@ -2,33 +2,28 @@
   <div class="app-container">
     <h6 style="float:right;margin-top:0;color: red">F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,
       在添加整件时F7查看该整件的零件关系</h6>
-    <!--    步骤条-->
-    <el-steps :active="2" process-status="wait" align-center style="margin-bottom: 40px;margin-top: 40px">
-      <el-step title="填写销售单信息" />
-      <el-step title="添加零件或整件" />
-    </el-steps>
-    <!--    查询表-->
-    <el-form :inline="true" class="demo-form-inline" style="position: relative ">
+    <!--    查询表格数据-->
+    <el-form :inline="true" class="demo-form-inline" style="position: relative;margin-top: 40px ">
       <el-form-item>
-        <el-select   v-model="levelIV.odType"   clearable placeholder="选择商品类型" style="width: 130px"  @change="changeTotal($event)">
+        <el-select   v-model="levelIV.qdType"   clearable placeholder="选择商品类型" style="width: 130px" @change="changeTotal($event)" >
           <el-option :value="1" label="零件"/>
           <el-option :value="0" label="整件"/>
         </el-select>
       </el-form-item>
-      <el-form-item   v-if="levelIV.odType===1" style="width: 200px" >
+      <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
         <el-input   v-model="levelIV.pNumber" placeholder="请输入零件号" ></el-input>
       </el-form-item>
-      <el-form-item   v-if="levelIV.odType===1" style="width: 210px">
+      <el-form-item   v-if="levelIV.qdType===1" style="width: 210px">
         <el-input v-model="levelIV.pName" placeholder="请输入零件名" ></el-input>
       </el-form-item>
-      <el-form-item   v-if="levelIV.odType===1" style="width: 200px" >
+      <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
         <el-cascader
           placeholder="请选择零件类目"
           v-model="levelIV.pCategoryId"
           :props="{value:'name',label:'name'}"
           :show-all-levels="false"
-          clearable
           @change="queryGoods"
+          clearable
           :options="levelIVDirectoryList"
         >
           <template slot-scope="{ node, data }">
@@ -37,10 +32,10 @@
           </template>
         </el-cascader>
       </el-form-item>
-      <el-form-item   v-if="levelIV.odType===0" style="width: 210px">
+      <el-form-item   v-if="levelIV.qdType===0" style="width: 210px">
         <el-input v-model="levelIV.wName" placeholder="请输入整件名" ></el-input>
       </el-form-item>
-      <el-button :disabled="!(levelIV.odType===0||levelIV.odType===1)" type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
+      <el-button :disabled="!(levelIV.qdType===0||levelIV.qdType===1)" type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
       <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 100px" @click="showSelected">查看已选零件</el-button>
       <!--      <el-button @click="previous" type="primary" style="position: absolute;right: 10px">上一步</el-button>-->
       <!--      <el-button  type="primary" @click="next"  style="position: absolute;right: 10px;width: 100px">下一步</el-button>-->
@@ -49,7 +44,7 @@
     <el-table :data="list"
               border
               fit
-              v-show="levelIV.odType===1"
+              v-show="levelIV.qdType===1"
               highlight-current-row
               style="width: 100%;font-size: 2px;line-height:20px;padding: 0">
       <el-table-column
@@ -62,7 +57,7 @@
       </el-table-column>
       <el-table-column type="expand" label="详情" width="50px">
         <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand" label-width="80px" :label-position="right" >
+          <el-form label-position="left" inline class="demo-table-expand" label-width="80px" :label-position="right">
             <el-form-item label="零件类目:">
               <span>{{ props.row.pCategoryId }}</span>
             </el-form-item>
@@ -70,7 +65,7 @@
               <span>{{ props.row.factory.fName }}</span>
             </el-form-item>
             <el-form-item label="货物位置:">
-              <span>{{ props.row.pCategoryId }}</span>
+              <span>{{ props.row.oSupposeIncome }}</span>
             </el-form-item>
             <el-form-item label="图片:">
             </el-form-item>
@@ -80,7 +75,7 @@
             <el-form-item>
               <div class="demo-image__placeholder">
                 <div class="block">
-                  <el-image :src="props.row.pictures[0].path" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
+                  <el-image :src="src" style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
                     <div slot="placeholder" class="image-slot">
                       加载中<span class="dot">...</span>
                     </div>
@@ -93,7 +88,8 @@
       </el-table-column>
       <el-table-column prop="pNumber" label="零件号" width="80px" align="center" />
       <el-table-column prop="pName" label="零件名" width="100px" align="center" />
-      <el-table-column prop="place.plName" label="产地或品牌" width="100px"  align="center"/>
+      <el-table-column prop="place.plName" label="产地" width="80px"  align="center"/>
+      <!--      <el-table-column prop="pCarName" label="车型号" width="80px"  align="center"/>-->
       <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
       <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>
       <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />
@@ -105,10 +101,10 @@
           <el-form>
             <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
               <el-form-item>
-                数量:<el-input-number @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
+                数量:<el-input-number @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.qdNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
-                价格:<el-input  @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width: 100px;" size="small" ></el-input>
+                价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
@@ -122,7 +118,7 @@
     <el-table use-virtual
               :data="wholeList"
               border
-              v-show="levelIV.odType===0"
+              v-show="levelIV.qdType===0"
               fit
               highlight-current-row
               style="width: 100%">
@@ -142,10 +138,10 @@
           <el-form>
             <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
               <el-form-item>
-                数量:<el-input-number @keyup.119.native="searchNoCustomerList(scope.row.wId)" @keyup.118.native="searchWhole(scope.row.wId)" @keyup.117.native="searchHistoryList(scope.row.wId)" @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
+                数量:<el-input-number @keyup.119.native="searchNoCustomerList(scope.row.wId)" @keyup.118.native="searchWhole(scope.row.wId)" @keyup.117.native="searchHistoryList(scope.row.wId)" @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.qdNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
-                价格:<el-input @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width: 100px;" size="small" ></el-input>
+                价格:<el-input @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
@@ -155,16 +151,15 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--    分页-->
     <el-pagination
       layout="total, prev, pager, next, jumper"
       :page-size="levelIV.pageSize"
       :current-page="levelIV.pageNum"
-      :total="total"
+      :total="partTotal"
       style="padding: 30px 0; text-align: right;"
       @current-change="queryGoods"
     />
-    <!-- 历史价格 -->
+    <!-- 历史销售价格 -->
     <el-dialog :visible.sync="dialogHistoryPrice"  title="客户该商品历史信息" width="70%">
       <el-table
         :data="historyPriceList"
@@ -259,7 +254,7 @@
         <el-table-column prop="partsNum" label="一个整件所需零件数"  align="center" />
       </el-table>
     </el-dialog>
-    <!--    购物车-->
+    <!--    查看购买的零件或整件-->
     <el-dialog
       :visible.sync="dialogVisible"
       width="80%"
@@ -268,12 +263,12 @@
     >
       <el-container class="my-info-container" style="padding-top: 0">
         <el-main style="padding-top: 0;padding-bottom: 0">
-          <el-form :model="priceSlip" status-icon ref="priceSlip" label-width="100px" class="demo-ruleForm" style="padding-top: 0;padding-bottom: 0">
+          <el-form :model="salesSlip" status-icon ref="salesSlip" label-width="100px" class="demo-ruleForm" style="padding-top: 0;padding-bottom: 0">
             <h4>零件信息</h4>
             <div style="float: top;padding:0" >
               <el-table
                 style="padding-top: 0"
-                :data="priceSlip.orderDetailList"
+                :data="salesSlip.quotationDetailList"
                 border
                 fit
                 highlight-current-row>
@@ -281,11 +276,11 @@
                 <el-table-column prop="pName" label="零件名" width="200px" align="center"/>
                 <el-table-column prop="place.plName" label="产地" width="150px" align="center"/>
                 <el-table-column prop="unit.uName" label="单位" width="80px" align="center"/>
-                <el-table-column prop="odNumber" label="数量" width="80px" align="center"/>
-                <el-table-column prop="odRetailPrice" label="单价" width="80px" align="center"/>
+                <el-table-column prop="qdNumber" label="数量" width="80px" align="center"/>
+                <el-table-column prop="price" label="单价" width="80px" align="center"/>
                 <el-table-column prop="totalPrice" label="总价" width="110px" align="center">
                   <template slot-scope="scope">
-                    {{ scope.row.odNumber*scope.row.odRetailPrice}}
+                    {{ scope.row.qdNumber*scope.row.price}}
                   </template>
                 </el-table-column>
                 <el-table-column label="操作"  align="center">
@@ -300,16 +295,16 @@
             <div style="float: bottom">
               <el-table
                 style="padding: 0"
-                :data="priceSlip.wholeDetailsList"
+                :data="salesSlip.wholeDetailsList"
                 border
                 fit
                 highlight-current-row>
                 <el-table-column prop="wName" label="整件名" width="200px" align="center"/>
-                <el-table-column prop="odNumber" label="数量" width="200px" align="center"/>
-                <el-table-column prop="odRetailPrice" label="单价" width="150px" align="center"/>
+                <el-table-column prop="qdNumber" label="数量" width="200px" align="center"/>
+                <el-table-column prop="price" label="单价" width="150px" align="center"/>
                 <el-table-column prop="totalPrice" label="总价" width="110px" align="center">
                   <template slot-scope="scope">
-                    {{ scope.row.odNumber*scope.row.odRetailPrice}}
+                    {{ scope.row.qdNumber*scope.row.price}}
                   </template>
                 </el-table-column>
                 <el-table-column label="操作"  align="center">
@@ -331,11 +326,11 @@
     <!--    修改购物车零件-->
     <el-dialog :visible.sync="dialogPartsVisible" title="修改购物车零件">
       <el-form :model="partsModify" label-width="120px" ref="partsModify" :rules="rules">
-        <el-form-item label="零件数量" prop="odNumber">
-          <el-input  v-model="partsModify.odNumber"/>
+        <el-form-item label="零件数量" prop="qdNumber">
+          <el-input  v-model="partsModify.qdNumber"/>
         </el-form-item>
-        <el-form-item label="零件价格" prop="odRetailPrice">
-          <el-input  @keyup.native="partsModify.odRetailPrice = oninput(partsModify.odRetailPrice)" v-model="partsModify.odRetailPrice"/>
+        <el-form-item label="零件价格" prop="price">
+          <el-input  @keyup.native="partsModify.price = oninput(partsModify.price)" v-model="partsModify.price"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -345,13 +340,13 @@
       </div>
     </el-dialog>
     <!--    修改购物车整件-->
-    <el-dialog :visible.sync="dialogWholeVisible" title="修改购物车整件">
+    <el-dialog :visible.sync="dialogWholeVisible" title="修改购物车整件" >
       <el-form :model="wholesModify" label-width="120px" ref="wholesModify" :rules="rules">
-        <el-form-item label="整件数量" prop="odNumber" >
-          <el-input  v-model="wholesModify.odNumber"/>
+        <el-form-item label="整件数量" prop="qdNumber">
+          <el-input  v-model="wholesModify.qdNumber"/>
         </el-form-item>
-        <el-form-item label="整件价格" prop="odRetailPrice" >
-          <el-input @keyup.native="wholesModify.odRetailPrice = oninput(wholesModify.odRetailPrice)" v-model="wholesModify.odRetailPrice"/>
+        <el-form-item label="整件" prop="price">
+          <el-input  @keyup.native="wholesModify.price = oninput(wholesModify.price)" v-model="wholesModify.price"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -398,33 +393,17 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-    <!--缺货备注提醒-->
-    <el-dialog :visible.sync="dialogNote"  title="该商品历史信息" width="70%">
-      <el-form :model="priceNote" label-width="120px" ref="priceNote" :rules="rules">
-        <el-form-item label="备注" prop="note">
-          <el-input v-model="priceNote.note" style="width: 90%" rows="5" type="textarea"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogNote = false">取 消</el-button>
-        <el-button  type="primary"
-                    @click="UpdateNote()">确 定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
 import {levelIVDirectory, PurchasePrice, queryHistoryPrice} from "@/views/Slips/myApi";
-import {getTime,stopF5F6} from "@/views/Slips/myUtils"
 import {PostData} from "@/api";
+import {getTime,stopF5F6} from "@/views/Slips/myUtils"
 import Cookie from "js-cookie";
 import {validatePassCheck} from "@/views/Slips/ruleNumber";
 export default {
   data() {
     return {
-      //零件负数添加备注
-      dialogNote:false,
-      priceNote:{},
       //该零件历史记录
       dialogNoCustomerHistoryPrice:false,
       historyNoCustomerPriceList:[],
@@ -451,7 +430,6 @@ export default {
         pageNum:1,
         pageSize:10
       },
-      //历史价格弹框
       dialogHistoryPrice:false,
       historyPage:{
         pageNum:1,
@@ -463,31 +441,30 @@ export default {
       customerPrince:null,
       wholeList:[],
       list:[],
-      total:0,
+      partTotal:0,
       levelIV:{
         pageNum:1,
         pageSize:10
       },
       levelIVDirectoryList:[],
-      priceSlip:{
-        orderDetailList:[],
+      salesSlip:{
+        quotationDetailList:[],
         wholeDetailsList:[]
       },
       rules:{
-        odNumber: [
+        qdNumber: [
           {required: true, message: '请输入数量', trigger: 'change'},
           {validator:validatePassCheck, trigger: 'change' }
         ],
-        odRetailPrice:[
+        price:[
           {required: true, message: '请输入价格', trigger: 'change'}
         ]
       }
     }
   },
   created() {
-    this.priceSlip=this.$route.query.priceSlip
     this.getList()
-    this.getPrice()
+    this.getPrince()
     stopF5F6()
   },
   methods: {
@@ -502,9 +479,9 @@ export default {
         cancelButtonText:'取消',
         type:'warning'
       }).then(()=>{
-        for(let i=0;i<this.priceSlip.orderDetailList.length;i++){
-          if(this.priceSlip.orderDetailList[i].pId===record.pId){
-            this.priceSlip.orderDetailList.splice(i, 1)
+        for(let i=0;i<this.salesSlip.quotationDetailList.length;i++){
+          if(this.salesSlip.quotationDetailList[i].pId===record.pId){
+            this.salesSlip.quotationDetailList.splice(i, 1)
           }
         }
       })
@@ -512,10 +489,10 @@ export default {
     UpdateParts(){
       this.$refs['partsModify'].validate((valid)=>{
         if(valid){
-          for(let i=0;i<this.priceSlip.orderDetailList.length;i++){
-            if(this.priceSlip.orderDetailList[i].pId===this.partsModify.pId){
-              this.priceSlip.orderDetailList[i].odNumber=this.partsModify.odNumber
-              this.priceSlip.orderDetailList[i].odRetailPrice=this.partsModify.odRetailPrice
+          for(let i=0;i<this.salesSlip.quotationDetailList.length;i++){
+            if(this.salesSlip.quotationDetailList[i].pId===this.partsModify.pId){
+              this.salesSlip.quotationDetailList[i].qdNumber=this.partsModify.qdNumber
+              this.salesSlip.quotationDetailList[i].price=this.partsModify.price
             }
           }
           this.dialogPartsVisible=false
@@ -529,9 +506,9 @@ export default {
         cancelButtonText:'取消',
         type:'warning'
       }).then(()=>{
-        for(let i=0;i<this.priceSlip.wholeDetailsList.length;i++){
-          if(this.priceSlip.wholeDetailsList[i].wId===record.wId){
-            this.priceSlip.wholeDetailsList.splice(i, 1)
+        for(let i=0;i<this.salesSlip.wholeDetailsList.length;i++){
+          if(this.salesSlip.wholeDetailsList[i].wId===record.wId){
+            this.salesSlip.wholeDetailsList.splice(i, 1)
           }
         }
       })
@@ -543,11 +520,10 @@ export default {
     UpdateWhole(){
       this.$refs['wholesModify'].validate((valid)=>{
         if(valid){
-          console.log(valid)
-          for(let i=0;i<this.priceSlip.wholeDetailsList.length;i++){
-            if(this.priceSlip.wholeDetailsList[i].wId===this.wholesModify.wId){
-              this.priceSlip.wholeDetailsList[i].odNumber=this.wholesModify.odNumber
-              this.priceSlip.wholeDetailsList[i].odRetailPrice=this.wholesModify.odRetailPrice
+          for(let i=0;i<this.salesSlip.wholeDetailsList.length;i++){
+            if(this.salesSlip.wholeDetailsList[i].wId===this.wholesModify.wId){
+              this.salesSlip.wholeDetailsList[i].qdNumber=this.wholesModify.qdNumber
+              this.salesSlip.wholeDetailsList[i].price=this.wholesModify.price
             }
           }
           this.dialogWholeVisible=false
@@ -557,7 +533,7 @@ export default {
     //零件整件切换页数变化
     changeTotal(event){
       if(event>=0){
-        this.total=0
+        this.partTotal=0
       }
     },
     //整件零件关系
@@ -574,7 +550,6 @@ export default {
         for (let i=0;i<res.length;i++){
           res[i].odCreateTime = getTime(res[i].odCreateTime)
         }
-        console.log(this.historyPurchasePriceList)
         this.historyPurchasePriceList=res
         if(this.historyPurchasePriceList&&this.historyPurchasePriceList.length>0){
           this.dialogGoodPrice=true
@@ -588,8 +563,8 @@ export default {
     },
     //零件售卖记录该客户
     searchList(pId){
-      let customerId=this.$route.query.priceSlip.oCustomerId
-      let type=this.levelIV.odType
+      let customerId=this.$route.query.salesSlips.qCustomerId
+      let type=this.levelIV.qdType
       queryHistoryPrice(customerId,pId,type).then(res=>
       {
         for (let i=0;i<res.length;i++){
@@ -609,6 +584,7 @@ export default {
     //零件售卖记录所有客户
     searchNoCustomerList(pId){
       let type=this.levelIV.odType
+      console.log(pId)
       queryHistoryPrice(undefined,pId,type).then(res=>
       {
         for (let i=0;i<res.length;i++){
@@ -630,94 +606,55 @@ export default {
       this.dialogVisible=true
     },
     submitForm(){
-      try {
-        this.$refs['priceSlip'].validate((valid) => {
-          if (valid) {
-            this.priceSlip.oCustomerId=this.$route.query.priceSlip.oCustomerId
-            this.priceSlip.qOrderStatus = 0
-            this.priceSlip.oType=3
-            this.priceSlip.oIsPackage=1
-            this.priceSlip.oStatus=1
-            this.priceSlip.oOrderClosingStatus=2
-            this.priceSlip.oCreatePeopleId = parseInt(Cookie.get('aId'))
-            if(this.priceSlip.wholeDetailsList&&this.priceSlip.wholeDetailsList.length>0){
-              this.priceSlip.wholeDetailsList.forEach((value)=>{
-                value.pName=value.wName
-                value.odPartsId=value.wId
-              })
-            }
-            this.priceSlip.orderDetailList=[...this.priceSlip.orderDetailList,...this.priceSlip.wholeDetailsList]
-            let oSupposeIncome = 0
-            for (let i = 0; i < this.priceSlip.orderDetailList.length; i++) {
-              this.priceSlip.orderDetailList[i].odCustomerId = this.priceSlip.oCustomerId
-              this.priceSlip.orderDetailList[i].odStatus=0
-              this.priceSlip.orderDetailList[i].odSizeType= this.priceSlip.orderDetailList[i].pPartsSizeType
-              let partPrince = this.priceSlip.orderDetailList[i].odRetailPrice
-              oSupposeIncome += partPrince * this.priceSlip.orderDetailList[i].odNumber
-            }
-            this.priceSlip.oSupposeIncome = oSupposeIncome
-            PostData('order/addOrder',this.priceSlip)
-              .then(res=>{
-                if (res.result === 'fails') {
-                  let note=''
-                  res.lackPartList.forEach((value) => {
-                    let number = null
-                    number = +value.lackNumber - (2 * value.lackNumber)
-                    alert('由于' + value.pName + '数量不足,添加销售单失败,目前' + value.pName + '的数量为'
-                      + value.pRealInventory + '还缺少' + number)
-                    note += `${value.pName}缺${number}个.`
-                  })
-                  let Note = {}
-                  Note.status = 0
-                  Note.operateId = parseInt(Cookie.get('aId'))
-                  Note.type = 0
-                  Note.note = note
-                  this.priceNote=Note
-                  this.dialogNote=true
-                  this.UpdateNote()
-                }else {
-                  this.dialogVisible=false
-                  this.$message({
-                    type: 'success',
-                    message: '增加销售单成功'
-                  })
-                  this.$router.push({path:'/Slips/princeSlipManagement'})
-                }
-              })
-          } else {
-            return false;
-          }
-        });
-      }catch (e) {
-      }
-    },
-    //负数零件备注增加
-    UpdateNote(){
-      this.$refs.priceNote.validate((valid)=>{
-        if(valid){
-          PostData('/note/insert', this.priceNote).then(res => {
-            this.dialogNote=false
-            this.dialogVisible=false
-            this.$message({
-              type: 'success',
-              message: '增加销售单成功'
+      this.$refs['salesSlip'].validate((valid) => {
+        if (valid) {
+          this.salesSlip.qOrderStatus = 0
+          this.salesSlip.qCustomerId = this.$route.query.qCustomerId
+          this.salesSlip.qCreatePeopleId = parseInt(Cookie.get('aId'))
+          let qPrice = 0
+          if(this.salesSlip.wholeDetailsList&&this.salesSlip.wholeDetailsList.length>0){
+            this.salesSlip.wholeDetailsList.forEach((value)=>{
+              value.pName=value.wName
+              value.qdRealTimePrice=parseInt(value.price)
+              value.qdPartsId=value.wId
             })
-            this.$router.push({path:'/Slips/princeSlipManagement'})
-          })
+          }
+          this.salesSlip.quotationDetailList=[...this.salesSlip.quotationDetailList,...this.salesSlip.wholeDetailsList]
+          if(this.salesSlip.quotationDetailList&&this.salesSlip.quotationDetailList.length>0) {
+            this.salesSlip.quotationDetailList.forEach((value) => {
+              value.qdOrderId = this.$route.query.qId
+              value.qdCustomerId = this.salesSlip.qCustomerId
+              value.qdPartsSizeType=value.pPartsSizeType
+              value.qdRealTimePrice=parseInt(value.price)
+              let partPrince = parseInt(value.price)
+              qPrice += partPrince * value.qdNumber
+            })
+            this.salesSlip.qPrice = qPrice
+          }
+          PostData('quotationDetail/addQuotationDetail',this.salesSlip)
+            .then(res=>{
+              this.$message({
+                type:'success',
+                message:'添加成功'
+              })
+              this.$router.back()
+            }).catch(()=>{})
+        } else {
+          return false;
         }
-      })
+      });
     },
     //添加零件
     addPart(item){
       let temp=Object.assign({},item)
-      temp.odType=this.levelIV.odType
-      if(temp.odType===1){
+      temp.qdType=this.levelIV.qdType
+      if(temp.qdType===1){
         let flag=false
-        if(temp.odNumber&&temp.odRetailPrice){
-          for(let part of this.priceSlip.orderDetailList){
+        if(temp.qdNumber&&temp.price){
+          for(let part of this.salesSlip.quotationDetailList){
             if(item.pId===part.pId) {
-              part.odNumber += item.odNumber
-              part.odRetailPrice=item.odRetailPrice
+              part.qdNumber += item.qdNumber
+              part.price=item.price
               flag = true
               this.$message({
                 message: '已修改零件数量',
@@ -726,8 +663,8 @@ export default {
             }
           }
           if(!flag){
-            temp.odPartsId=temp.pId
-            this.priceSlip.orderDetailList.push(temp)
+            temp.qdPartsId=temp.pId+''
+            this.salesSlip.quotationDetailList.push(temp)
             this.$message({
               message:'已添加至已选零件库',
               type:"success"
@@ -742,11 +679,13 @@ export default {
         }}
       else {
         let flag=false
-        if(temp.odNumber&&temp.odRetailPrice){
-          for (let part of this.priceSlip.wholeDetailsList) {
+        if(temp.qdNumber&&temp.price){
+          console.log(item)
+          for (let part of this.salesSlip.wholeDetailsList) {
+            console.log(part)
             if (item.wId === part.wId) {
-              part.odNumber += item.odNumber
-              part.odRetailPrice=item.odRetailPrice
+              part.qdNumber += item.qdNumber
+              part.price=item.price
               flag = true
               this.$message({
                 message: '已修改整件数量',
@@ -756,7 +695,7 @@ export default {
           }
           if(!flag){
             temp.odPartsId=temp.wId
-            this.priceSlip.wholeDetailsList.push(temp)
+            this.salesSlip.wholeDetailsList.push(temp)
             this.$message({
               message:'已添加至已选整件库',
               type:"success"
@@ -770,17 +709,18 @@ export default {
           })
         }
       }
+
     },
     //查询
     queryGoods(pageNum=1){
-      if(this.levelIV.odType===1){
-        let levelIVCopy={}
-        if(typeof pageNum==="number"){
-          this.levelIV.pageNum=pageNum
-          levelIVCopy.pageNum=pageNum
-          levelIVCopy=JSON.parse(JSON.stringify(this.levelIV))
-          let categoryList=""
-          if(levelIVCopy.pCategoryId &&levelIVCopy.pCategoryId.length>0&&typeof levelIVCopy.pCategoryId!="string") {
+      if (this.levelIV.qdType === 1) {
+        let levelIVCopy = {}
+        if (typeof pageNum === "number") {
+          this.levelIV.pageNum = pageNum
+          levelIVCopy.pageNum = pageNum
+          levelIVCopy = JSON.parse(JSON.stringify(this.levelIV))
+          let categoryList = ""
+          if (levelIVCopy.pCategoryId && levelIVCopy.pCategoryId.length > 0 && typeof levelIVCopy.pCategoryId != "string") {
             levelIVCopy.pCategoryId.forEach((item, index, array) => {
               if (array[index + 1]) {
                 categoryList += item + "/"
@@ -789,11 +729,11 @@ export default {
               }
             })
           }
-          levelIVCopy.pCategoryId=categoryList
-        }else{
-          let categoryList=""
-          levelIVCopy=JSON.parse(JSON.stringify(this.levelIV))
-          if(levelIVCopy.pCategoryId &&levelIVCopy.pCategoryId.length>0&&typeof levelIVCopy.pCategoryId!="string") {
+          levelIVCopy.pCategoryId = categoryList
+        } else {
+          let categoryList = ""
+          levelIVCopy = JSON.parse(JSON.stringify(this.levelIV))
+          if (levelIVCopy.pCategoryId && levelIVCopy.pCategoryId.length > 0 && typeof levelIVCopy.pCategoryId != "string") {
             levelIVCopy.pCategoryId.forEach((item, index, array) => {
               if (array[index + 1]) {
                 categoryList += item + "/"
@@ -802,42 +742,41 @@ export default {
               }
             })
           }
-          levelIVCopy.pCategoryId=categoryList
+          levelIVCopy.pCategoryId = categoryList
         }
         levelIVCopy.pPartsStatus=1
-        PostData('parts/selectAllByEnabled',levelIVCopy)
-          .then(res=>{
-            let middleList=res.list
-            this.total=res.total
-            if(middleList&&middleList.length>0){
+        PostData('parts/selectAllByEnabled', levelIVCopy)
+          .then(res => {
+            let middleList = res.list
+            this.partTotal = res.total
+            if (middleList && middleList.length > 0) {
               middleList.forEach(value => {
-                value.odRetailPrice=this.customerPrince===0?value.pLowPrice:this.customerPrince===1?value.pMiddlePrice:value.pHighPrice
+                value.price = this.customerPrince === 0 ? value.pLowPrice : this.customerPrince === 1 ? value.pMiddlePrice : value.pHighPrice
               })
             }
-            this.list=middleList
+            this.list = middleList
             this.wholeList=[]
           })
-      }
-      else {
+      } else {
         this.levelIV.wIsUse=1
-        PostData('/whole/selectAllByLike', this.levelIV).then(res => {
+        PostData('whole/selectAllByLike', this.levelIV).then(res => {
           this.wholeList=res.list
-          this.total=res.total
+          this.partTotal=res.total
           this.list=[]
         })
       }
+
     },
     getList(){
       levelIVDirectory().then(res=>{
         this.levelIVDirectoryList=res
       })
     },
-    getPrice(){
+    getPrince(){
       let query={
-        cuId:this.$route.query.priceSlip.oCustomerId
+        cuId:this.$route.query.qCustomerId
       }
-      PostData('/customer/selectAllByLike',query).then(res=>{
-        console.log(res.list)
+      PostData('customer/selectAllByLike',query).then(res=>{
         switch (res.list[0].cuDiscount){
           case "一级价格":
             this.customerPrince=0
@@ -853,9 +792,9 @@ export default {
     },
     previous() {
       this.$router.push({
-        path: "/Slips/addSPriceSlips" ,
+        path: "/Slips/addSlips" ,
         query:{
-          priceSlip:this.priceSlip
+          salesSlip:this.salesSlip
         }
       });
     },
@@ -877,7 +816,6 @@ export default {
       if (len1 == "-") {
         str = "";
       }
-
       //限制只能输入一个小数点
       if (str.indexOf(".") != -1) {
         let str_ = str.substr(str.indexOf(".") + 1);
@@ -901,15 +839,12 @@ export default {
 .demo-table-expand {
   border-top: 1px solid #000000;
   border-left:1px solid #000000;
+  border-right:1px solid #000000;
   font-size: 0;
 }
 .demo-table-expand label {
   width: 90px;
   color: #99a9bf;
-}
-.el-image__inner{
-  width: 200px;
-  height: 200px;
 }
 .demo-table-expand .el-form-item {
   border-bottom: 1px solid #000000;
@@ -918,8 +853,4 @@ export default {
   margin-bottom: 0;
   width: 50%;
 }
-.my-info-dialog .my-info-container .demo-ruleForm .el-dialog__body{
-  padding: 0;
-}
-
 </style>

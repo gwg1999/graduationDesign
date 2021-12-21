@@ -647,6 +647,13 @@ export const constantRoutes=[
         hidden: true
       },
       {
+        path: 'addSlipsDetailsGoods',
+        name: '新增报价单零件',
+        component: () => import('@/views/Slips/salesSlips/addSlips/addSlipsDetailsGoods'),
+        meta: { title: '新增报价单零件', icon: 'tree' ,roles:['admin']},
+        hidden: true
+      },
+      {
         path: 'princeSlipManagement',
         name: '销售单管理',
         component: () => import('@/views/Slips/princeSlips/princeSlipManagement'),
