@@ -172,7 +172,8 @@
         <template slot-scope="scope">
           <el-image
             style="width: 100px; height: 100px"
-            :src="scope.row.kPicture"
+            alt="无"
+            :src="scope.row.kPicture" :preview-src-list="srcList(scope.row.kPicture)"
           >
           </el-image>
         </template>
@@ -264,9 +265,9 @@ export default {
         kCategoryName: [
           {required: true, message: "请选择零件类目", trigger: "blur"}
         ],
-        kPlaceId:[
-          {required: true, message: "产地名不能为空", trigger: "blur"}
-        ],
+        // kPlaceId:[
+        //   {required: true, message: "产地名不能为空", trigger: "blur"}
+        // ],
         kUnitId:[
           {required: true, message: "单位不能为空", trigger: "blur"}
         ]
@@ -287,6 +288,11 @@ export default {
     inPicturePar() {
       return qs.stringify(this.inPicPar)
     },
+    srcList(){
+      return (value)=>{
+        return [value]
+      }
+    }
   },
   methods: {//创建具体的方法
     getList() {
@@ -422,10 +428,10 @@ export default {
     showDetails(data) {
       console.log(data);
       this.inPicPar.kId=data.kId
-      data.kCategoryName=data.kCategoryName.split("/")
       console.log(888);
       console.log(data);
       this.knowledge = Object.assign({}, data)
+      this.knowledge.kCategoryName=this.knowledge.kCategoryName.split("/")
       this.title = '修改零件信息'
       this.partDialogVisible = true
       // localStorage.setItem('fId',this.list[index].fId)

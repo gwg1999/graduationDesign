@@ -16,10 +16,10 @@
         </el-select>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===1" style="width: 200px" >
-        <el-input   v-model="levelIV.pNumber" placeholder="请输入零件号" ></el-input>
+        <el-input   v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===1" style="width: 210px">
-        <el-input v-model="levelIV.pName" placeholder="请输入零件名" ></el-input>
+        <el-input v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===1" style="width: 200px" >
         <el-cascader
@@ -776,38 +776,24 @@ export default {
     //查询
     queryGoods(pageNum=1){
       if(this.levelIV.odType===1){
-        let levelIVCopy={}
-        if(typeof pageNum==="number"){
+        let categoryList=""
+        if(this.levelIV.pCategoryId &&this.levelIV.pCategoryId.length>0) {
+          this.levelIV.pCategoryId.forEach((item, index, array) => {
+                if (array[index + 1]) {
+                  categoryList += item + "/"
+                } else {
+                  categoryList += item
+                }
+              })
+            }
+        this.levelIV.pCategoryId=categoryList
+        if(pageNum>1){
           this.levelIV.pageNum=pageNum
-          levelIVCopy.pageNum=pageNum
-          levelIVCopy=JSON.parse(JSON.stringify(this.levelIV))
-          let categoryList=""
-          if(levelIVCopy.pCategoryId &&levelIVCopy.pCategoryId.length>0&&typeof levelIVCopy.pCategoryId!="string") {
-            levelIVCopy.pCategoryId.forEach((item, index, array) => {
-              if (array[index + 1]) {
-                categoryList += item + "/"
-              } else {
-                categoryList += item
-              }
-            })
-          }
-          levelIVCopy.pCategoryId=categoryList
-        }else{
-          let categoryList=""
-          levelIVCopy=JSON.parse(JSON.stringify(this.levelIV))
-          if(levelIVCopy.pCategoryId &&levelIVCopy.pCategoryId.length>0&&typeof levelIVCopy.pCategoryId!="string") {
-            levelIVCopy.pCategoryId.forEach((item, index, array) => {
-              if (array[index + 1]) {
-                categoryList += item + "/"
-              } else {
-                categoryList += item
-              }
-            })
-          }
-          levelIVCopy.pCategoryId=categoryList
+        }else {
+          this.levelIV.pageNum=1
         }
-        levelIVCopy.pPartsStatus=1
-        PostData('parts/selectAllByEnabled',levelIVCopy)
+        this.levelIV.pPartsStatus=1
+        PostData('parts/selectAllByEnabled',this.levelIV)
           .then(res=>{
             let middleList=res.list
             this.total=res.total

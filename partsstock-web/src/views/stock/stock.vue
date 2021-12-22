@@ -8,7 +8,7 @@
       :before-close="handleClose">
       <el-form :model="buyList" ref="buyList" label-width="100px" class="demo-dynamic" :rules="rules">
         <el-form-item label="仓库管理员" prop="warehouseOperaterId">
-          <el-select v-model="buyList.warehouseOperaterId" filterable placeholder="请选择">
+          <el-select v-model="buyList.warehouseOperaterId" filterable placeholder="请选择" clearable>
             <el-option
               v-for="item in houseOperator"
               :key="item.aId"
@@ -21,7 +21,7 @@
         <!--            <el-input v-model="admin.aId" style="width: 300px"s/>-->
         <!--          </el-form-item>-->
         <el-form-item label="付款方式" prop="paymentWay">
-          <el-select v-model="buyList.paymentWay" filterable placeholder="请选择">
+          <el-select v-model="buyList.paymentWay" filterable placeholder="请选择" clearable>
             <el-option
               v-for="item in spaymentWay"
               :key="item.value"
@@ -48,7 +48,8 @@
             :fetch-suggestions="querySearch"
             placeholder="请输入客户名"
             :trigger-on-focus="false"
-            @select="handleSelect">
+            @select="handleSelect"
+            clearable>
             <!--      <i-->
             <!--        class="el-icon-edit el-input__icon"-->
             <!--        slot="suffix"-->
@@ -59,10 +60,10 @@
               <!--        <span class="addr">{{ item.address }}</span>-->
             </template>
           </el-autocomplete>
-          <el-select v-model="stockQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员">
+          <el-select v-model="stockQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员" clearable>
             <el-option :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>
           </el-select>
-          <el-select v-model="stockQuery.iStatus" style="margin-left: 3px" placeholder="请选择订单状态">
+          <el-select v-model="stockQuery.iStatus" style="margin-left: 3px" placeholder="请选择订单状态" clearable>
             <el-option label="未询价" :value="0"></el-option>
             <el-option label="已询价" :value="1"></el-option>
           </el-select>

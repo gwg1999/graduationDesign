@@ -70,7 +70,8 @@
             :fetch-suggestions="querySearch"
             placeholder="请输入客户名"
             :trigger-on-focus="false"
-            @select="handleSelect">
+            @select="handleSelect"
+            clearable>
             <!--      <i-->
             <!--        class="el-icon-edit el-input__icon"-->
             <!--        slot="suffix"-->
@@ -81,10 +82,10 @@
               <!--        <span class="addr">{{ item.address }}</span>-->
             </template>
           </el-autocomplete>
-          <el-select v-model="buyQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员">
+          <el-select v-model="buyQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员" clearable>
             <el-option :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>
           </el-select>
-          <el-select v-model="buyQuery.SStatus" placeholder="请选择订单状态" style="margin-left: 3px">
+          <el-select v-model="buyQuery.SStatus" placeholder="请选择订单状态" style="margin-left: 3px" clearable>
             <el-option label="未发货" :value="0"></el-option>
             <el-option label="部分发货" :value="1"></el-option>
             <el-option label="全部发货" :value="2"></el-option>

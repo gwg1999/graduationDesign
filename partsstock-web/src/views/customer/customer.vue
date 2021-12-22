@@ -121,6 +121,10 @@
                 <el-option label="微信" value="0"></el-option>
                 <el-option label="支付宝" value="1"></el-option>
                 <el-option label="信用卡" value="2"></el-option>
+                <el-option label="扫码" value="3"></el-option>
+                <el-option label="现金" value="4"></el-option>
+                <el-option label="挂账" value="5"></el-option>
+                <el-option label="对公" value="6"></el-option>
               </el-select>
             </el-form-item >
 <!--            <el-form-item label="用户权限" prop="cuPermission">-->

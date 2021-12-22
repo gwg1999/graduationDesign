@@ -775,38 +775,24 @@ export default {
     //查询
     queryGoods(pageNum=1){
       if(this.levelIV.odType===1){
-        let levelIVCopy={}
-        if(typeof pageNum==="number"){
-          this.levelIV.pageNum=pageNum
-          levelIVCopy.pageNum=pageNum
-          levelIVCopy=JSON.parse(JSON.stringify(this.levelIV))
-          let categoryList=""
-          if(levelIVCopy.pCategoryId &&levelIVCopy.pCategoryId.length>0&&typeof levelIVCopy.pCategoryId!="string") {
-            levelIVCopy.pCategoryId.forEach((item, index, array) => {
-              if (array[index + 1]) {
-                categoryList += item + "/"
-              } else {
-                categoryList += item
-              }
-            })
-          }
-          levelIVCopy.pCategoryId=categoryList
-        }else{
-          let categoryList=""
-          levelIVCopy=JSON.parse(JSON.stringify(this.levelIV))
-          if(levelIVCopy.pCategoryId &&levelIVCopy.pCategoryId.length>0&&typeof levelIVCopy.pCategoryId!="string") {
-            levelIVCopy.pCategoryId.forEach((item, index, array) => {
-              if (array[index + 1]) {
-                categoryList += item + "/"
-              } else {
-                categoryList += item
-              }
-            })
-          }
-          levelIVCopy.pCategoryId=categoryList
+        let categoryList=""
+        if(this.levelIV.pCategoryId &&this.levelIV.pCategoryId.length>0) {
+          this.levelIV.pCategoryId.forEach((item, index, array) => {
+            if (array[index + 1]) {
+              categoryList += item + "/"
+            } else {
+              categoryList += item
+            }
+          })
         }
-        levelIVCopy.pPartsStatus=1
-        PostData('parts/selectAllByEnabled',levelIVCopy)
+        this.levelIV.pCategoryId=categoryList
+        if(pageNum>1){
+          this.levelIV.pageNum=pageNum
+        }else {
+          this.levelIV.pageNum=1
+        }
+        this.levelIV.pPartsStatus=1
+        PostData('parts/selectAllByEnabled',this.levelIV)
           .then(res=>{
             let middleList=res.list
             this.total=res.total

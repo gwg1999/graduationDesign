@@ -11,10 +11,10 @@
         </el-select>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
-        <el-input   v-model="levelIV.pNumber" placeholder="请输入零件号" ></el-input>
+        <el-input   v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 210px">
-        <el-input v-model="levelIV.pName" placeholder="请输入零件名" ></el-input>
+        <el-input v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
         <el-cascader
@@ -36,7 +36,7 @@
         <el-input v-model="levelIV.wName" placeholder="请输入整件名" ></el-input>
       </el-form-item>
       <el-button :disabled="!(levelIV.qdType===0||levelIV.qdType===1)" type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
-      <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 100px" @click="showSelected">查看已选零件</el-button>
+      <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 10px" @click="showSelected">查看已选零件</el-button>
       <!--      <el-button @click="previous" type="primary" style="position: absolute;right: 10px">上一步</el-button>-->
       <!--      <el-button  type="primary" @click="next"  style="position: absolute;right: 10px;width: 100px">下一步</el-button>-->
     </el-form>
@@ -716,38 +716,25 @@ export default {
     //查询
     queryGoods(pageNum=1){
       if (this.levelIV.qdType === 1) {
-        let levelIVCopy = {}
-        if (typeof pageNum === "number") {
-          this.levelIV.pageNum = pageNum
-          levelIVCopy.pageNum = pageNum
-          levelIVCopy = JSON.parse(JSON.stringify(this.levelIV))
-          let categoryList = ""
-          if (levelIVCopy.pCategoryId && levelIVCopy.pCategoryId.length > 0 && typeof levelIVCopy.pCategoryId != "string") {
-            levelIVCopy.pCategoryId.forEach((item, index, array) => {
-              if (array[index + 1]) {
-                categoryList += item + "/"
-              } else {
-                categoryList += item
-              }
-            })
-          }
-          levelIVCopy.pCategoryId = categoryList
-        } else {
-          let categoryList = ""
-          levelIVCopy = JSON.parse(JSON.stringify(this.levelIV))
-          if (levelIVCopy.pCategoryId && levelIVCopy.pCategoryId.length > 0 && typeof levelIVCopy.pCategoryId != "string") {
-            levelIVCopy.pCategoryId.forEach((item, index, array) => {
-              if (array[index + 1]) {
-                categoryList += item + "/"
-              } else {
-                categoryList += item
-              }
-            })
-          }
-          levelIVCopy.pCategoryId = categoryList
+        let categoryList=""
+        if(this.levelIV.pCategoryId &&this.levelIV.pCategoryId.length>0) {
+          this.levelIV.pCategoryId.forEach((item, index, array) => {
+            if (array[index + 1]) {
+              categoryList += item + "/"
+            } else {
+              categoryList += item
+            }
+          })
         }
-        levelIVCopy.pPartsStatus=1
-        PostData('parts/selectAllByEnabled', levelIVCopy)
+        this.levelIV.pCategoryId=categoryList
+        if(pageNum>1){
+          this.levelIV.pageNum=pageNum
+        }else {
+          this.levelIV.pageNum=1
+        }
+        this.levelIV.pPartsStatus=1
+        console.log(this.levelIV)
+        PostData('parts/selectAllByEnabled', this.levelIV)
           .then(res => {
             let middleList = res.list
             this.partTotal = res.total
