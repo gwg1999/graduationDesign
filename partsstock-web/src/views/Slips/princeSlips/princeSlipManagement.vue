@@ -4,7 +4,7 @@
       <!--查询表单-->
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
         <el-form-item>
-          <el-input v-model="queryPrinceSheet.name"  clearable placeholder="客户名称" style="width: 150px"></el-input>
+          <el-input v-model="queryPrinceSheet.name" @keyup.enter.native="getList()" clearable placeholder="客户名称" style="width: 150px"></el-input>
         </el-form-item>
         <el-form-item >
           <el-date-picker
@@ -13,6 +13,7 @@
             range-separator="至"
             start-placeholder="销售单创建时间开始日期"
             end-placeholder="销售单创建时间结束日期"
+            @change="getList()"
             style="width: 420px">
           </el-date-picker>
         </el-form-item>

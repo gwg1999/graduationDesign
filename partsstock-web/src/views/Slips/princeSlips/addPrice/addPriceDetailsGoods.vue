@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h6 style="float:right;margin-top:0;color: red">F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,
+    <h6 style="float:right;margin-top:0;color: red">(在鼠标点击数量框内后)---F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,
       在添加整件时F7查看该整件的零件关系</h6>
     <el-form :inline="true" class="demo-form-inline" style="position: relative;margin-top: 40px ">
       <el-form-item>
@@ -10,10 +10,10 @@
         </el-select>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===1" style="width: 200px" >
-        <el-input   v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
+        <el-input @keyup.enter.native="queryGoods"  v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===1" style="width: 210px">
-        <el-input v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>
+        <el-input @keyup.enter.native="queryGoods" v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===1" style="width: 200px" >
         <el-cascader
@@ -32,7 +32,7 @@
         </el-cascader>
       </el-form-item>
       <el-form-item   v-if="levelIV.odType===0" style="width: 210px">
-        <el-input v-model="levelIV.wName" clearable placeholder="请输入整件名" ></el-input>
+        <el-input @keyup.enter.native="queryGoods" v-model="levelIV.wName" clearable placeholder="请输入整件名" ></el-input>
       </el-form-item>
       <el-button :disabled="!(levelIV.odType===0||levelIV.odType===1)" type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
       <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 10px" @click="showSelected">查看已选零件</el-button>
@@ -99,7 +99,7 @@
           <el-form>
             <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
               <el-form-item>
-                数量:<el-input-number @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
+                数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
                 价格:<el-input  @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width: 100px;" size="small" ></el-input>
@@ -136,7 +136,7 @@
           <el-form>
             <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
               <el-form-item>
-                数量:<el-input-number @keyup.119.native="searchNoCustomerList(scope.row.wId)" @keyup.118.native="searchWhole(scope.row.wId)" @keyup.117.native="searchHistoryList(scope.row.wId)" @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
+                数量:<el-input-number  :min="0" @keyup.119.native="searchNoCustomerList(scope.row.wId)" @keyup.118.native="searchWhole(scope.row.wId)" @keyup.117.native="searchHistoryList(scope.row.wId)" @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
                 价格:<el-input @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width: 100px;" size="small" ></el-input>
@@ -785,14 +785,16 @@ export default {
             }
           })
         }
-        this.levelIV.pCategoryId=categoryList
         if(pageNum>1){
           this.levelIV.pageNum=pageNum
         }else {
           this.levelIV.pageNum=1
         }
         this.levelIV.pPartsStatus=1
-        PostData('parts/selectAllByEnabled',this.levelIV)
+        let levelIVCopy={}
+        levelIVCopy=JSON.parse(JSON.stringify(this.levelIV))
+        levelIVCopy.pCategoryId=categoryList
+        PostData('parts/selectAllByEnabled',levelIVCopy)
           .then(res=>{
             let middleList=res.list
             this.total=res.total
@@ -807,7 +809,13 @@ export default {
       }
       else {
         this.levelIV.wIsUse=1
-        PostData('/whole/selectAllByLike', this.levelIV).then(res => {
+        if(pageNum>1){
+          this.levelIV.pageNum=pageNum
+        }else {
+          this.levelIV.pageNum=1
+        }
+        PostData('whole/selectAllByLike', this.levelIV).then(res => {
+          console.log(res)
           this.wholeList=res.list
           this.total=res.total
           this.list=[]

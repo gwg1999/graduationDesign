@@ -7,7 +7,7 @@
         <!--          <el-input v-model="querySalesSlip.pName"  clearable placeholder="名称" style="width: 150px"></el-input>-->
         <!--        </el-form-item>-->
         <el-form-item>
-          <el-select v-model="querySalesSlip.qdType" clearable placeholder="类型" style="width: 200px"  >
+          <el-select v-model="querySalesSlip.qdType" @change="getList()" clearable placeholder="类型" style="width: 200px"  >
             <el-option :value="1" label="零件"/>
             <el-option :value="0" label="整件"/>
           </el-select>

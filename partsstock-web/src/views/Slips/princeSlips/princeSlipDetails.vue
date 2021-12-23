@@ -3,7 +3,7 @@
     <div class="app-container" >
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
         <el-form-item >
-          <el-select v-model="queryPrinceSheet.odType"   clearable placeholder="请选择商品类型" style="width: 200px"  >
+          <el-select v-model="queryPrinceSheet.odType" @change="getList()"  clearable placeholder="请选择商品类型" style="width: 200px"  >
             <el-option :value="0" label="整件"/>
             <el-option :value="1" label="零件"/>
           </el-select>
