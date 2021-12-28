@@ -84,7 +84,7 @@
       <el-form ref="partsB" :model="parts" label-width="150px" :rules="rules">
         <div style="width: 50%;float: left;background: white">
         <el-form-item label="零件名称" prop="pName">
-          <el-input v-model="parts.pName" style="width: 100%" disabled/>
+          <el-input v-model="parts.pName" style="width: 100%"/>
         </el-form-item>
         <el-form-item label="零件号" prop="pNumber">
           <el-input v-model="parts.pNumber" style="width: 100%"/>

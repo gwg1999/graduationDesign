@@ -252,7 +252,7 @@ export default {
         }).catch(()=>{})
     },
     getList() {
-      PostData('/whole/selectAllByLike',qs.stringify(this.wholeQuery))
+      PostData('/whole/selectAllByLike',this.wholeQuery)
         .then(res=>{
           this.list = res.list
           this.pageTotal=res.total
@@ -283,7 +283,7 @@ export default {
     },
     querySearch(queryString, cb) {
       this.wholeQuery.wName=queryString;
-      PostData('/whole/selectAllByLike',qs.stringify(this.wholeQuery)).then(ref=>{
+      PostData('/whole/selectAllByLike',this.wholeQuery).then(ref=>{
         cb(ref.list)
       })
       // 调用 callback 返回建议列表的数据

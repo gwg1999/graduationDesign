@@ -137,8 +137,8 @@
 
             <el-pagination
               layout="total, prev, pager, next, jumper"
-              :page-size="partQuery.pageSize"
-              :current-page="partQuery.pageNum"
+              :page-size="searchQuery.pageSize"
+              :current-page="searchQuery.pageNum"
               :total="pageTotal"
               style="padding: 30px 0; text-align: right;"
               @current-change="handlePageChange"
