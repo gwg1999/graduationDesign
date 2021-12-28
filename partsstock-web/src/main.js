@@ -18,7 +18,7 @@ import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 // import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
-
+import PinyinMatch from 'pinyin-match';
 import * as filters from './filters' // global filters
 import qs from 'qs'
 // import plTable from 'pl-table'
@@ -53,6 +53,7 @@ Object.keys(filters).forEach(key => {
 
 Vue.config.productionTip = false
 
+Vue.prototype.$pinyinmatch = PinyinMatch;
 new Vue({
   el: '#app',
   router,

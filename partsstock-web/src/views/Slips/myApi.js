@@ -10,6 +10,14 @@ function queryAll(type=2,status=1) {
 
   })
 }
+export const customerQuery=(customer,pageNum,pageSize)=>{
+  return request({
+    url: 'customer/selectAllByLike',
+    method: 'post',
+    data:customer,
+    params:{pageNum,pageSize},
+  })
+}
 export const levelIVDirectory=()=>{
   return new Promise(async (resolve,reject)=>{
     let levelIVDirectoryList=handleArray(await queryAll())
@@ -18,7 +26,7 @@ export const levelIVDirectory=()=>{
 }
 export const commonList=(url)=>{
   return new Promise(async resolve => {
-    let promise=await PostData(url,{pageNum:0,pageSize:0})
+    let promise=await PostData(url,{pageNum:1,pageSize:10000})
     resolve(promise)
   })
 }

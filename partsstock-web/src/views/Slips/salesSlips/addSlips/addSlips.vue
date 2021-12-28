@@ -7,10 +7,10 @@
     <div>
       <div class="app-container">
         <el-form label-width="120px" :rules="rules" :model="salesSlip" ref="salesSlip" >
-          <el-form-item label="客户单位" prop="qCustomerId" style="width: 500px">
+          <el-form-item label="客户单位" prop="qCustomerId" style="width: 650px">
             <el-select
               v-model="salesSlip.qCustomerId" filterable clearable placeholder="请选择客户单位"
-              :filter-method="userFilter" style="width: 500px">
+              :filter-method="userFilter" style="width: 640px">
               <el-option
                 v-for="customer in customerList"
                 :key="customer.cuId"
@@ -52,18 +52,32 @@ export default {
   created() {
     this.getList()
     if(this.$route.query.salesSlip){
+      //深拷贝中的浅拷
       this.salesSlip = Object.assign({}, this.$route.query.salesSlip)
     }
   },
   methods: {
+    //客户单位模糊查询
     userFilter(query = '') {
-      let arr = this.customerNameList.filter((item) => {
-        return item.cuUnitName.includes(query)
-      })
-      if (arr.length > 50) {
-        this.customerList = arr.slice(0, 50)
-      } else {
-        this.customerList = arr
+      if(query!==''){
+        let PinyinMatch = this.$pinyinmatch;
+        if (query) {
+          let result = [];
+          this.customerNameList.forEach(i => {
+            let m = PinyinMatch.match(i.cuUnitName, query);
+            if (m) {
+              result.push(i);
+            }
+          });
+          if(result.length>20){
+            this.customerList = result.slice(0, 20);
+          } else
+          {
+            this.customerList=result
+          }
+        }
+      }else {
+        this.customerList=[]
       }
     },
     getList(){

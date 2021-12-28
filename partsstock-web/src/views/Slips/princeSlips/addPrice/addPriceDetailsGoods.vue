@@ -22,9 +22,9 @@
           :props="{value:'name',label:'name'}"
           :show-all-levels="false"
           clearable
+          filterable
           @change="queryGoods"
-          :options="levelIVDirectoryList"
-        >
+          :options="levelIVDirectoryList">
           <template slot-scope="{ node, data }">
             <span>{{ data["name"] }}</span>
             <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
@@ -43,7 +43,7 @@
               fit
               v-show="levelIV.odType===1"
               highlight-current-row
-              style="width: 100%;font-size: 2px;line-height:20px;padding: 0">
+              style="width: 100%;font-size: 4px;line-height:20px;padding: 0">
       <el-table-column
         label="序号"
         width="50%"
@@ -66,15 +66,15 @@
             </el-form-item>
             <el-form-item label="图片:">
             </el-form-item>
-            <el-form-item label="备注:" style="height: 163px;width: 50%">
+            <el-form-item label="备注:" style="height: 180px;width: 50%">
               <span>{{ props.row.pNote }}</span>
             </el-form-item>
-            <el-form-item>
-              <div class="demo-image__placeholder">
-                <div class="block">
+            <el-form-item style="width: 50%;height: 180px;" >
+              <div class="demo-image__placeholder" style="width: 300px;height: 180px;margin-left: 50%">
+                <div class="block" style="width: 270px;height: 180px">
                   <el-image :src="props.row.pictures[0].path"
                             :preview-src-list="[props.row.pictures[0].path]"
-                            style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
+                            style="height:95%;width: 95%;padding-top: 2px;padding-left: 10px">
                     <div slot="placeholder" class="image-slot">
                       加载中<span class="dot">...</span>
                     </div>
@@ -128,9 +128,9 @@
           {{ (levelIV.pageNum - 1) * levelIV.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="wName" label="整件名" width="140px" align="center" />
-      <el-table-column prop="wNumber" label="整件数量"  width="140px" align="center" />
-      <el-table-column prop="wAlarmNumber" label="告警量"  width="140px" align="center" />
+      <el-table-column prop="wName" label="整件名" width="500px" align="center" />
+      <el-table-column prop="wNumber" label="整件数量"  width="100px" align="center" />
+      <el-table-column prop="wAlarmNumber" label="告警量"  width="100px" align="center" />
       <el-table-column prop="wId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
@@ -570,7 +570,6 @@ export default {
         for (let i=0;i<res.length;i++){
           res[i].sdCreateTime = getTime(res[i].sdCreateTime)
         }
-        console.log(res)
         this.historyPurchasePriceList=res
         if(this.historyPurchasePriceList&&this.historyPurchasePriceList.length>0){
           this.dialogGoodPrice=true
@@ -794,6 +793,7 @@ export default {
         let levelIVCopy={}
         levelIVCopy=JSON.parse(JSON.stringify(this.levelIV))
         levelIVCopy.pCategoryId=categoryList
+        console.log(levelIVCopy)
         PostData('parts/selectAllByEnabled',levelIVCopy)
           .then(res=>{
             let middleList=res.list
@@ -884,13 +884,12 @@ export default {
 </script>
 <style scoped>
 .dialog-footer{
-  padding: 0px;
+  padding: 0;
   margin-bottom: 20px;
 }
 .demo-table-expand {
   border-top: 1px solid #000000;
   border-left:1px solid #000000;
-  font-size: 0;
 }
 .demo-table-expand label {
   width: 90px;

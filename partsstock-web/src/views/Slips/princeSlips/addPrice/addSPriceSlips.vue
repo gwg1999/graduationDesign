@@ -1,17 +1,16 @@
 <template>
   <div>
     <div class="app-container">
-      <!--      <h2 style="text-align: center;">添加销售单</h2>-->
       <el-steps :active="1" process-status="wait" align-center style="margin-bottom: 40px;">
         <el-step title="填写销售单信息" />
         <el-step title="添加零件或整件" />
       </el-steps>
       <el-form label-width="120px" :rules="rules" :model="priceSlip" ref="priceSlip">
 
-        <el-form-item label="客户单位" prop="oCustomerId" style="width: 500px">
+        <el-form-item label="客户单位" prop="oCustomerId" style="width: 650px">
           <el-select
             v-model="priceSlip.oCustomerId" filterable clearable placeholder="请选择客户单位"
-            :filter-method="customerNameListFilter" style="width: 500px" @change="deliverWay($event)">
+            :filter-method="customerNameListFilter" style="width: 640px" @change="deliverWay($event)">
             <el-option
               v-for="customer in customerList"
               :key="customer.cuId"
@@ -22,14 +21,17 @@
 
         <el-form-item label="仓库管理员" prop="oWarehouseOperaterId" style="width: 500px">
           <el-select
-            v-model="priceSlip.oWarehouseOperaterId" clearable filterable placeholder="请选择仓库管理员" style="width: 500px">
+            v-model="priceSlip.oWarehouseOperaterId" clearable
+            :filter-method="warehouseOperatorListListFilter"
+            filterable placeholder="请选择仓库管理员" style="width: 500px">
             <el-option
-              v-for="WarehouseOperator in WarehouseOperatorList"
+              v-for="WarehouseOperator in warehouseNameList"
               :key="WarehouseOperator.aId"
               :label="`${WarehouseOperator.aName}(仓库管理员姓名)-${WarehouseOperator.aUsername}(仓库管理员账号)`"
               :value="WarehouseOperator.aId"/>
           </el-select>
         </el-form-item>
+
         <el-form-item label="发票类型" prop="oInvoiceTypeId">
           <el-select v-model="priceSlip.oInvoiceTypeId"   clearable placeholder="发票类型" style="width: 200px"  >
             <el-option :value="0" label="无"/>
@@ -46,15 +48,6 @@
               :value="item.cuCourier"/>
           </el-select>
         </el-form-item>
-        <!--        <el-form-item label="发货方式" prop="oDeliveryWay">-->
-        <!--          <el-select v-model="priceSlip.oDeliveryWay"  allow-create filterable  placeholder="发货方式" style="width: 200px"  >-->
-        <!--            <el-option-->
-        <!--              v-for="item in oDeliveryWayList"-->
-        <!--              :key="item.cuCourier"-->
-        <!--              :label="`${item.cuCourier}-${item.way}`"-->
-        <!--              :value="item.cuCourier"/>-->
-        <!--          </el-select>-->
-        <!--        </el-form-item>-->
         <el-form-item label="支付方式" prop="oPaymentWay">
           <el-select v-model="priceSlip.oPaymentWay"   clearable placeholder="支付方式" style="width: 200px"  >
             <el-option value="挂账" label="挂账"/>
@@ -96,9 +89,12 @@ export default {
         orderDetailList:[],
         wholeDetailsList:[]
       },
+      //客户单位
       customerList:[],
       customerNameList:[],
+      //仓库管理员
       WarehouseOperatorList:[],
+      warehouseNameList:[],
       rules: {
         oCustomerId: [
           {required: true, message: '请选择客户单位', trigger: 'change'}
@@ -141,24 +137,58 @@ export default {
         }
       })
     },
+    //客户单位模糊查询
     customerNameListFilter(query = '') {
-      let arr = this.customerNameList.filter((item) => {
-        return item.cuUnitName.includes(query)
-      })
-      if (arr.length > 50) {
-        this.customerList = arr.slice(0, 50)
+     if(query!==''){
+       let PinyinMatch = this.$pinyinmatch;
+       if (query) {
+         let result = [];
+         this.customerNameList.forEach(i => {
+           let m = PinyinMatch.match(i.cuUnitName, query);
+           if (m) {
+             result.push(i);
+           }
+         });
+         if(result.length>20){
+           this.customerList = result.slice(0, 20);
+         } else
+         {
+           this.customerList=result
+         }
+       }
+     }else {
+       this.customerList=[]
+     }
+    },
+    warehouseOperatorListListFilter(query = '') {
+      if(query!==''){
+        let PinyinMatch = this.$pinyinmatch;
+        if (query) {
+          let result = [];
+          this.WarehouseOperatorList.forEach(i => {
+            let m = PinyinMatch.match(i.aName, query);
+            if (m) {
+              result.push(i);
+            }
+          });
+          if(result.length>20){
+            this.warehouseNameList = result.slice(0, 20);
+          } else
+          {
+            this.warehouseNameList=result
+          }
+        }
       }else {
-        this.customerList = arr
+        this.warehouseNameList=[]
       }
     },
     getList(){
       commonList("customer/selectAllByLike").then(res=>{
+        console.log(res)
         this.customerNameList=res.list
-        console.log(res.list)
       })
       commonList('admin/selectAllByLike').then(res=>{
         this.WarehouseOperatorList=res.list
-        console.log(res.list)
       })
     },
     saveSalesSlip(){

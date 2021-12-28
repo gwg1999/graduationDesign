@@ -28,6 +28,7 @@
           :show-all-levels="false"
           @change="queryGoods"
           clearable
+          collapse-tags
           :options="levelIVDirectoryList"
         >
           <template slot-scope="{ node, data }">
@@ -50,7 +51,7 @@
               fit
               v-show="levelIV.qdType===1"
               highlight-current-row
-              style="width: 100%;font-size: 2px;line-height:20px;padding: 0">
+              style="width: 100%;font-size: 4px;line-height:20px;padding: 0">
       <el-table-column
         label="序号"
         width="50%"
@@ -61,7 +62,7 @@
       </el-table-column>
       <el-table-column type="expand" label="详情" width="50px">
         <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand" label-width="80px" :label-position="right">
+          <el-form label-position="right" inline class="demo-table-expand" label-width="80px">
             <el-form-item label="零件类目:">
               <span>{{ props.row.pCategoryId }}</span>
             </el-form-item>
@@ -73,15 +74,15 @@
             </el-form-item>
             <el-form-item label="图片:">
             </el-form-item>
-            <el-form-item label="备注:" style="height: 163px;width: 50%">
+            <el-form-item label="备注:" style="height: 180px;width: 50%">
               <span>{{ props.row.pNote }}</span>
             </el-form-item>
-            <el-form-item>
-              <div class="demo-image__placeholder">
-                <div class="block">
+            <el-form-item style="width: 50%;height: 180px;" >
+              <div class="demo-image__placeholder" style="width: 300px;height: 180px;margin-left: 50%">
+                <div class="block" style="width: 270px;height: 180px">
                   <el-image :src="props.row.pictures[0].path"
                             :preview-src-list="[props.row.pictures[0].path]"
-                            style="height: 150px;width: 100%;padding-top: 10px;padding-left: 180px">
+                            style="height:95%;width: 95%;padding-top: 2px;padding-left: 10px">
                     <div slot="placeholder" class="image-slot">
                       加载中<span class="dot">...</span>
                     </div>
@@ -107,7 +108,7 @@
           <el-form>
             <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
               <el-form-item>
-                数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.qdNumber"  size="small"></el-input-number>
+                数量:<el-input style="width: 100px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.qdNumber = number(scope.row.qdNumber)"  v-model = "scope.row.qdNumber"  size="small"></el-input>
               </el-form-item>
               <el-form-item>
                 价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
@@ -136,9 +137,9 @@
           {{ (levelIV.pageNum - 1) * levelIV.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="wName" label="整件名" width="140px" align="center" />
-      <el-table-column prop="wNumber" label="整件数量"  width="140px" align="center" />
-      <el-table-column prop="wAlarmNumber" label="告警量"  width="140px" align="center" />
+      <el-table-column prop="wName" label="整件名" width="500px" align="center" />
+      <el-table-column prop="wNumber" label="整件数量"  width="100px" align="center" />
+      <el-table-column prop="wAlarmNumber" label="告警量"  width="100px" align="center" />
       <el-table-column prop="wId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
@@ -147,7 +148,7 @@
                 数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.wId)" @keyup.118.native="searchWhole(scope.row.wId)" @keyup.117.native="searchHistoryList(scope.row.wId)" @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.qdNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
-                价格:<el-input @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
+                价格:<el-input @keyup.native="scope.row.price =oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
@@ -825,6 +826,19 @@ export default {
       str = str.replace(/[^\d^\.]+/g, ""); // 保留数字和小数点
       str = str.replace(/^\D*([0-9]\d*\.?\d{0,2})?.*$/, "$1"); // 小数点后只能输 2 位
       return str;
+    },
+    number(value){
+      let str = value;
+      let len1 = str.substr(0, 1);
+      let len2 = str.substr(1, 1);
+      //如果第一位是0，第二位不是点，就用数字把点替换掉
+      if (str.length > 1 && len1 == 0 && (len2 == "0"||len2 != "^^")) {
+        str = str.substr(1, 1);
+      }
+      //正则替换
+      str = str.replace(/[^\d]+/g, "");
+      str = str.replace(/^\D*([1-9]\d*)$/, "$1");
+      return str;
     }
   }
 }
@@ -851,4 +865,5 @@ export default {
   margin-bottom: 0;
   width: 50%;
 }
+
 </style>

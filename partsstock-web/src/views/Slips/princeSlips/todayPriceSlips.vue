@@ -60,9 +60,9 @@
               <el-form-item label="支付订单编号:">
                 <span>{{ props.row.oOrderNumber }}</span>
               </el-form-item>
-              <el-form-item label="打包图片:" style="width: 50%;height: 150px">
-                <div class="demo-image__placeholder"  style="width: 300px;height: 150px">
-                  <div class="block" style="width: 280px;height: 150px">
+              <el-form-item label="打包图片:" style="width: 50%;height: 180px">
+                <div class="demo-image__placeholder"  style="width: 300px;height: 180px">
+                  <div class="block" style="width: 270px;height: 180px">
                     <el-image  :src="props.row.packageUrl"
                                :preview-src-list="[props.row.packageUrl]"
                                style="height:80%;width: 80%;padding-top: 10px;margin-left: 20px">
@@ -73,9 +73,9 @@
                   </div>
                 </div>
               </el-form-item>
-              <el-form-item label="发货图片:" style="width: 50%;height: 150px">
-                <div class="demo-image__placeholder" style="width: 300px;height: 150px">
-                  <div class="block" style="width: 280px;height: 150px">
+              <el-form-item label="发货图片:" style="width: 50%;height: 180px">
+                <div class="demo-image__placeholder" style="width: 300px;height: 180px">
+                  <div class="block" style="width: 270px;height: 180px">
                     <el-image :src="props.row.deliverUrl"
                               :preview-src-list="[props.row.deliverUrl]"
                               style="height:80%;width: 80%;padding-top: 10px;margin-left: 20px">
@@ -345,10 +345,7 @@ export default {
       setTimeout(()=>{
         this.$refs.inUpload.submit()
         this.dialogPackageGoodsVisible=false
-        this.$message({
-          type:'success',
-          message:'打包成功'
-        })
+
       },0)
       setTimeout(()=>{
         let princeSheetModify={}
@@ -359,6 +356,10 @@ export default {
       },0)
       setTimeout(()=>{
         this.getList()
+        this.$message({
+          type:'success',
+          message:'打包成功'
+        })
       },1000)
     },
     handleBeforeUpload(file){
@@ -395,10 +396,6 @@ export default {
       setTimeout(()=>{
         this.$refs.inDownload.submit()
         this.dialogDeliverGoodsVisible=false
-        this.$message({
-          type:'success',
-          message:'发货成功'
-        })
       },0)
       setTimeout(()=>{
         let princeSheetModify={}
@@ -411,6 +408,10 @@ export default {
       },0)
       setTimeout(()=>{
         this.getList()
+        this.$message({
+          type:'success',
+          message:'发货成功'
+        })
       },1000)
     },
     //转报价单

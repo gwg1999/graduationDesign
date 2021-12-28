@@ -63,9 +63,12 @@
         <el-form :model="salesSlipsModify" label-width="120px" :rules="rules" ref="salesSlipsModify">
           <el-form-item label="客户名称" prop="customerName">
             <el-select
-              v-model="salesSlipsModify.customerName" clearable placeholder="请选择客户名称">
+              v-model="salesSlipsModify.customerName"
+              filterable
+              :filter-method="customerNameListFilter"
+              clearable placeholder="请选择客户名称">
               <el-option
-                v-for="customer in customList"
+                v-for="customer in customerNameList"
                 :key="customer.cuId"
                 :label="customer.cuUnitName"
                 :value="customer.cuId"/>
@@ -83,9 +86,11 @@
       <el-dialog :visible.sync="dialogWarehouseOperatorFormVisible" title="转销售单">
         <el-form :model="warehouseOperatorModify" label-width="120px" :rules="rules" ref="warehouseOperatorModify">
           <el-form-item label="选择仓库管理员" prop="oWarehouseOperaterId">
-            <el-select v-model="warehouseOperatorModify.oWarehouseOperaterId"  clearable filterable placeholder="选择仓库管理员" >
+            <el-select v-model="warehouseOperatorModify.oWarehouseOperaterId"
+                       :filter-method="warehouseOperatorListListFilter"
+                       clearable filterable placeholder="选择仓库管理员" >
               <el-option
-                v-for="warehouseOperator in warehouseOperatorList"
+                v-for="warehouseOperator in warehouseNameList"
                 :key="warehouseOperator.aId"
                 :label="warehouseOperator.aName"
                 :value="warehouseOperator.aId"/>
@@ -159,6 +164,7 @@ export default {
       dialogWarehouseOperatorFormVisible:false,
       warehouseOperatorModify:{},
       warehouseOperatorList:[],
+      warehouseNameList:[],
       dialogSalesSheetFormVisible:false,
       salesSheetBtnDisabled:false,
       querySalesSlip:{
@@ -170,6 +176,7 @@ export default {
       salesSlipsList:[],
       salesSlipsModify:{},
       customList:[],
+      customerNameList:[],
       rules:{
         customerName: [
           {required: true, message: '请选填入客户名称', trigger: 'change'}
@@ -191,8 +198,53 @@ export default {
     this.getCommonList()
   },
   methods:{
+    //客户单位模糊查询
+    customerNameListFilter(query = '') {
+      if(query!==''){
+        let PinyinMatch = this.$pinyinmatch;
+        if (query) {
+          let result = [];
+          this.customList.forEach(i => {
+            let m = PinyinMatch.match(i.cuUnitName, query);
+            if (m) {
+              result.push(i);
+            }
+          });
+          if(result.length>20){
+            this.customerNameList = result.slice(0, 20);
+          } else
+          {
+            this.customerNameList=result
+          }
+        }
+      }else {
+        this.customerList=[]
+      }
+    },
+    warehouseOperatorListListFilter(query = '') {
+      if(query!==''){
+        let PinyinMatch = this.$pinyinmatch;
+        if (query) {
+          let result = [];
+          this.warehouseOperatorList.forEach(i => {
+            let m = PinyinMatch.match(i.aName, query);
+            if (m) {
+              result.push(i);
+            }
+          });
+          if(result.length>20){
+            this.warehouseNameList = result.slice(0, 20);
+          } else
+          {
+            this.warehouseNameList=result
+          }
+        }
+      }else {
+        this.warehouseNameList=[]
+      }
+    },
     getCommonList(){
-      commonList('customer/selectAllByLike').then(res=>{
+      commonList("customer/selectAllByLike").then(res=>{
         this.customList=res.list
       })
       commonList('admin/selectAllByLike').then(res=>{
@@ -222,7 +274,6 @@ export default {
                   + value.pRealInventory + '还缺少' + number)
                 note += `${value.pName}缺${number}个.`
               })
-
               let Note = {}
               Note.status = 0
               Note.operateId = parseInt(Cookie.get('aId'))

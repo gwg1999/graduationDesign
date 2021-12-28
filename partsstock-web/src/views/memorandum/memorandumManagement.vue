@@ -5,14 +5,18 @@
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
         <el-autocomplete
           v-model="queryMemorandum.aName"
+          @change="handleOperator($event)"
           :fetch-suggestions="querySearchAsync"
+          clearable
           placeholder="请输入创建人员姓名"
           :trigger-on-focus="false"
           @select="handleSelect(queryMemorandum,$event)"
         >
         </el-autocomplete>
         <el-form-item>
-          <el-select v-model="queryMemorandum.status" clearable placeholder="是否解决" style=" margin-left: 10px;width: 150px"  >
+          <el-select v-model="queryMemorandum.status" clearable placeholder="是否解决"
+                     @change="getList"
+                     style=" margin-left: 10px;width: 150px"  >
             <el-option :value="0" label="未解决"/>
             <el-option :value="1" label="已解决"/>
           </el-select>
@@ -21,6 +25,7 @@
           <el-date-picker
             v-model="queryMemorandum.createMemorandumTime"
             type="daterange"
+            @change="getList"
             range-separator="至"
             start-placeholder="备忘录创建时间开始日期"
             end-placeholder="备忘录创建时间结束日期"
@@ -107,7 +112,6 @@ import {commonList} from "@/views/Slips/myApi";
 export default {
   data(){
     return{
-      state:'',
       adminList:[],
       total:0,
       dialogMemorandumVisible:false,
@@ -135,7 +139,16 @@ export default {
     this.getList()
     this.getCommonList()
   },
+  watch:{
+
+  },
   methods:{
+    handleOperator(event){
+      if(event===''){
+        this.queryMemorandum.operateId=undefined
+        this.getList()
+      }
+    },
     querySearchAsync(queryString, cb) {
       let adminQuery={}
       adminQuery.aName=queryString
@@ -147,7 +160,8 @@ export default {
       })
     },
     handleSelect(item,event) {
-      item.operateId=event.aId
+      this.queryMemorandum.operateId=event.aId
+      this.getList()
     },
     getCommonList(){
       commonList('admin/selectAdmin').then(res=>{
@@ -155,7 +169,6 @@ export default {
       })
     },
     getList(pageNum=1){
-      this.queryMemorandum.pageNum=pageNum
       if(this.queryMemorandum.createMemorandumTime){
         this.queryMemorandum.startCreateTime=reserveTime(this.queryMemorandum.createMemorandumTime[0])
         this.queryMemorandum.endCreateTime=reserveTime(this.queryMemorandum.createMemorandumTime[1])
@@ -163,12 +176,17 @@ export default {
         this.queryMemorandum.startCreateTime=undefined
         this.queryMemorandum.endCreateTime=undefined
       }
+      if(pageNum>1){
+        this.queryMemorandum.pageNum=pageNum
+      }
+      else{
+        this.queryMemorandum.pageNum=1
+      }
       PostData('note/selectAllByLike',this.$qs.stringify(this.queryMemorandum))
         .then(res=>{
           res.list.forEach((value)=>{
             value.createTime=getTime(value.createTime)
           })
-          this.queryMemorandum.operateId=undefined
           this.memorandumList=res.list
           this.total=res.total
         })
@@ -177,7 +195,7 @@ export default {
       this.dialogMemorandumVisible=true
       if (this.$refs['memorandumModify'] !== undefined)
         this.$refs['memorandumModify'].resetFields();
-      params.operateId=params.admin.aName
+      // params.operateId=params.admin.aName
       this.memorandumModify=JSON.parse(JSON.stringify(params))
     },
     UpdateMemorandum(){

@@ -48,9 +48,8 @@
         class="exporttable"
         :data="princeSheetList"
         border
-        style="font-size: 4px"
         :cell-style="{borderColor:'#000000'}"
-        :header-cell-style="{borderColor:'#000000'}"
+        :header-cell-style="{borderColor:'#000000',paddingBottom:'1px'}"
         fit
         highlight-current-row
       >
@@ -63,8 +62,7 @@
             {{ (queryPrinceSheet.pageNum - 1) * queryPrinceSheet.pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="oCreateTime" label="零件号"  width="169px"   align="center"/>
-        <el-table-column prop="partName" label="零件中文名" width="169px"  align="center"/>
+        <el-table-column prop="partName" label="零件中文名" width="338px"  align="center"/>
         <el-table-column prop="oIsPackage" label="车型号" width="148px" align="center"/>
         <el-table-column prop="oIsPackage" label="产地" width="110px" align="center"/>
         <el-table-column prop="oIsPackage" label="单位" width="55px" align="center"/>
