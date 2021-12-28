@@ -3,7 +3,7 @@
     <div class="app-container" >
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
         <el-form-item>
-          <el-input v-model="querySalesSlip.name"  clearable placeholder="客户" style="width: 150px"></el-input>
+          <el-input v-model="querySalesSlip.name"  clearable placeholder="客户" @keyup.enter.native="getList()" style="width: 150px"></el-input>
         </el-form-item>
         <el-form-item >
           <el-date-picker
@@ -13,6 +13,7 @@
             start-placeholder="报价单创建时间开始日期"
             end-placeholder="报价单创建时间结束日期"
             style="width: 420px"
+            @change="getList()"
             clearable>
           </el-date-picker>
         </el-form-item>

@@ -4,7 +4,7 @@
       <!--查询表单-->
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
         <el-form-item>
-          <el-input v-model="queryPrinceSheet.name"  clearable placeholder="客户名称" style="width: 150px"></el-input>
+          <el-input v-model="queryPrinceSheet.name" @keyup.enter.native="getList()" clearable placeholder="客户名称" style="width: 150px"></el-input>
         </el-form-item>
         <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="getList(1)">查 询</el-button>
 <!--        <router-link to="/Slips/addSPriceSlips">-->

@@ -224,6 +224,7 @@ export default {
     selectFocus(e){
       let value = e.target.value;
       setTimeout(() => {
+        console.log(this.$refs.searchSelect)
         let input = this.$refs.searchSelect.$children[0].$refs.input;
         input.value = value;
       })

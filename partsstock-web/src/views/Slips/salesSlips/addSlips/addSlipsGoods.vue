@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <h6 style="float:right;margin-top:0;color: red">F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,
+    <h6 style="float:right;margin-top:0;color: red">(在鼠标点击数量框内后)---F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,
       在添加整件时F7查看该整件的零件关系</h6>
     <el-steps :active="2" process-status="wait" align-center style="margin-bottom: 40px;margin-top: 40px">
       <el-step title="填写报价单信息" />
@@ -15,10 +15,10 @@
         </el-select>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
-        <el-input   v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
+        <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 210px">
-        <el-input v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>
+        <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
         <el-cascader
@@ -37,11 +37,11 @@
         </el-cascader>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===0" style="width: 210px">
-        <el-input v-model="levelIV.wName" placeholder="请输入整件名" ></el-input>
+        <el-input @keyup.enter.native="queryGoods" v-model="levelIV.wName" placeholder="请输入整件名" ></el-input>
       </el-form-item>
       <el-button :disabled="!(levelIV.qdType===0||levelIV.qdType===1)" type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
-      <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 100px" @click="showSelected">查看已选零件</el-button>
-<!--      <el-button @click="previous" type="primary" style="position: absolute;right: 10px">上一步</el-button>-->
+      <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 10px" @click="showSelected">查看已选零件</el-button>
+      <!--      <el-button @click="previous" type="primary" style="position: absolute;right: 10px">上一步</el-button>-->
       <!--      <el-button  type="primary" @click="next"  style="position: absolute;right: 10px;width: 100px">下一步</el-button>-->
     </el-form>
     <!-- 零件添加表格 -->
@@ -95,7 +95,7 @@
       <el-table-column prop="pNumber" label="零件号" width="80px" align="center" />
       <el-table-column prop="pName" label="零件名" width="100px" align="center" />
       <el-table-column prop="place.plName" label="产地" width="80px"  align="center"/>
-<!--      <el-table-column prop="pCarName" label="车型号" width="80px"  align="center"/>-->
+      <!--      <el-table-column prop="pCarName" label="车型号" width="80px"  align="center"/>-->
       <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
       <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>
       <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />
@@ -107,7 +107,7 @@
           <el-form>
             <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
               <el-form-item>
-                数量:<el-input-number @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.qdNumber"  size="small"></el-input-number>
+                数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.qdNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
                 价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
@@ -144,7 +144,7 @@
           <el-form>
             <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
               <el-form-item>
-                数量:<el-input-number @keyup.119.native="searchNoCustomerList(scope.row.wId)" @keyup.118.native="searchWhole(scope.row.wId)" @keyup.117.native="searchHistoryList(scope.row.wId)" @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.qdNumber"  size="small"></el-input-number>
+                数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.wId)" @keyup.118.native="searchWhole(scope.row.wId)" @keyup.117.native="searchHistoryList(scope.row.wId)" @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.qdNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
                 价格:<el-input @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
@@ -540,7 +540,7 @@ export default {
     //零件整件切换页数变化
     changeTotal(event){
       if(event>=0){
-      this.partTotal=0
+        this.partTotal=0
       }
     },
     //整件零件关系
@@ -729,15 +729,16 @@ export default {
             }
           })
         }
-        this.levelIV.pCategoryId=categoryList
         if(pageNum>1){
           this.levelIV.pageNum=pageNum
         }else {
           this.levelIV.pageNum=1
         }
         this.levelIV.pPartsStatus=1
-        console.log(this.levelIV)
-        PostData('parts/selectAllByEnabled', this.levelIV)
+        let levelIVCopy={}
+        levelIVCopy=JSON.parse(JSON.stringify(this.levelIV))
+        levelIVCopy.pCategoryId=categoryList
+        PostData('parts/selectAllByEnabled', levelIVCopy)
           .then(res => {
             let middleList = res.list
             this.partTotal = res.total
@@ -751,6 +752,11 @@ export default {
           })
       } else {
         this.levelIV.wIsUse=1
+        if(pageNum>1){
+          this.levelIV.pageNum=pageNum
+        }else {
+          this.levelIV.pageNum=1
+        }
         PostData('/whole/selectAllByLike', this.levelIV).then(res => {
           this.wholeList=res.list
           this.partTotal=res.total
