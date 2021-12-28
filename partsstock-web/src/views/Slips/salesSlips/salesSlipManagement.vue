@@ -59,18 +59,19 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-dialog :visible.sync="dialogSalesSheetFormVisible" title="修改报价单">
+      <el-dialog :visible.sync="dialogSalesSheetFormVisible" title="修改报价单" >
         <el-form :model="salesSlipsModify" label-width="120px" :rules="rules" ref="salesSlipsModify">
           <el-form-item label="客户名称" prop="customerName">
             <el-select
               v-model="salesSlipsModify.customerName"
               filterable
+              style="width:580px"
               :filter-method="customerNameListFilter"
               clearable placeholder="请选择客户名称">
               <el-option
                 v-for="customer in customerNameList"
                 :key="customer.cuId"
-                :label="customer.cuUnitName"
+                :label="`${customer.cuUnitName}(客户姓名)-${customer.cuPhoneNumber}(客户电话)-${customer.cuAddress}(客户地址)`"
                 :value="customer.cuId"/>
             </el-select>
           </el-form-item>
@@ -87,12 +88,13 @@
         <el-form :model="warehouseOperatorModify" label-width="120px" :rules="rules" ref="warehouseOperatorModify">
           <el-form-item label="选择仓库管理员" prop="oWarehouseOperaterId">
             <el-select v-model="warehouseOperatorModify.oWarehouseOperaterId"
+                       style="width:580px"
                        :filter-method="warehouseOperatorListListFilter"
                        clearable filterable placeholder="选择仓库管理员" >
               <el-option
                 v-for="warehouseOperator in warehouseNameList"
                 :key="warehouseOperator.aId"
-                :label="warehouseOperator.aName"
+                :label="`${warehouseOperator.aName}(仓库管理员姓名)-${warehouseOperator.aUsername}(仓库管理员账号)`"
                 :value="warehouseOperator.aId"/>
             </el-select>
           </el-form-item>
@@ -111,7 +113,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="其他费用">
-            <el-input @keyup.native="warehouseOperatorModify.oOtherCostMoney = oninput(warehouseOperatorModify.oOtherCostMoney)" v-model="warehouseOperatorModify.oOtherCostMoney"/>
+            <el-input style="width: 200px" @keyup.native="warehouseOperatorModify.oOtherCostMoney = oninput(warehouseOperatorModify.oOtherCostMoney)" v-model="warehouseOperatorModify.oOtherCostMoney"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -248,6 +250,7 @@ export default {
         this.customList=res.list
       })
       commonList('admin/selectAllByLike').then(res=>{
+        console.log(res.list)
         this.warehouseOperatorList=res.list
       })
     },
