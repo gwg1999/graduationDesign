@@ -4,9 +4,9 @@
       <el-form  :rules="rules" :model="princeSheetReturn" ref="princeSheetReturn" >
         <div v-for="(itemList, index) in princeSheetReturn.returnDetailList" :key="index">
           <el-form-item  label="商品选择" >
-            <el-col :span="5" style="width: 210px;">
+            <el-col :span="5" style="width: 300px;">
               <el-form-item :prop="`returnDetailList[${index}].odId`" :rules="rules.odId">
-                <el-select  @change="changeSelect($event,index)" v-model="itemList.odId"  clearable placeholder="退货商品选择" style="width: 200px"  >
+                <el-select  @change="changeSelect($event,index)" v-model="itemList.odId"  clearable placeholder="退货商品选择" style="width: 290px"  >
                   <el-option
                     v-for="good in returnGoodList"
                     :key="good.odId"
@@ -43,7 +43,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="退货原因" prop="rReason">
-          <el-input v-model="princeSheetReturn.rReason" style="width: 400px"/>
+          <el-input vv-model="princeSheetReturn.rReason" style="width:80%"  rows="5" type="textarea"/>
         </el-form-item>
         <el-form-item>
           <el-button  type="primary" @click="saveSalesSlip()">保存</el-button>
@@ -105,6 +105,11 @@ export default {
               this.$set(this.princeSheetReturn.returnDetailList,index,returnListKey)
             }
           }
+          this.returnGoodList.forEach((value)=>{
+            if(value.odId===event){
+              value.partName=`${value.partName}(已选择退货)`
+            }
+          })
         })
     },
     getList(){

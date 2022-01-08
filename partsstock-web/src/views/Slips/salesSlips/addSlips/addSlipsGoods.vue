@@ -70,26 +70,49 @@
               <span>{{ props.row.factory.fName }}</span>
             </el-form-item>
             <el-form-item label="货物位置:">
-              <span>{{ props.row.oSupposeIncome }}</span>
+              <span>{{ props.row.positions }}</span>
             </el-form-item>
-            <el-form-item label="图片:">
+            <el-form-item label="内部图片:">
             </el-form-item>
             <el-form-item label="备注:" style="height: 180px;width: 50%">
               <span>{{ props.row.pNote }}</span>
             </el-form-item>
-            <el-form-item style="width: 50%;height: 180px;" >
+<!--            <el-form-item  style="height: 180px;width: 50%">-->
+<!--            </el-form-item>-->
+            <el-form-item  style="width: 50%;height: 180px;" >
               <div class="demo-image__placeholder" style="width: 300px;height: 180px;margin-left: 50%">
                 <div class="block" style="width: 270px;height: 180px">
-                  <el-image :src="props.row.pictures[0].path"
-                            :preview-src-list="[props.row.pictures[0].path]"
-                            style="height:95%;width: 95%;padding-top: 2px;padding-left: 10px">
-                    <div slot="placeholder" class="image-slot">
-                      加载中<span class="dot">...</span>
-                    </div>
-                  </el-image>
+                  <el-carousel trigger="click" height="180px">
+                    <el-carousel-item v-for="item in props.row.pictures" :key="item.pId">
+                      <el-image :src="item.path"
+                                :preview-src-list="[item.path]"
+                                style="height:95%;width: 95%;padding-top: 2px;padding-left: 10px">
+                        <div slot="placeholder" class="image-slot">
+                          加载中<span class="dot">...</span>
+                        </div>
+                      </el-image>
+                    </el-carousel-item>
+                  </el-carousel>
                 </div>
               </div>
             </el-form-item>
+<!--            <el-form-item label="外部图片:" style="width: 50%;height: 180px;" >-->
+<!--              <div class="demo-image__placeholder" style="width: 300px;height: 180px;margin-left: 25%">-->
+<!--                <div class="block" style="width: 270px;height: 180px">-->
+<!--                  <el-carousel trigger="click" height="180px">-->
+<!--                    <el-carousel-item v-for="item in props.row.pictures" :key="item.pId">-->
+<!--                      <el-image :src="item.path"-->
+<!--                                :preview-src-list="[item.path]"-->
+<!--                                style="height:95%;width: 95%;padding-top: 2px;padding-left: 10px">-->
+<!--                        <div slot="placeholder" class="image-slot">-->
+<!--                          加载中<span class="dot">...</span>-->
+<!--                        </div>-->
+<!--                      </el-image>-->
+<!--                    </el-carousel-item>-->
+<!--                  </el-carousel>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </el-form-item>-->
           </el-form>
         </template>
       </el-table-column>
@@ -592,7 +615,6 @@ export default {
     //零件售卖记录所有客户
     searchNoCustomerList(pId){
       let type=this.levelIV.odType
-      console.log(pId)
       queryHistoryPrice(undefined,pId,type).then(res=>
       {
         for (let i=0;i<res.length;i++){
@@ -686,7 +708,6 @@ export default {
       else {
         let flag=false
         if(temp.qdNumber&&temp.price){
-          console.log(item)
           for (let part of this.salesSlip.wholeDetailsList) {
             console.log(part)
             if (item.wId === part.wId) {
@@ -745,10 +766,32 @@ export default {
             this.partTotal = res.total
             if (middleList && middleList.length > 0) {
               middleList.forEach(value => {
+                let copyPositions=''
+                if(value.positions&&value.positions.length>0){
+                  if(value.positions[0].position==='暂时未定'){
+                    copyPositions='暂时未定'
+                  }else{
+                    value.positions.forEach((value,index,array)=>{
+                      if(array[index+1]){
+                        copyPositions+=`第${index+1}个位置:${value.position}---`
+                      }else{
+                        copyPositions+=`第${index+1}个位置:${value.position}`
+                      }
+                    })
+                  }
+                }else {
+                  copyPositions='暂时未定'
+                }
+                value.positions=copyPositions
+                value.pictures=value.pictures.filter(value=>{
+                  return value.type===0
+                })
                 value.price = this.customerPrince === 0 ? value.pLowPrice : this.customerPrince === 1 ? value.pMiddlePrice : value.pHighPrice
               })
             }
+
             this.list = middleList
+            console.log( this.list)
             this.wholeList=[]
           })
       } else {
@@ -773,9 +816,12 @@ export default {
     },
     getPrince(){
       let query={
-        cuId:this.$route.query.salesSlips.qCustomerId
+        cuId:this.$route.query.salesSlips.qCustomerId,
+        pageNum:1,
+        pageSize:10
       }
-      PostData('/customer/selectAllByLike',query).then(res=>{
+      PostData('customer/selectAllByLike',query).then(res=>{
+        console.log(res)
         switch (res.list[0].cuDiscount){
           case "一级价格":
             this.customerPrince=0

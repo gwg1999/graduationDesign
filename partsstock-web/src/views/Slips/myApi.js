@@ -6,8 +6,7 @@ function queryAll(type=2,status=1) {
   return request({
     url: '/position/selectCatalogue',
     method: 'post',
-    params:{type,status},
-
+    params:{type,status}
   })
 }
 export const customerQuery=(customer,pageNum,pageSize)=>{
