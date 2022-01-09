@@ -3,55 +3,60 @@
 <template>
   <div class="app-container" style="background: white">
     <!--查询表单-->
-    <el-form :inline="true" class="demo-form-inline" style="position: relative">
-      <template slot-scope="scoped">
-      <el-form-item>
+<!--    <el-form :inline="true" class="demo-form-inline" style="position: relative">-->
+<!--      <template slot-scope="scoped">-->
+<!--      <el-form-item>-->
 <!--        <el-input v-model="partQuery.pName" clearable placeholder="零件名"  style="width: 150px"/>-->
-        <el-input v-model="pGoodsNum" placeholder="请输入零件号" style="width: 30%" class="search" clearable></el-input>
-        <el-autocomplete
-          v-model="state"
-          :fetch-suggestions="querySearch"
-          placeholder="请输入零件名"
-          :trigger-on-focus="false"
-          @select="handleSelect"
-          class="search"
-          clearable>
-          <!--      <i-->
-          <!--        class="el-icon-edit el-input__icon"-->
-          <!--        slot="suffix"-->
-          <!--        @click="handleIconClick">-->
-          <!--      </i>-->
-          <template slot-scope="{ item }">
-            <div>{{ item.pName }}</div>
-            <!--        <span class="addr">{{ item.address }}</span>-->
-          </template>
-        </el-autocomplete>
-        <el-cascader
-          ref="pCatCascader"
-          :options="categoryOption"
-          placeholder="请选择零件类目"
-          :props="{value:'name', label:'name'}"
-          @change="handleChange(pCategoryList)"
-          :show-all-levels="false"
-          v-model="pCategoryList"
-          class="search"
-          clearable>
-          <template slot-scope="{ node, data }">
-            <span>{{ data.name }}</span>
-            <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-          </template>
-        </el-cascader>
-      </el-form-item>
+    <div>
+      <el-input v-model="searchQuery.pId" placeholder="序列号" style="width: 8%" class="search" clearable></el-input>
+      <el-input v-model="pGoodsNum" placeholder="请输入零件号" style="width: 15%" class="search" clearable></el-input>
+      <el-autocomplete
+        v-model="state"
+        :fetch-suggestions="querySearch"
+        placeholder="请输入零件名"
+        :trigger-on-focus="false"
+        @select="handleSelect"
+        class="search"
+        clearable
+        style="padding-bottom: 18px;width: 260px">
+        <!--      <i-->
+        <!--        class="el-icon-edit el-input__icon"-->
+        <!--        slot="suffix"-->
+        <!--        @click="handleIconClick">-->
+        <!--      </i>-->
+        <template slot-scope="{ item }">
+          <div>{{ item.pName }}</div>
+          <!--        <span class="addr">{{ item.address }}</span>-->
+        </template>
+      </el-autocomplete>
+      <el-cascader
+        ref="pCatCascader"
+        :options="categoryOption"
+        placeholder="请选择零件类目"
+        :props="{value:'name', label:'name'}"
+        @change="handleChange(pCategoryList)"
+        :show-all-levels="false"
+        v-model="pCategoryList"
+        class="search"
+        clearable>
+        <template slot-scope="{ node, data }">
+          <span>{{ data.name }}</span>
+          <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+        </template>
+      </el-cascader>
+      <!--      </el-form-item>-->
       <el-button type="primary" icon="el-icon-search" @click="search()">查 询</el-button>
       <el-select v-model="searchQuery.pPartsStatus" placeholder="零件状态" @change="handleStatusChange" style="margin-left: 18px" clearable>
         <el-option :value="1" label="上架"></el-option>
         <el-option :value="0" label="下架"></el-option>
       </el-select>
-      <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 10px" @click="toInsert()" >添加</el-button>
+      <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 15px" @click="toInsert()" >添加</el-button>
+    </div>
 
-      </template>
 
-    </el-form>
+<!--      </template>-->
+
+<!--    </el-form>-->
 
     <!-- 表格 -->
     <el-table use-virtual

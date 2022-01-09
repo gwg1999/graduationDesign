@@ -1,6 +1,6 @@
 <template>
 <div>
-  <h2 style="text-align: center">请选择零件厂商</h2>
+  <h2 style="text-align: center">请选择零件厂商33</h2>
   <div style="text-align: center">
     <el-select  v-model="fIdValue" filterable placeholder="请选择厂商" style="text-align: center" @change="handleChange">
       <el-option

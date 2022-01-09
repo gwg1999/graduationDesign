@@ -224,17 +224,17 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="客户" prop="sCustomId">
-            <el-select  v-model="buyList.sCustomId" placeholder="选择客户">
-              <el-option
-                v-for="item in customerList"
-                :label="item.cuUnitName"
-                :value="item.cuId">
-<!--                <span style="float: left">{{ item.cuUnitName }}</span>-->
-                <!--        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>-->
-              </el-option>
-            </el-select>
-          </el-form-item>
+<!--          <el-form-item label="客户" prop="sCustomId">-->
+<!--            <el-select  v-model="buyList.sCustomId" placeholder="选择客户">-->
+<!--              <el-option-->
+<!--                v-for="item in customerList"-->
+<!--                :label="item.cuUnitName"-->
+<!--                :value="item.cuId">-->
+<!--&lt;!&ndash;                <span style="float: left">{{ item.cuUnitName }}</span>&ndash;&gt;-->
+<!--                &lt;!&ndash;        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>&ndash;&gt;-->
+<!--              </el-option>-->
+<!--            </el-select>-->
+<!--          </el-form-item>-->
         </div>
         <div style="width: 50%;float: right">
           <el-form-item label="付款方式" prop="spaymentWay">
@@ -536,14 +536,6 @@ export default {
         this.selectedPart[i].sdPartsName=this.selectedPart[i].pName
         this.selectedPart[i].sdOrderId=this.submitInfo.orderId
         this.selectedPart[i].sdStatus=0
-      }
-      for(let j=0;j<this.selectedWhole.length;j++){
-        this.selectedWhole[j].sdCustomerId=parseInt(this.buyList.sCustomId)
-        this.selectedWhole[j].sdPartsId=parseInt(this.selectedWhole[j].wId)
-        this.selectedWhole[j].sdType=0
-        this.selectedWhole[j].sdPartsName=this.selectedWhole[j].wName
-        this.selectedWhole[j].sdOrderId=this.submitInfo.orderId
-        this.selectedWhole[j].sdStatus=0
       }
     },
     assignment(){

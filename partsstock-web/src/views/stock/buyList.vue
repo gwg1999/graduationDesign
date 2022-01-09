@@ -65,23 +65,23 @@
       <template slot-scope="scoped">
         <el-form-item>
           <!--          <el-input v-model="customerQuery.cuUnitName" clearable placeholder="用户名"  style="width: 150px"/>-->
-          <el-autocomplete
-            v-model="buyQuery.customerName"
-            :fetch-suggestions="querySearch"
-            placeholder="请输入客户名"
-            :trigger-on-focus="false"
-            @select="handleSelect"
-            clearable>
-            <!--      <i-->
-            <!--        class="el-icon-edit el-input__icon"-->
-            <!--        slot="suffix"-->
-            <!--        @click="handleIconClick">-->
-            <!--      </i>-->
-            <template slot-scope="{ item }">
-              <div>{{ item.cuUnitName }}</div>
-              <!--        <span class="addr">{{ item.address }}</span>-->
-            </template>
-          </el-autocomplete>
+<!--          <el-autocomplete-->
+<!--            v-model="buyQuery.customerName"-->
+<!--            :fetch-suggestions="querySearch"-->
+<!--            placeholder="请输入客户名"-->
+<!--            :trigger-on-focus="false"-->
+<!--            @select="handleSelect"-->
+<!--            clearable>-->
+<!--            &lt;!&ndash;      <i&ndash;&gt;-->
+<!--            &lt;!&ndash;        class="el-icon-edit el-input__icon"&ndash;&gt;-->
+<!--            &lt;!&ndash;        slot="suffix"&ndash;&gt;-->
+<!--            &lt;!&ndash;        @click="handleIconClick">&ndash;&gt;-->
+<!--            &lt;!&ndash;      </i>&ndash;&gt;-->
+<!--            <template slot-scope="{ item }">-->
+<!--              <div>{{ item.cuUnitName }}</div>-->
+<!--              &lt;!&ndash;        <span class="addr">{{ item.address }}</span>&ndash;&gt;-->
+<!--            </template>-->
+<!--          </el-autocomplete>-->
           <el-select v-model="buyQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员" clearable>
             <el-option :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>
           </el-select>
@@ -113,7 +113,7 @@
         <!--          {{ (adminQuery.pageNum - 1) * adminQuery.pageSize + scope.$index + 1 }}-->
         <!--        </template>-->
       </el-table-column>
-      <el-table-column prop="customerName" label="客户名" width="60%"  align="center"/>
+<!--      <el-table-column prop="customerName" label="客户名" width="60%"  align="center"/>-->
       <el-table-column prop="wareHouseName" label="仓库管理员" width="60%" align="center" />
       <el-table-column prop="adminName" label="操作员" width="60%" align="center" />
       <el-table-column prop="sOrderNumber" label="支付订单号" width="220%"  align="center"/>

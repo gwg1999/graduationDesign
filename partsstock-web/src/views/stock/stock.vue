@@ -115,6 +115,10 @@
       </el-table-column>
       <el-table-column label="询价零件" width="160%" align="center" prop="">
         <template slot-scope="scope">
+<!--          <h3>{{scope.row.detailPartsPoJos[0].factoryId}}</h3>-->
+<!--          <el-button @click="showTest(scope.row.detailPartsPoJos[0].factoryId)">-->
+<!--            查看-->
+<!--          </el-button>-->
           <router-link :to="{path:'showParts',query:{iId:JSON.stringify(scope.row.iId),factoryId:scope.row.detailPartsPoJos[0].factoryId}}">
             <el-button type="primary" size="small" @click="">查看</el-button>
           </router-link>
@@ -283,6 +287,9 @@ export default {
     },
     backPre(){
       this.$router.back()
+    },
+    showTest(data){
+      console.log(data);
     },
     toInsert(){
       this.$router.push('/stockAdd')

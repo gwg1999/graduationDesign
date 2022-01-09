@@ -1,51 +1,56 @@
 <template>
   <div class="app-container" style="background: white;">
     <!--查询表单-->
-    <el-form :inline="true" class="demo-form-inline" style="position: relative">
-      <template slot-scope="scoped">
-        <el-form-item>
+<!--    <el-form :inline="true" class="demo-form-inline" style="position: relative">-->
+<!--      <template slot-scope="scoped">-->
+<!--        <el-form-item>-->
           <!--          <el-input v-model="factoryQuery.fName" clearable placeholder="厂家名"  style="width: 150px"/>-->
-          <el-input v-model="knowQuery.KNumber" placeholder="请输入零件号" style="width: 30%" class="search" clearable></el-input>
-          <el-autocomplete
-            v-model="knowQuery.KName"
-            :fetch-suggestions="querySearch"
-            placeholder="请输入零件名"
-            :trigger-on-focus="false"
-            @select="handleSelect"
-            class="search"
-            clearable>
-            <!--      <i-->
-            <!--        class="el-icon-edit el-input__icon"-->
-            <!--        slot="suffix"-->
-            <!--        @click="handleIconClick">-->
-            <!--      </i>-->
-            <template slot-scope="{ item }">
-              <div>{{ item.kName }}</div>
-              <!--        <span class="addr">{{ item.address }}</span>-->
-            </template>
-          </el-autocomplete>
-          <el-cascader
-            ref="pCatCascader"
-            :options="categoryOption"
-            placeholder="请选择零件类目"
-            :props="{value:'name', label:'name'}"
-            @change="handleChange(pCategoryList)"
-            :show-all-levels="false"
-            v-model="kCategoryList"
-            class="search"
-            clearable>
-            <template slot-scope="{ node, data }">
-              <span>{{ data.name }}</span>
-              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-            </template>
-          </el-cascader>
-        </el-form-item>
-        <el-button type="primary" icon="el-icon-search" @click="search">查 询</el-button>
+    <div style="padding-bottom: 18px">
+      <el-input v-model="knowQuery.KNumber" placeholder="请输入零件号" style="width: 15%" class="search" clearable></el-input>
+      <el-autocomplete
+        v-model="knowQuery.kName"
+        :fetch-suggestions="querySearch"
+        placeholder="请输入零件名"
+        :trigger-on-focus="false"
+        @select="handleSelect"
+        class="search"
+        clearable
+        style="width: 260px"
+      >
+        <!--      <i-->
+        <!--        class="el-icon-edit el-input__icon"-->
+        <!--        slot="suffix"-->
+        <!--        @click="handleIconClick">-->
+        <!--      </i>-->
+        <template slot-scope="{ item }">
+          <div>{{ item.kName }}</div>
+          <!--        <span class="addr">{{ item.address }}</span>-->
+        </template>
+      </el-autocomplete>
+      <el-cascader
+        ref="pCatCascader"
+        :options="categoryOption"
+        placeholder="请选择零件类目"
+        :props="{value:'name', label:'name'}"
+        @change="handleChange(pCategoryList)"
+        :show-all-levels="false"
+        v-model="kCategoryList"
+        class="search"
+        clearable>
+        <template slot-scope="{ node, data }">
+          <span>{{ data.name }}</span>
+          <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+        </template>
+      </el-cascader>
+      <!--        </el-form-item>-->
+      <el-button type="primary" icon="el-icon-search" @click="search">查 询</el-button>
 
 
-        <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 30px" @click="openAdd">添加</el-button>
-      </template>
-    </el-form>
+      <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 30px" @click="openAdd">添加</el-button>
+    </div>
+
+<!--      </template>-->
+<!--    </el-form>-->
     <el-dialog
       :title=title
       :visible.sync="partDialogVisible"
@@ -70,8 +75,8 @@
                   </template>
                 </el-cascader>
               </el-form-item>
-              <el-form-item label="零件名" prop="kName" v-if="knowledge.kName!==''">
-                <el-input v-model="knowledge.kName" style="width: 200px"/>
+              <el-form-item label="零件名" prop="kName">
+                <el-input v-model="knowledge.kName" style="width: 260px"/>
               </el-form-item>
               <el-form-item label="零件号" prop="kNumber">
                 <el-input v-model="knowledge.kNumber" style="width: 200px"/>
@@ -447,7 +452,7 @@ export default {
       // 调用 callback 返回建议列表的数据
     },
     handleSelect(item) {
-      this.state = item.kName
+      this.knowQuery.kName = item.kName
     },
     enable() {
       setTimeout(() => {

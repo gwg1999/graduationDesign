@@ -108,7 +108,7 @@
   </span>
     </el-dialog>
     <el-button type="primary" style="margin-bottom: 3px" @click="addPartMethod">添加零件</el-button>
-    <el-button type="primary" style="margin-bottom: 3px" @click="addWholeMethod">添加整件</el-button>
+<!--    <el-button type="primary" style="margin-bottom: 3px" @click="addWholeMethod">添加整件</el-button>-->
     <el-table
       :data="list"
       border
