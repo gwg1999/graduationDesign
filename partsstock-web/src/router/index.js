@@ -751,6 +751,19 @@ export const constantRoutes=[
       },
 
       {
+        path: 'cancelSlipsManagement',
+        name: '负数销售单',
+        component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsManagement'),
+        meta: { title: '负数销售单', icon: 'table' ,roles:['admin','editor']}
+      },
+      {
+        path: 'cancelSlipsDetails',
+        name: '负数销售单详情表',
+        component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsDetails'),
+        meta: { title: '负数销售单详情表', icon: 'table' ,roles:['admin','editor']},
+        hidden: true
+      },
+      {
         path: 'printTable',
         name: '打印单',
         component: () => import('@/views/Slips/princeSlips/printTable/printTable'),
@@ -774,8 +787,22 @@ export const constantRoutes=[
       {
         path: '/stockAdd',
         name: '添加询价单',
-        component: () => import('@/views/stock/stockAdd'),
+        component: () => import('@/views/stock/stockAdd/stockAdd'),
         meta: { title: '添加询价单', icon: 'table' },
+        hidden: true
+      },
+      {
+        path: '/goodAdd',
+        name: '添加零件或整件',
+        component: () => import('@/views/stock/stockAdd/goodAdd'),
+        meta: { title: '添加零件或整件', icon: 'table' },
+        hidden: true
+      },
+      {
+        path: '/stockAdd/detailAdd',
+        name: '添加零件或整件',
+        component: () => import('@/views/stock/stockAdd/addDetail'),
+        meta: { title: '添加零件或整件', icon: 'table' },
         hidden: true
       },
       {
@@ -801,8 +828,15 @@ export const constantRoutes=[
       {
         path: '/stock/addBuy',
         name: '新增进货单',
-        component: () => import('@/views/stock/addBuyList'),
+        component: () => import('@/views/stock/buyAdd/buyAdd'),
         meta: { title: '新增进货单',  noCache: true,icon:'tree' },
+        hidden: true
+      },
+      {
+        path: '/stock/goodAdd',
+        name: '添加零件',
+        component: () => import('@/views/stock/buyAdd/goodAdd'),
+        meta: { title: '添加零件',  noCache: true,icon:'tree' },
         hidden: true
       },
       {
