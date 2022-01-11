@@ -90,13 +90,14 @@
 <!--          {{ (adminQuery.pageNum - 1) * adminQuery.pageSize + scope.$index + 1 }}-->
 <!--        </template>-->
       </el-table-column>
+      <el-table-column prop="factory.fName" label="工厂名" width="130"  align="center"/>
       <el-table-column prop="customName" label="客户" width="210%"  align="center"/>
       <el-table-column prop="adminName" label="操作员" width="170%" align="center" />
       <!--      <el-table-column prop="aPassword" label="用户密码" width="120%"  align="center"/>-->
       <el-table-column prop="iPrice" label="订单总价" width="170%"  align="center">
         <template slot-scope="scope">
           <h3 v-if="scope.row.iPrice===0&&scope.row.iStatus===0">未报价</h3>
-          <h3 v-else>{{scope.row.iPrice}}</h3>
+          <h3 v-else>{{scope.row.iPrice}}元</h3>
         </template>
       </el-table-column>
       <!--      <el-table-column prop="aCreateTime" label="创建时间" width="160%" align="center"/>-->
@@ -119,7 +120,7 @@
 <!--          <el-button @click="showTest(scope.row.detailPartsPoJos[0].factoryId)">-->
 <!--            查看-->
 <!--          </el-button>-->
-          <router-link :to="{path:'showParts',query:{iId:JSON.stringify(scope.row.iId),factoryId:scope.row.detailPartsPoJos[0].factoryId}}">
+          <router-link :to="{path:'showParts',query:{iId:JSON.stringify(scope.row.iId),factoryId:scope.row.iFactoryId}}">
             <el-button type="primary" size="small" @click="">查看</el-button>
           </router-link>
         </template>
@@ -348,7 +349,15 @@ export default {
       })
     },
     querySearch(queryString, cb) {
+      this.customerQuery={
+        cuUnitName:'',
+        cuPhoneNumber:'',
+        cuAddress:'',
+        pageSize: 10,
+        pageNum: 1,
+      }
       this.customerQuery.cuUnitName=queryString;
+      this.customerQuery.pageNum=1
       PostData('/customer/selectAllByLike',this.customerQuery).then(ref=>{
         cb(ref.list)
       })

@@ -51,20 +51,21 @@
           {{ (partQuery.pageNum - 1) * partQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />
-      <el-table-column prop="pNumber" label="零件号" width="50%" align="center" />
-      <el-table-column prop="pName" label="零件名" width="100%" align="center" />
-      <el-table-column prop="place.plName" label="产地或品牌" width="70%"  align="center"/>
-      <el-table-column prop="factory.fName" label="厂家" width="50%"  align="center"/>
+<!--      <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />-->
+      <el-table-column prop="pId" label="序列号" width="80" align="center" />
+      <el-table-column prop="pNumber" label="零件号" width="120" align="center" />
+      <el-table-column prop="pName" label="零件名" width="180" align="center" />
+      <el-table-column prop="place.plName" label="产地或品牌" width="100"  align="center"/>
+      <el-table-column prop="factory.fName" label="厂家" width="120"  align="center"/>
       <el-table-column prop="unit.uName" label="单位" width="40%" align="center"/>
 <!--      <el-table-column prop="supplier.sName" label="供应商" width="50%"  align="center"/>-->
-      <el-table-column prop="pCarName" label="车属性" width="50%"  align="center"/>
+<!--      <el-table-column prop="pCarName" label="车属性" width="50%"  align="center"/>-->
       <el-table-column prop="pLowPrice" label="一级价格" width="50%"  align="center"/>
       <el-table-column prop="pMiddlePrice" label="二级价格" width="50%" align="center" />
       <el-table-column prop="pHighPrice" label="三级价格" width="50%"  align="center"/>
       <el-table-column prop="pBuyingPrice" label="进价" width="50%"  align="center"/>
       <el-table-column prop="pHighLimit" label="上限" width="40%"  align="center"/>
-      <el-table-column prop="pLowLimit" label="下限" width="40%"  align="center"/>
+      <el-table-column prop="pLowLimit" label="下限" width="60"  align="center"/>
       <!--     <el-table-column prop="pNote" label="备注" width="80"  align="center"/>-->
       <!--      <el-table-column prop="pPicture" label="图片" width="120"  align="center"/>-->
       <el-table-column prop="pRealInventory" label="实际库存数" width="50%"  align="center"/>

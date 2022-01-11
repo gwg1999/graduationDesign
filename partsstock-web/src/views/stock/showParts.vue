@@ -6,8 +6,8 @@
       width="30%"
       :before-close="handleClose">
       <el-form :model="editPartNum" status-icon :rules="rules" ref="editPart" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="零件名" prop="pName">
-          <el-input v-model="editPartNum.pName" disabled></el-input>
+        <el-form-item label="零件名" prop="indPartsName">
+          <el-input v-model="editPartNum.indPartsName" disabled></el-input>
         </el-form-item>
         <el-form-item label="单价" prop="indPrice">
           <el-input v-model="editPartNum.indPrice"></el-input>
@@ -24,7 +24,7 @@
     <el-dialog
       title="添加零件"
       :visible.sync="addVisible"
-      width="40%"
+      :fullscreen="true"
       :before-close="handleClose">
       <el-form :model="addPart" status-icon :rules="rules" ref="addPart" label-width="100px" class="demo-ruleForm">
         <el-form-item label="零件名" prop="indPartsName">
@@ -107,7 +107,9 @@
     <el-button type="primary" @click="confirmWholeAdd">确 定</el-button>
   </span>
     </el-dialog>
-    <el-button type="primary" style="margin-bottom: 3px" @click="addPartMethod">添加零件</el-button>
+    <router-link :to="{path:'/stockAdd/detailAdd',query:{oId:detailQuery.indOrderId,factoryId:detailQuery.factoryId}}">
+    <el-button type="primary" style="margin-bottom: 3px">添加零件</el-button>
+    </router-link>
 <!--    <el-button type="primary" style="margin-bottom: 3px" @click="addWholeMethod">添加整件</el-button>-->
     <el-table
       :data="list"
@@ -156,7 +158,7 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
             <el-button size="mini"  icon="el-icon-edit" type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改零件数量</el-button>
-            <el-button size="mini" icon="el-icon-delete" type="danger" style="width: auto" @click="deletePart(scope.$index)">删除该零件</el-button>
+            <el-button size="mini" icon="el-icon-delete" type="danger" style="width: auto" @click="deletePart(scope.$index)" v-show="list.length>1">删除该零件</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -179,7 +181,8 @@ export default {
         pageNum: 1
       },
       detailQuery:{
-        indOrderId:null
+        indOrderId:null,
+        factoryId:null
       },
       editPartNum:{
         indNumber:1,
@@ -237,10 +240,11 @@ export default {
     getList() {
       // this.list=this.$route.query.partList
       this.detailQuery.indOrderId = JSON.parse(this.$route.query.iId)
+      this.detailQuery.factoryId= JSON.parse(this.$route.query.factoryId)
       console.log(this.detailQuery.indOrderId);
       PostData('/inquiry/queryInquiryDetail',qs.stringify(this.detailQuery)).then(ref=>{
-        console.log(ref);
         this.list=ref
+        console.log(this.list);
         this.addPart.factoryId=JSON.parse(this.$route.query.factoryId)
         this.addPart.indOrderId=this.list[0].indOrderId
         this.addPart.indCustomerId=this.list[0].indCustomerId
@@ -261,6 +265,7 @@ export default {
         .catch(_ => {});
     },
     editPartNumMethod(row){
+      console.log(row);
       this.editPartNum.indPartsName=row.indPartsName
       this.editPartNum.indNumber=row.indNumber
       this.editPartNum.indId=row.indId
@@ -271,6 +276,7 @@ export default {
     confirmEdit(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log(this.editPartNum);
           PostData('/inquiry/editInquiryDetail',this.editPartNum).then(res=>{
             this.list.forEach(item=>{
               if(item.indId===this.editPartNum.indId){

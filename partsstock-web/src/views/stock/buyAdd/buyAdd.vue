@@ -2,7 +2,7 @@
   <div>
     <div class="app-container">
       <el-steps :active="1" process-status="wait" align-center style="margin-bottom: 40px;">
-        <el-step title="填写询价单信息" />
+        <el-step title="填写进货单信息" />
         <el-step title="添加零件" />
       </el-steps>
       <el-form label-width="120px" :rules="rules" :model="priceSlip" ref="priceSlip">
@@ -31,10 +31,10 @@
               :value="WarehouseOperator.aId"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="厂家名" prop="factoryId">
+        <el-form-item label="厂家名" prop="sfactoryId">
           <!--            <el-input v-model="salesSlip.qNote" style="width: 90%" rows="5" type="textarea"/>-->
           <el-select
-            v-model="priceSlip.factoryId" filterable clearable placeholder="请选择厂家" style="width: 500px" :filter-method="factoryFilter">
+            v-model="priceSlip.sfactoryId" filterable clearable placeholder="请选择厂家" style="width: 500px" :filter-method="factoryFilter">
             <el-option
               v-for="factory in factoryList"
               :key="factory.fId"
@@ -87,7 +87,7 @@ export default {
         sisPayment:0,
         sstatus:0,
         stype:2,
-        sorderStatus:2,
+        sorderStatus:0,
         srealIncome:0,
         orderDetailList:[],
         wholeDetailsList:[]
@@ -119,7 +119,7 @@ export default {
         swarehouseOperaterId:[
           {required:true,message:'请选择仓库管理员',trigger:'change'}
         ],
-        factoryId: [
+        sfactoryId: [
           { required: true, message: '请选择客户厂家', trigger: 'change' }
         ]
       }
@@ -222,7 +222,7 @@ export default {
                 path: '/stock/goodAdd',
                 query:{
                   orderId:res.data,
-                  factoryId:this.priceSlip.factoryId
+                  factoryId:this.priceSlip.sfactoryId
                 }
               })
             }).catch(()=>{})

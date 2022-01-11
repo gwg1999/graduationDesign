@@ -29,6 +29,7 @@
       <template slot-scope="scoped">
         <el-form-item>
           <!--        <el-input v-model="partQuery.pName" clearable placeholder="零件名"  style="width: 150px"/>-->
+<!--          <el-input v-model="sequeNum" clearable placeholder="序列号" style="width: 100px" class="search"></el-input>-->
           <el-autocomplete
             v-model="state"
             :fetch-suggestions="querySearch"
@@ -63,7 +64,11 @@
           </el-cascader>
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="search()">查 询</el-button>
-        <el-button type="primary" icon="el-icon-view"style="float: right" @click="showSelected">查看已选零件({{computeNum}})</el-button>
+        <div style="float: right">
+          <el-button type="primary" @click="backPre">返 回</el-button>
+          <el-button type="primary" icon="el-icon-view" @click="showSelected">查看已选零件({{computeNum}})</el-button>
+        </div>
+
         <!--        <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 10px" @click="toInsert()" >添加</el-button>-->
 
       </template>
@@ -86,25 +91,19 @@
         </template>
       </el-table-column>
       <!--      <el-table-column prop="pId" label="零件号" width="50%" align="center" hidden/>-->
-      <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />
-      <el-table-column prop="pNumber" label="零件号" width="50%" align="center" />
-      <el-table-column prop="pName" label="零件名" width="140%" align="center" />
-      <el-table-column prop="place.plName" label="产地或品牌" width="70%"  align="center"/>
-      <el-table-column prop="factory.fName" label="厂家" width="60%"  align="center"/>
-      <el-table-column prop="unit.uName" label="单位" width="40%" align="center"/>
-      <!--      <el-table-column prop="supplier.sName" label="供应商" width="60%"  align="center"/>-->
-      <el-table-column prop="pCarName" label="车属性" width="60%"  align="center"/>
-      <el-table-column prop="pLowPrice" label="一级价格" width="50%"  align="center"/>
-      <el-table-column prop="pMiddlePrice" label="二级价格" width="50%" align="center" />
-      <el-table-column prop="pHighPrice" label="三级价格" width="50%"  align="center"/>
-      <el-table-column prop="pBuyingPrice" label="进价" width="50%"  align="center"/>
-      <el-table-column prop="pHighLimit" label="上限" width="50%"  align="center"/>
-      <el-table-column prop="pLowLimit" label="下限" width="50%"  align="center"/>
-      <!--     <el-table-column prop="pNote" label="备注" width="80"  align="center"/>-->
-      <!--      <el-table-column prop="pPicture" label="图片" width="120"  align="center"/>-->
-      <el-table-column prop="pRealInventory" label="实际库存数" width="60%"  align="center"/>
+<!--      <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />-->
+      <el-table-column prop="pId" label="序列号" width="80px" align="center" />
+      <el-table-column prop="pNumber" label="零件号" width="150px" align="center" />
+      <el-table-column prop="pName" label="零件名" width="200px" align="center" />
+      <el-table-column prop="place.plName" label="产地或品牌" width="120"  align="center"/>
+      <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
+      <el-table-column prop="pLowPrice" label="一级价格" width="80"  align="center"/>
+      <el-table-column prop="pMiddlePrice" label="二级价格" width="80" align="center" />
+      <el-table-column prop="pHighPrice" label="三级价格" width="80"  align="center"/>
+      <el-table-column prop="pBuyingPrice" label="进价" width="80"  align="center"/>
+      <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>
 
-      <el-table-column prop="pReturnCycle" label="退货周期（天）" width="60%"  align="center"/>
+      <el-table-column prop="pReturnCycle" label="退货周期（天）" width="90"  align="center"/>
       <el-table-column prop="pId" label="零件数目" align="center">
         <template slot-scope="scope">
           <div style="display: flex;justify-content: space-between">
@@ -154,6 +153,7 @@ export default {
       flag:false,
       dialogVisible: false,
       pGoodsNum:'',
+      sequeNum:'',
       realInventory:'',
       list: [], //查询之后接口返回集合
       state:'',//模糊查询后返回的值
@@ -207,6 +207,9 @@ export default {
     // this.getPageTotal()
   },
   methods:{//创建具体的方法
+    backPre(){
+      this.$router.back()
+    },
     addPart(item){
       let temp=Object.assign({},item)
       let flag=false
@@ -368,6 +371,7 @@ export default {
     },
     search(){
       this.searchQuery.pageNum=1
+      this.partQuery.pId=this.sequeNum
       this.searchQuery.pName=this.state
       this.searchQuery.pNumber=this.pGoodsNum
       this.searchQuery.pCategoryId=this.pCategoryList.join("/")

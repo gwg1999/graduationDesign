@@ -61,7 +61,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="addVisible = false">取 消</el-button>
-    <el-button type="primary" @click="confirmAdd('addPart')">确 定</el-button>
+    <el-button type="primary" @click="toAddParts">确 定</el-button>
   </span>
     </el-dialog>
     <el-dialog
@@ -107,7 +107,7 @@
     <el-button type="primary" @click="confirmWholeAdd('wholeForm')">确 定</el-button>
   </span>
     </el-dialog>
-    <el-button type="primary" style="margin-bottom: 3px" @click="addPartMethod">添加零件</el-button>
+    <el-button type="primary" style="margin-bottom: 3px" @click="toAddParts">添加零件</el-button>
 <!--    <el-button type="primary" style="margin-bottom: 3px" @click="addWholeMethod">添加整件</el-button>-->
     <el-table
       :data="list"
@@ -161,7 +161,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改零件数量</el-button>
+          <el-button type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改数量或价格</el-button>
           <el-button type="danger" style="width: auto" @click="deletePart(scope.row.sdId)" v-if="scope.row.sdStatus!==2">删除该零件</el-button>
           <el-button type="warning" style="width: auto" @click="received(scope.row)" v-if="scope.row.sdStatus!==2">收 货</el-button>
         </template>
@@ -192,7 +192,6 @@ export default {
       editPartNum:{
         sdNumber:1,
         sdPrice:0,
-        sdStatus:0
       },
       deletePartList:{},
       addPart:{
@@ -253,6 +252,7 @@ export default {
   methods:{//创建具体的方法
     getList() {
       this.buyPartListQuery.orderId=this.$route.query.orderId.toString()
+      this.buyPartListQuery.factoryId=this.$route.query.factoryId
       console.log(this.buyPartListQuery.orderId);
       PostData('/stock/queryStockDetail',qs.stringify(this.buyPartListQuery)).then(ref=>{
         console.log(ref.list);
@@ -269,6 +269,15 @@ export default {
     backPre(){
       this.$router.back()
     },
+    toAddParts(){
+      this.$router.push({
+        path: '/stock/goodAdd',
+        query:{
+          orderId:this.buyPartListQuery.orderId,
+          factoryId:this.buyPartListQuery.factoryId
+        }
+      })
+    },
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
@@ -279,6 +288,7 @@ export default {
     editPartNumMethod(row){
       console.log(row);
       this.editPartNum.sdPartsName=row.sdPartsName
+      this.editPartNum.sdStatus=row.sdStatus
       this.editPartNum.sdNumber=row.sdNumber
       this.editPartNum.sdPartsId=row.sdPartsId
       this.editPartNum.sdPrice=row.sdPrice
@@ -295,6 +305,7 @@ export default {
     confirmEdit(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log(this.editPartNum);
           PostData('/stock/updateStockDetail',this.editPartNum).then(res=>{
             this.$message({
               showClose: true,

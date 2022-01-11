@@ -170,7 +170,6 @@
       <!--      <el-table-column prop="cPrice" label="车价格" width="80%"  align="center"/>-->
       <!--      <el-table-column prop="cStatus" label="车状态" width="110%" align="center"/>-->
       <!--      <el-table-column prop="cTypeId" label="车类型ID" width="130%" align="center"/>-->
-      <el-table-column prop="kCategoryName" label="零件类目名" width="260"  align="center"/>
       <el-table-column prop="place.plName" label="产地名" width="100%"  align="center"/>
       <el-table-column prop="unit.uName" label="单位" width="60%"  align="center"/>
       <el-table-column prop="kPicture" label="图片" width="200" align="center">
@@ -183,6 +182,7 @@
           </el-image>
         </template>
       </el-table-column>
+      <el-table-column prop="kNote" label="备注" width="260"  align="center"/>
 <!--      <el-table-column prop="kOtherModel" label="对应其他型号" width="200"  align="center"/>-->
       <!--      <el-table-column prop="cuDiscount" label="默认折扣" width="50%" align="center" />-->
       <!--      <el-table-column prop="cuDefaultPayment" label="默认支付方式" width="80%"  align="center"/>-->
@@ -538,7 +538,7 @@ export default {
                       type: 'success',
                       message: '添加成功'
                     })
-                  },500)
+                  },100)
                 }
               }).catch(() => {
             })

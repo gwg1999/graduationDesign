@@ -18,8 +18,28 @@
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
         <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
       </el-form-item>
-      <el-form-item   v-if="levelIV.qdType===1" style="width: 210px">
-        <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>
+      <el-form-item   v-if="levelIV.qdType===1" style="width: 250px">
+<!--        <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>-->
+        <el-autocomplete
+          v-model="levelIV.pName"
+          :fetch-suggestions="querySearch"
+          placeholder="请输入零件名"
+          @select="handleSelect"
+          :trigger-on-focus="false"
+          class="search"
+          clearable
+          style="width: 250px"
+        >
+          <!--      <i-->
+          <!--        class="el-icon-edit el-input__icon"-->
+          <!--        slot="suffix"-->
+          <!--        @click="handleIconClick">-->
+          <!--      </i>-->
+          <template slot-scope="{ item }">
+            <div>{{ item.pName }}</div>
+            <!--        <span class="addr">{{ item.address }}</span>-->
+          </template>
+        </el-autocomplete>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
         <el-cascader
@@ -98,14 +118,15 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="pNumber" label="零件号" width="80px" align="center" />
-      <el-table-column prop="pName" label="零件名" width="100px" align="center" />
+      <el-table-column prop="pId" label="序列号" width="80px" align="center" />
+      <el-table-column prop="pNumber" label="零件号" width="150px" align="center" />
+      <el-table-column prop="pName" label="零件名" width="200px" align="center" />
       <el-table-column prop="place.plName" label="产地" width="80px"  align="center"/>
       <!--      <el-table-column prop="pCarName" label="车型号" width="80px"  align="center"/>-->
       <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
-      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>
-      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />
-      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>
+<!--      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>-->
+<!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />-->
+<!--      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>-->
       <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>
       <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>
       <el-table-column prop="pId" label="零件数目和价格" align="center">
@@ -115,9 +136,9 @@
               <el-form-item>
                 数量:<el-input style="width: 100px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.qdNumber = number(scope.row.qdNumber)"  v-model = "scope.row.qdNumber"  size="small"></el-input>
               </el-form-item>
-              <el-form-item>
-                供货周期:<el-input style="width: 100px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.indDeliveryCycle = number(scope.row.indDeliveryCycle)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input>
-              </el-form-item>
+<!--              <el-form-item>-->
+<!--                供货周期:<el-input style="width: 80px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.indDeliveryCycle = number(scope.row.indDeliveryCycle)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input>-->
+<!--              </el-form-item>-->
               <el-form-item>
                 价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
               </el-form-item>
@@ -445,6 +466,13 @@ export default {
         pageNum:1,
         pageSize:10,
       },
+      partQuery:{
+        pId:null,
+        pName:null,
+        pPartsStatus:1,
+        pageSize: 10,
+        pageNum: 1,
+      },
       dialogGoodPrice:false,
       historyPurchasePriceList:[],
       historyPurchasePriceQuery:{
@@ -492,6 +520,7 @@ export default {
     this.inPrice=JSON.parse(this.$route.query.inPrice)
     this.getList()
     this.getPrince()
+    this.queryGoods()
     stopF5F6()
   },
   methods: {
@@ -499,6 +528,18 @@ export default {
     openPartRecordDialog(record){
       this.dialogPartsVisible=true
       this.partsModify=JSON.parse(JSON.stringify(record))
+    },
+    handleSelect(item) {
+      this.levelIV.pName=item.pName
+    },
+    querySearch(queryString, cb) {
+      this.partQuery.pName=queryString;
+      this.partQuery.pFactoryId=this.factoryId
+      this.partQuery.pageNum=1
+      PostData('parts/selectAllByEnabled',this.partQuery).then(ref=>{
+        cb(ref.list)
+      })
+      // 调用 callback 返回建议列表的数据
     },
     deletePartRecord(record){
       this.$confirm('是否将此条零件信息从购物车删除'+'?','提示',{
@@ -663,6 +704,7 @@ export default {
                 value.qdPartsSizeType=value.pPartsSizeType
                 value.indCustomerId=this.inPrice.indCustomerId
                 value.indPartsId=value.pId
+                value.indDeliveryCycle=0
                 value.indType=1
                 value.indNumber=parseInt(value.qdNumber)
                 value.indPrice=0
@@ -695,6 +737,7 @@ export default {
     assignment(){
       this.submitInfo.icreateOperatorId=parseInt(Cookie.get('aId'))
       this.submitInfo.icustomId=parseInt(this.inPrice.indCustomerId)
+      this.submitInfo.ifactoryId=this.inPrice.factoryId
       this.submitInfo.istatus=0
       this.submitInfo.iprice=0
       this.submitInfo.inquiryDetailList.splice(0,this.submitInfo.inquiryDetailList.length)
@@ -707,7 +750,7 @@ export default {
       temp.qdType=this.levelIV.qdType
       if(temp.qdType===1){
         let flag=false
-        if(temp.qdNumber&&temp.price&&temp.indDeliveryCycle){
+        if(temp.qdNumber&&temp.price){
           for(let part of this.salesSlip.quotationDetailList){
             if(item.pId===part.pId) {
               part.qdNumber += item.qdNumber
@@ -730,7 +773,7 @@ export default {
         }
         else {
           this.$message({
-            message:'请输入零件数量或价格或供货周期',
+            message:'请输入零件数量或价格',
             type:"warning"
           })
         }}

@@ -85,8 +85,8 @@
 <!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="50%" align="center" />-->
 <!--      <el-table-column prop="pHighPrice" label="三级价格" width="50%"  align="center"/>-->
       <el-table-column prop="pBuyingPrice" label="进价" width="100"  align="center"/>
-      <el-table-column prop="pHighLimit" label="上限" width="80"  align="center"/>
-      <el-table-column prop="pLowLimit" label="下限" width="80"  align="center"/>
+<!--      <el-table-column prop="pHighLimit" label="上限" width="80"  align="center"/>-->
+<!--      <el-table-column prop="pLowLimit" label="下限" width="80"  align="center"/>-->
       <!--     <el-table-column prop="pNote" label="备注" width="80"  align="center"/>-->
      <!--      <el-table-column prop="pPicture" label="图片" width="120"  align="center"/>-->
       <el-table-column prop="pRealInventory" label="实际库存数" width="100"  align="center"/>
@@ -101,16 +101,19 @@
 
 <!--      <el-table-column prop="pReturnCycle" label="产品售后周期（三保）" width="60%"  align="center"/>-->
 
-      <el-table-column prop="pPartsStatus" label="状态" width="70%" align="center">
+      <el-table-column prop="pictures" label="内部图片" width="200" align="center">
         <template slot-scope="scope">
-          <el-tag
-            :type="scope.row.pPartsStatus === 1
-                    ? 'success'
-                    : scope.row.pPartsStatus === 0
-                    ? 'danger'
-                    : ''
-               "
-          >{{scope.row.pPartsStatus===1?'上架':'下架'}}</el-tag>
+          <el-carousel trigger="click" height="180px">
+            <el-carousel-item v-for="item in scope.row.pictures" :key="item.pId">
+              <el-image :src="item.path"
+                        :preview-src-list="[item.path]"
+                        style="height:95%;width: 95%;padding-top: 2px;padding-left: 10px">
+                <div slot="placeholder" class="image-slot">
+                  加载中<span class="dot">...</span>
+                </div>
+              </el-image>
+            </el-carousel-item>
+          </el-carousel>
         </template>
       </el-table-column>
 
@@ -209,8 +212,16 @@
             getList() {
               PostData('parts/selectAllByLike',qs.stringify(this.partQuery))
                 .then(res=>{
+                  console.log(res.list);
                   this.list = res.list
-                  console.log(this.list);
+                  this.list.forEach(part=>{
+                    part.pictures=part.pictures.filter(item=>{
+                      return item.type===0
+                    })
+                  })
+                  // this.list.pictures.filter(item=>{
+                  //   return item.type===0
+                  // })
                   this.pageTotal=res.total
                 }).catch(err=>{
                 this.$message.error(err.message);
