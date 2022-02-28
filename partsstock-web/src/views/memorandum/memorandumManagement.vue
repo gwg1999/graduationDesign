@@ -78,15 +78,15 @@
     <!--修改备忘录-->
     <el-dialog :visible.sync="dialogMemorandumVisible" title="修改备忘录">
       <el-form :model="memorandumModify" label-width="120px" :rules="rules" ref="memorandumModify">
-        <el-form-item label="选择创建人员" prop="operateId">
-          <el-select v-model="memorandumModify.operateId" filterable placeholder="选择仓库管理员" >
-            <el-option
-              v-for="admin in adminList"
-              :key="admin.aId"
-              :label="admin.aName"
-              :value="admin.aId"/>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="选择创建人员" prop="operateId">-->
+<!--          <el-select v-model="memorandumModify.operateId" filterable placeholder="选择仓库管理员" >-->
+<!--            <el-option-->
+<!--              v-for="admin in adminList"-->
+<!--              :key="admin.aId"-->
+<!--              :label="admin.aName"-->
+<!--              :value="admin.aId"/>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
         <el-form-item label="解决状态" prop="status">
           <el-select v-model="memorandumModify.status" clearable placeholder="是否解决" style="width: 200px"  >
             <el-option :value="0" label="未解决"/>

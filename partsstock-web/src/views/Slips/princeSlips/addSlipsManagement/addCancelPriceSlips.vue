@@ -42,8 +42,11 @@
             <el-option value="2" label="仅退款"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="总价格">
+          <el-input v-model="priceTotal" clearable style="width: 200px"/>
+        </el-form-item>
         <el-form-item label="退货原因" prop="rReason">
-          <el-input vv-model="princeSheetReturn.rReason" style="width:80%"  rows="5" type="textarea"/>
+          <el-input v-model="princeSheetReturn.rReason" style="width:80%"  rows="5" type="textarea"/>
         </el-form-item>
         <el-form-item>
           <el-button  type="primary" @click="saveSalesSlip()">保存</el-button>
@@ -81,15 +84,32 @@ export default {
         odId: [
           { required: true, message: '请选择退货商品', trigger: 'change' }
         ],
+        rType:[
+          { required: true, message: '请选择交易属性', trigger: 'change' }
+        ],
         odNumber: [
           { required: true, validator:validatePassCheck, trigger: 'change' }
         ]
+        // totalPrice:[
+        //   { required: true, validator:validatePassCheck, trigger: 'change' }
+        // ]
       }
     }
   },
   computed:{
     numberPlaceholder(){
       return this.queryFlag===1 ? "请填写零件数量" : this.queryFlag===0?"请填写整件数量":'请先选择零件或整件'
+    },
+    priceTotal(){
+      let total=0
+      this.princeSheetReturn.returnDetailList.forEach(value=>{
+        total+=value.odNumber*value.odRetailPrice
+      })
+      if(total>0){
+        return parseInt(total)
+      }else {
+        return 0
+      }
     }
   },
   methods: {
@@ -99,10 +119,14 @@ export default {
         this.queryDetails.odType, this.queryDetails.pageNum, this.queryDetails.pageSize)
         .then(res => {
           let returnList= res.list.filter((value)=>value.odStatus!==1)
+          console.log(returnList);
           for (let returnListKey of returnList) {
             if(returnListKey.odId===event) {
               returnListKey.number = returnListKey.odNumber
+              // returnListKey.odRetailPrice=3
               this.$set(this.princeSheetReturn.returnDetailList,index,returnListKey)
+              console.log(this.princeSheetReturn.returnDetailList);
+              // odRetailPrice
             }
           }
           this.returnGoodList.forEach((value)=>{
@@ -124,7 +148,8 @@ export default {
     addItem () {
       this.princeSheetReturn.returnDetailList.push({
         odId: '',
-        odNumber:''
+        odNumber:'',
+        price:''
       })
     },
     deleteItem (item, index) {

@@ -25,10 +25,10 @@
           </el-date-picker>
         </el-form-item>
         <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="getList(1)">查 询</el-button>
-        <router-link to="/Slips/addSalesSlip">
-          <el-button type="primary"
-                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>
-        </router-link>
+<!--        <router-link to="/Slips/addSalesSlip">-->
+<!--          <el-button type="primary"-->
+<!--                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>-->
+<!--        </router-link>-->
       </el-form>
       <el-table
         :data="CancelSlipList"
@@ -69,7 +69,7 @@
         <el-table-column prop="rPrice" label="退货总价" width="100" align="center"/>
         <el-table-column label="操作" width="150" align="center">
           <template slot-scope="scope">
-            <router-link :to="{path:'/returnGood/cancelSlipsDetails',query:{qId:scope.row.rId}}">
+            <router-link :to="{path:'/Slips/cancelSlipsDetails',query:{qId:scope.row.rId}}">
               <el-button type="primary"  size="mini" icon="el-icon-edit" >查看详情</el-button>
             </router-link>
           </template>
