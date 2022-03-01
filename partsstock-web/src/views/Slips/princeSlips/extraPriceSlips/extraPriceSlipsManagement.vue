@@ -4,7 +4,7 @@
       <!--查询表单-->
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
         <el-form-item>
-          <el-select v-model="queryPrinceSheet.type" @change="getList" filterable placeholder="请选择订单信息" style="width: 200px">
+          <el-select v-model="queryPrinceSheet.type"   clearable placeholder="请选择订单信息" style="width: 200px">
             <el-option :value="0" label="销售单"></el-option>
             <el-option :value="1" label="进货单"></el-option>
             <el-option :value="2" label="退货单"></el-option>
@@ -30,27 +30,27 @@
         </el-table-column>
         <el-table-column prop="number" label="支出费用" width="80px" align="center" />
         <el-table-column prop="date" label="日期"  width="100px"   align="center"/>
-        <el-table-column prop="note" label="备注" width="100px"  align="center"/>
+        <el-table-column prop="note" label="备注"   align="center"/>
         <el-table-column prop="type" label="订单类型" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.oIsPackage===0?'销售单':scope.row.oIsPackage===1?'进货单':'退货单'}}
           </template>
         </el-table-column>
-        <el-table-column label="操作"  align="center">
+        <el-table-column label="操作" width="100px" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit"   @click="openExtraPrinceSlips(scope.row)">修改</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteExtraPrinceSlips(scope.row.oId)">删除</el-button>
+<!--            <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteExtraPrinceSlips(scope.row.oId)">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
       <!--      修改额外订单信息-->
       <el-dialog :visible.sync="dialogExtraPriceSheetFormVisible" title="修改额外订单信息">
-        <el-form :model="ExtraPriceSheetModify" label-width="120px" :rules="rules" ref="princeSheetModify">
+        <el-form :model="ExtraPriceSheetModify" label-width="120px" :rules="rules" ref="ExtraPriceSheetModify">
           <el-form-item label="支出费用" prop="number">
-            <el-input v-model="ExtraPriceSheetModify.odNumber"/>
+            <el-input v-model="ExtraPriceSheetModify.number"/>
           </el-form-item>
-          <el-form-item label="备注">
-            <el-input v-model="ExtraPriceSheetModify.odRetailPrice"/>
+          <el-form-item label="备注" prop="note">
+            <el-input v-model="ExtraPriceSheetModify.note" style="width: 90%" rows="5" type="textarea"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -73,6 +73,7 @@
 </template>
 <script>
 import {PostData} from "@/api";
+import {getTime} from "@/views/Slips/myUtils";
 
 export default {
   data(){
@@ -80,8 +81,12 @@ export default {
       total:0,
       ExtraPriceSheetBtnDisabled:false,
       dialogExtraPriceSheetFormVisible:false,
-      ExtraPriceSheetModify:{},
-      queryPrinceSheet:{},
+      ExtraPriceSheetModify:{
+      },
+      queryPrinceSheet:{
+        pageSize:10,
+        pageNum:1
+      },
       princeSheetList:[],
       rules:{
         number:[
@@ -99,21 +104,31 @@ export default {
   },
   methods: {
     //获取额外订单信息列表
-    getList(){
-      PostData('otherFee/selectAllByLike',this.queryPrinceSheet).then(res=>{
-        console.log(res)
-        //--todo
+    getList(pageNum=1){
+      this.queryPrinceSheet.pageNum=pageNum
+      PostData('otherFee/selectAllByLike',this.$qs.stringify(this.queryPrinceSheet)).then(res=>{
+        res.list.forEach(value=>{
+          value.date=getTime(value.date)
+        })
+        this.princeSheetList=res.list
+        this.total=res.total
       })
     },
     //打开修改额外订单信息
-    openExtraPrinceSlips(){
+    openExtraPrinceSlips(params){
       this.dialogExtraPriceSheetFormVisible=true
+      this.ExtraPriceSheetModify=JSON.parse(JSON.stringify(params))
     },
     //修改额外订单信息
     UpdateExtraPriceSheet(){
-      PostData('otherFee/update',this.ExtraPriceSheetModify).then(res=>{
-        //--todo
-        this.dialogExtraPriceSheetFormVisible=false
+      this.$refs['ExtraPriceSheetModify'].validate((valid)=>{
+        PostData('otherFee/update',this.$qs.stringify(this.ExtraPriceSheetModify)).then(res=>{
+          this.$message({
+            type: 'success',
+            message: '修改额外订单信息成功'
+          })
+          this.dialogExtraPriceSheetFormVisible=false
+        })
       })
     },
     //删除额外订单信息

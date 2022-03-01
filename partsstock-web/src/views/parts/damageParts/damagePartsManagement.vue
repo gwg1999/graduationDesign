@@ -4,7 +4,7 @@
       <!--查询表单-->
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
         <el-form-item>
-          <el-input v-model="queryDamageParts.name" @keyup.enter.native="getList()" clearable placeholder="零件名称" style="width: 150px"></el-input>
+          <el-input v-model="queryDamageParts.pName"  clearable placeholder="零件名称" style="width: 150px"></el-input>
         </el-form-item>
         <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="getList(1)">查 询</el-button>
       </el-form>
@@ -20,32 +20,29 @@
           align="center"
         >
           <template slot-scope="scope">
-            {{ (queryPrinceSheet.pageNum - 1) * queryPrinceSheet.pageSize + scope.$index + 1 }}
+            {{ (queryDamageParts.pageNum - 1) * queryDamageParts.pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="number" label="零件名称" width="80px" align="center" />
-        <el-table-column prop="badNum" label="损坏数量"  width="100px"   align="center"/>
-        <el-table-column prop="note" label="备注" width="100px"  align="center"/>
-        <!--        <el-table-column prop="type" label="订单类型" width="80px" align="center">-->
-        <!--          <template slot-scope="scope">-->
-        <!--            {{ scope.row.oIsPackage===0?'销售单':scope.row.oIsPackage===1?'进货单':'退货单'}}-->
-        <!--          </template>-->
-        <!--        </el-table-column>-->
-        <el-table-column label="操作"  align="center">
+        <el-table-column prop="parts.pName" label="零件名称" width="300px" align="center" />
+        <el-table-column prop="number" label="损坏数量"  width="100px"   align="center"/>
+        <el-table-column prop="amount" label="单价"  width="100px"   align="center"/>
+        <el-table-column prop="date" label="产生日期"  width="100px"   align="center"/>
+        <el-table-column prop="note" label="备注"   align="center"/>
+        <el-table-column label="操作" width="100px" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit"   @click="openDamageParts(scope.row)">修改</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteDamageParts(scope.row.oId)">删除</el-button>
+<!--            <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteDamageParts(scope.row.oId)">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
       <!--      修改额外订单信息-->
       <el-dialog :visible.sync="dialogDamagePartsFormVisible" title="修改额外订单信息">
-        <el-form :model="damagePartsModify" label-width="120px" :rules="rules" ref="princeSheetModify">
-          <el-form-item label="支出费用" prop="number">
-            <el-input v-model="damagePartsModify.odNumber"/>
-          </el-form-item>
+        <el-form :model="damagePartsModify" label-width="120px" :rules="rules" ref="damagePartsModify">
+<!--          <el-form-item label="支出费用" prop="number">-->
+<!--            <el-input v-model="damagePartsModify.odNumber"/>-->
+<!--          </el-form-item>-->
           <el-form-item label="备注" prop="note">
-            <el-input v-model="damagePartsModify.odRetailPrice"/>
+            <el-input v-model="damagePartsModify.note"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -68,6 +65,7 @@
 </template>
 <script>
 import {PostData} from "@/api";
+import {getTime} from "@/views/Slips/myUtils";
 
 export default {
   data(){
@@ -76,7 +74,11 @@ export default {
       damagePartsBtnButton:false,
       dialogDamagePartsFormVisible:false,
       damagePartsModify:{},
-      queryDamageParts:{},
+      queryDamageParts:{
+        parts:{},
+        pageNum:1,
+        pageSize:10
+      },
       damagePartsList:[],
       rules:{
         number:[
@@ -94,20 +96,34 @@ export default {
   },
   methods: {
     //获取额外订单信息列表
-    getList(){
-      PostData('otherFee/selectAllByLike',this.queryDamageParts).then(res=>{
-        //--todo
+    getList(pageNum=1){
+      this.queryDamageParts.pageNum=pageNum
+      console.log(this.queryDamageParts)
+      this.queryDamageParts.parts.pName=this.queryDamageParts.pName
+      PostData('partsBad/selectAllByLike',this.$qs.stringify(this.queryDamageParts)).then(res=>{
+        res.list.forEach(value=>{
+          value.date=getTime(value.date)
+        })
+        console.log(res.list)
+        this.damagePartsList=res.list
+        this.total=res.total
       })
     },
     //打开修改额外订单信息
-    openDamageParts(){
+    openDamageParts(params){
       this.dialogDamagePartsFormVisible=true
+      this.damagePartsModify=JSON.parse(JSON.stringify(params))
     },
     //修改额外订单信息
     UpdateDamageParts(){
-      PostData('otherFee/update',this.damagePartsModify).then(res=>{
-        //--todo
-        this.dialogDamagePartsFormVisible=false
+      this.$refs['damagePartsModify'].validate((valid)=>{
+        PostData('partsBad/update',this.$qs.stringify(this.damagePartsModify)).then(res=>{
+          this.$message({
+            type: 'success',
+            message: '修改额外订单信息成功'
+          })
+          this.dialogDamagePartsFormVisible=false
+        })
       })
     },
     //删除额外订单信息
