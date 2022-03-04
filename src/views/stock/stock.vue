@@ -155,21 +155,9 @@
                     <el-option label="已询价" :value="1"></el-option>
                   </el-select>
                 </el-form-item>
-                <!--          <el-form-item label="用户ID" prop="aId">-->
-                <!--            <el-input v-model="admin.aId" style="width: 300px"s/>-->
-                <!--          </el-form-item>-->
                 <el-form-item label="备注" prop="INote">
                   <el-input  v-model="oder.iNote" style="width: 200px" type="textarea"/>
                 </el-form-item>
-                <!--          <el-form-item label="用户密码" prop="aPassword">-->
-                <!--            <el-input v-model="admin.aPassword" style="width: 300px"/>-->
-                <!--          </el-form-item>-->
-                <!--          <el-form-item label="二级密码" prop="aSecondaryPassword">-->
-                <!--            <el-input v-model="admin.aSecondaryPassword" style="width: 300px"/>-->
-                <!--          </el-form-item>-->
-<!--                <el-form-item>-->
-<!--                  <el-button type="primary" @click="submitUpdate('oder')" style="margin-left: 130px">保存</el-button>-->
-<!--                </el-form-item>-->
               </div>
             </el-form>
             <el-button type="primary" icon="el-icon-magic-stick" slot="reference" style="margin-right: 2%">查看详情</el-button>

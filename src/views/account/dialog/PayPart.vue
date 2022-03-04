@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="挂账结算(测试)" :visible.sync="creditPartVisible">
+    <el-dialog title="挂账结算" :visible.sync="partVisible" @close="creditPartCancel">
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
@@ -40,10 +40,10 @@
         <el-button type="primary" @click="creditPartConfirm">确认</el-button>
       </div>
       <el-dialog width="30%" title="结算金额" :visible.sync="innerVisible" append-to-body>
-        <el-form label-width="60px">
+        <el-form label-width="60px" :rules="creditPartRules" :model="pay" ref="payForm">
           <el-form-item label="应收">{{ creditPartMoney }}</el-form-item>
-          <el-form-item label="实收">
-            <el-input v-model="payNumber"></el-input>
+          <el-form-item label="实收" prop="payNumber">
+            <el-input v-model="pay.payNumber"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="payCancel">取消</el-button>
@@ -62,8 +62,41 @@ export default {
   name: "PayPart",
   data(){
     return {
-      creditPartData: [],
-      payNumber: null,
+      creditPartData: [
+        {
+          id:1,
+          sTime: '1-1-1',
+          money:100
+        },
+        {
+          id: 3,
+          sTime: '1-1-1',
+          money: 100
+        },
+        {
+          id:2,
+          sTime: '1-1-1',
+          money:100
+        },
+        {
+          id:1,
+          sTime: '1-1-1',
+          money:100
+        },
+        {
+          id:1,
+          sTime: '1-1-1',
+          money:100
+        },
+        {
+          id:1,
+          sTime: '1-1-1',
+          money:100
+        },
+      ],
+      pay: {
+        payNumber: null,
+      },
       innerVisible: false,
       creditPartCondition: {
         name: null,
@@ -72,7 +105,11 @@ export default {
       },
       tempDate1: null,
       creditPartSelection: [],
-      // creditPartVisible: false,
+      creditPartRules: {
+        payNumber: [
+          {required: true, message: '请输入实收金额', trigger: ['change', 'blur']}
+        ]
+      },
     }
   },
   props: {
@@ -125,7 +162,7 @@ export default {
     // 取消挂账结算弹窗
     creditPartCancel(){
       this.toggleSelection()
-      this.creditPartVisible = false
+      this.$emit('cancelClick')
       this.tempDate1 = null
       this.creditPartCondition = {
         name: null,
@@ -147,30 +184,39 @@ export default {
 
     // 挂账结算->金额弹窗取消
     payCancel(){
-      this.payNumber = null
+      // this.$refs.payForm.$destroy()
+      this.pay.payNumber = null
       this.innerVisible = false
     },
 
     // 挂账结算->确认金额
     payConfirm(){
-      this.$confirm('请确认金额','提示', {
-        type:'warning'
-      }).then(()=>{
-        console.log('金额确认')
-        console.log('重新获取挂账交易记录信息')
-        this.$message.success('成功')
-        this.innerVisible = false
-        this.creditPartVisible = false
-        this.payNumber = null
-        this.toggleSelection()
-        this.creditPartCondition = {
-          name: null,
-          startTime: null,
-          endTime: null,
-        }
-      }).catch(()=>{
-        this.$message.error('支付失败，请重试')
-      })
+      console.log(this.pay.payNumber)
+      console.log(this.creditPartMoney)
+      if(parseInt(this.pay.payNumber)>this.creditPartMoney){
+        this.$message.error("实收金额大于应收金额，请重新确认")
+      }else{
+        this.$confirm('请确认金额','提示', {
+          type:'warning'
+        }).then(()=>{
+          console.log('金额确认')
+          console.log('重新获取挂账交易记录信息')
+          this.$message.success('成功')
+          this.innerVisible = false
+          this.$emit('cancelClick')
+          this.pay.payNumber = null
+          this.toggleSelection()
+          this.creditPartCondition = {
+            name: null,
+            startTime: null,
+            endTime: null,
+          }
+        }).catch(()=>{
+          this.$message.error('支付失败，请重试')
+        })
+      }
+
+
     },
   }
 }
