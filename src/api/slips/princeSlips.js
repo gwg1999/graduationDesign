@@ -2,12 +2,12 @@ import request from '@/utils/request'
 import {baseURL} from "@/api/http";
 import qs from 'qs'
 export default {
-  queryAll(name,beginTime,endTime,createTimeSequence,endTimeSequence,pageNum,pageSize) {
+  queryAll(name,beginTime,endTime,createTimeSequence,endTimeSequence,pageNum,pageSize,isExistBill) {
     return request({
       baseURL:baseURL,
       url: '/order/getOrder',
       method: 'post',
-      params:{name,beginTime,endTime,createTimeSequence,endTimeSequence,pageNum,pageSize}
+      params:{name,beginTime,endTime,createTimeSequence,endTimeSequence,pageNum,pageSize,isExistBill}
     })
   },
   queryAllDetails(odOrderId,pName,odType,pageNum,pageSize) {

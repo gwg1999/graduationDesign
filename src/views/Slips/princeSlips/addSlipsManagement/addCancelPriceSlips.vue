@@ -94,8 +94,8 @@
       <!--下一步提交-->
       <el-dialog :visible.sync="dialogSubmitVisible"  title="缺货备注提醒" width="70%">
         <el-form :model="priceSlip" label-width="120px" ref="priceSlip" :rules="rules">
-          <el-form-item label="交易属性" prop="Type">
-            <el-select v-model="priceSlip.Type"   clearable placeholder="交易属性" style="width: 200px"  >
+          <el-form-item label="交易属性" prop="type">
+            <el-select v-model="priceSlip.type"   clearable placeholder="交易属性" style="width: 200px"  >
               <el-option value="0" label="退货退款"/>
               <el-option value="1" label="退换货"/>
               <el-option value="2" label="仅退款"/>
@@ -201,7 +201,7 @@ export default {
             let num=part.number+item.number
             if(num>part.odNumber){
               this.$message({
-                message: `该订单购买数量大于要退货的数量,最多还可以退货的数量为${part.odNumber-part.number}`,
+                message: `现有数量大于退货的数量,现最多还可退${part.odNumber-part.number}件`,
                 type: "error"
               })
             }else {
@@ -226,7 +226,7 @@ export default {
             })
           }else{
             this.$message({
-              message:'所退货数量大于只有的数量',
+              message:'所退货数量大于现有的数量',
               type:"error"
             })
           }
@@ -377,11 +377,26 @@ export default {
         params = this.$route.query.row
         this.priceSlip.orderId = params.oId
         this.priceSlip.orderType = 0
-        this.princeSheetReturn.customerUnitName = params.customerName
-        this.princeSheetReturn.operatorName = params.createPeopleName
-        returnPoJo=this.priceSlip
-        console.log(this.priceSlip)
-        console.log(returnPoJo)
+        this.priceSlip.customerUnitName = params.customerName
+        this.priceSlip.operatorName = params.createPeopleName
+        this.priceSlip.returnNumber=this.priceSlip.priceTotal
+        this.priceSlip.returnDetailsList=this.priceSlip.orderDetailList
+
+        for (let i = 0; i < this.priceSlip.orderDetailList.length; i++) {
+          for (let j = 0; j < this.returnGoodList.length; j++) {
+            if (this.returnGoodList[j].odId === this.princeSheetReturn.returnDetailList[i].odId) {
+              this.princeSheetReturn.returnDetailList[i].rdPartsNum = this.returnGoodList[j].odNumber
+              this.princeSheetReturn.returnDetailList[i].rdPartsType = this.returnGoodList[j].odType
+              this.princeSheetReturn.returnDetailList[i].rdType = 0
+              this.princeSheetReturn.returnDetailList[i].rdRealOrderId = this.returnGoodList[j].odId
+              this.princeSheetReturn.returnDetailList[i].rdPartsId = this.returnGoodList[j].odPartsId
+              this.princeSheetReturn.returnDetailList[i].rdRetailPrice = this.returnGoodList[j].odRetailPrice * this.returnGoodList[j].odNumber
+            }
+          }
+        }
+        // returnPoJo=this.priceSlip
+        // console.log(this.priceSlip)
+        // console.log(returnPoJo)
         PostData('return/addReturn', returnPoJo)
           .then(res => {
             this.$message({

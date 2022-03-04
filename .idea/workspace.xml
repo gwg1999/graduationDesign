@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.env.development" beforeDir="false" afterPath="$PROJECT_DIR$/.env.development" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env.production" beforeDir="false" afterPath="$PROJECT_DIR$/.env.production" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/dev.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/slips/princeSlips.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/slips/princeSlips.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipManagement.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/todayPriceSlips.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/todayPriceSlips.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/parts/damageParts/damagePartsManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/parts/damageParts/damagePartsManagement.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,8 +48,10 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.standard" value="" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
     <property name="vue.rearranger.settings.migration" value="true" />
@@ -114,7 +117,7 @@
       <workItem from="1646267466866" duration="25570000" />
       <workItem from="1646304906172" duration="595000" />
       <workItem from="1646353627111" duration="5379000" />
-      <workItem from="1646363265830" duration="203000" />
+      <workItem from="1646363265830" duration="3872000" />
     </task>
     <servers />
   </component>

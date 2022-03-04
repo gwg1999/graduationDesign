@@ -279,6 +279,7 @@ export default {
         pageNum:1,
         createTimeSequence:0,
         endTimeSequence:0,
+        isExistBill:0
       },
       princeSheetList:[
       ],
@@ -438,7 +439,7 @@ export default {
       princeSlips.queryAll(this.queryPrinceSheet.name,this.queryPrinceSheet.beginTime
         ,this.queryPrinceSheet.endTime,this.queryPrinceSheet.createTimeSequence,
         this.queryPrinceSheet.endTimeSequence, this.queryPrinceSheet.pageNum,
-        this.queryPrinceSheet.pageSize)
+        this.queryPrinceSheet.pageSize,this.queryPrinceSheet.isExistBill)
         .then(res=>{
           this.total=res.total
           for (let i=0;i<res.list.length;i++){

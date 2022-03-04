@@ -6,6 +6,17 @@
         <el-form-item>
           <el-input v-model="queryDamageParts.pName"  clearable placeholder="零件名称" style="width: 150px"></el-input>
         </el-form-item>
+        <el-form-item >
+          <el-date-picker
+            v-model="queryDamageParts.DamagePartsCreateTime"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="坏件信息创建日期"
+            end-placeholder="坏件信息结束日期"
+            @change="getList()"
+            style="width: 420px">
+          </el-date-picker>
+        </el-form-item>
         <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="getList(1)">查 询</el-button>
       </el-form>
       <!--      销售单管理列表-->
@@ -31,16 +42,16 @@
         <el-table-column label="操作" width="100px" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit"   @click="openDamageParts(scope.row)">修改</el-button>
-<!--            <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteDamageParts(scope.row.oId)">删除</el-button>-->
+            <!--            <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteDamageParts(scope.row.oId)">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
       <!--      修改额外订单信息-->
       <el-dialog :visible.sync="dialogDamagePartsFormVisible" title="修改额外订单信息">
         <el-form :model="damagePartsModify" label-width="120px" :rules="rules" ref="damagePartsModify">
-<!--          <el-form-item label="支出费用" prop="number">-->
-<!--            <el-input v-model="damagePartsModify.odNumber"/>-->
-<!--          </el-form-item>-->
+          <!--          <el-form-item label="支出费用" prop="number">-->
+          <!--            <el-input v-model="damagePartsModify.odNumber"/>-->
+          <!--          </el-form-item>-->
           <el-form-item label="备注" prop="note">
             <el-input v-model="damagePartsModify.note"/>
           </el-form-item>
@@ -98,8 +109,15 @@ export default {
     //获取额外订单信息列表
     getList(pageNum=1){
       this.queryDamageParts.pageNum=pageNum
+      if(this.queryDamageParts.DamagePartsCreateTime){
+        this.queryDamageParts.startTime=getTime(this.queryDamageParts.DamagePartsCreateTime[0])
+        this.queryDamageParts.endTime=getTime(this.queryDamageParts.DamagePartsCreateTime[1])
+      }else {
+        this.queryDamageParts.startTime=undefined
+        this.queryDamageParts.endTime=undefined
+      }
       console.log(this.queryDamageParts)
-      this.queryDamageParts.parts.pName=this.queryDamageParts.pName
+      // this.queryDamageParts.parts.pName=this.queryDamageParts.pName
       PostData('partsBad/selectAllByLike',this.$qs.stringify(this.queryDamageParts)).then(res=>{
         res.list.forEach(value=>{
           value.date=getTime(value.date)
