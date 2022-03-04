@@ -1,22 +1,25 @@
 <template>
-  <div>
+  <div class="table-box">
     <el-table
-      :data="creditRecord"
+      :data="creditRecords"
       border
       fit
       highlight-current-row
-      style="width: 100%">
-      <el-table-column label="序号"></el-table-column>
-      <el-table-column label="金额"></el-table-column>
+      style="width: 100%"
+      v-if="tableType===0">
+      <el-table-column label="序号" align="center"></el-table-column>
+      <el-table-column label="金额" align="center"></el-table-column>
     </el-table>
-    <el-pagination
-      layout="total, prev, pager, next, jumper"
-      :page-size="stockQuery.pageSize"
-      :current-page="stockQuery.pageNum"
-      :total="pageTotal"
-      style="padding: 30px 0; text-align: right;"
-      @current-change="handlePageChange"
-    />
+    <el-table
+      :data="creditRecords"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      v-if="tableType===1">
+      <el-table-column label="序号" align="center"></el-table-column>
+      <el-table-column label="数量" align="center"></el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -25,16 +28,15 @@ export default {
   name: "CreditRecordTable",
   data(){
     return {
-      creditRecord: [],
-      stockQuery: {
-
-      },
-      pageTotal: null,
 
     }
   },
   props: {
-
+    creditRecords: {
+      type: Array,
+      default: []
+    },
+    tableType: Number,
   },
   methods: {
     handlePageChange(){

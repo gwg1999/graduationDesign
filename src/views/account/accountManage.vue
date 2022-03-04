@@ -52,6 +52,9 @@
 
     <div style="overflow: auto;flex: 1;" class="content-box">
       <div class="table-box">
+<!--        <div style="display: inline;">-->
+<!--          <credit-record-table :credit-records="creditRecords" :table-type="queryCondition.tableType"></credit-record-table>-->
+<!--        </div>-->
 <!--        可变表格-->
         <el-table
           :data="creditRecords"
@@ -122,10 +125,12 @@
 import {parseTime} from "@/utils";
 import PayPart from "@/views/account/dialog/PayPart";
 import PayAll from "@/views/account/dialog/PayAll";
+import CreditRecordTable from "@/views/account/table/creditRecordTable";
 
 export default {
   name: "accountManage",
   components: {
+    CreditRecordTable,
     PayPart,
     PayAll,
   },
@@ -174,6 +179,9 @@ export default {
       pageTotal: 0,
     }
   },
+  created(){
+    this.handlePageChange()
+  },
   computed: {
     totalMoney: function (){
       return this.accountDetail.cashMoney + this.accountDetail.buyerOnCredit + this.accountDetail.payOnLine
@@ -213,6 +221,7 @@ export default {
   float: left;
   /*border-right: solid black 1px;*/
   height: 100%;
+
 }
 .total-box{
   overflow: hidden;
