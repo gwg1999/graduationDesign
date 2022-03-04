@@ -94,8 +94,8 @@
       <!--下一步提交-->
       <el-dialog :visible.sync="dialogSubmitVisible"  title="缺货备注提醒" width="70%">
         <el-form :model="priceSlip" label-width="120px" ref="priceSlip" :rules="rules">
-          <el-form-item label="交易属性" prop="rType">
-            <el-select v-model="priceSlip.rType"   clearable placeholder="交易属性" style="width: 200px"  >
+          <el-form-item label="交易属性" prop="Type">
+            <el-select v-model="priceSlip.Type"   clearable placeholder="交易属性" style="width: 200px"  >
               <el-option value="0" label="退货退款"/>
               <el-option value="1" label="退换货"/>
               <el-option value="2" label="仅退款"/>
@@ -105,7 +105,7 @@
             <el-input v-model="priceSlip.priceTotal" clearable style="width: 200px"/>
           </el-form-item>
           <el-form-item label="退货原因">
-            <el-input v-model="priceSlip.rReason" style="width:80%"  rows="5" type="textarea"/>
+            <el-input v-model="priceSlip.note" style="width:80%"  rows="5" type="textarea"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -373,6 +373,12 @@ export default {
       //       this.princeSheetReturn.rPrice = rPrice
       this.$refs['priceSlip'].validate(valid=>{
         let returnPoJo={}
+        let params = {}
+        params = this.$route.query.row
+        this.priceSlip.orderId = params.oId
+        this.priceSlip.orderType = 0
+        this.princeSheetReturn.customerUnitName = params.customerName
+        this.princeSheetReturn.operatorName = params.createPeopleName
         returnPoJo=this.priceSlip
         console.log(this.priceSlip)
         console.log(returnPoJo)

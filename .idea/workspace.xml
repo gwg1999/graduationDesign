@@ -2,44 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.env.development" beforeDir="false" afterPath="$PROJECT_DIR$/.env.development" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env.production" beforeDir="false" afterPath="$PROJECT_DIR$/.env.production" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/myApi.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/myUtils.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addPrice/addPriceDetailsGoods.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addPrice/addPriceGoods.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addPrice/addSPriceSlips.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addPrinceDetailsSlips.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addPrinceSlip.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/minusSlipsManagement/minusSlips.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/minusSlipsManagement/minusSlipsDetails.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipDetails.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipManagement.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/printTable/background.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/printTable/printTable.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/printTable/printTable.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/serialNumber/serialNumberManagement.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/todayPriceSlips.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/ruleNumber.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlips/addSlips.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlips/addSlipsDetailsGoods.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlips/addSlipsGoods.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlipsManagement/addSalesSlip.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlipsManagement/addSalesSlipDetails.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/salesSlipDetails.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/salesSlipManagement.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/account/accountManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/accountManage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/parts/addPart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/parts/addPart.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/parts/editPart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/parts/editPart.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/parts/part.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/parts/part.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/parts/partAlert.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/parts/partAlert.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/parts/partsWhole.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/parts/partsWhole.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/returnGood/cancelSlipManagement/cancelSlipsDetails.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/returnGood/cancelSlipManagement/cancelSlipsManagement.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/returnGood/cancelStockManagement/cancelStocksDetails.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/returnGood/cancelStockManagement/cancelStocksManagement.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/returnGood/myApi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/dev.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -147,6 +114,7 @@
       <workItem from="1646267466866" duration="25570000" />
       <workItem from="1646304906172" duration="595000" />
       <workItem from="1646353627111" duration="5379000" />
+      <workItem from="1646363265830" duration="203000" />
     </task>
     <servers />
   </component>
