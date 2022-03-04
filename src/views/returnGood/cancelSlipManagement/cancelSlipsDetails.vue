@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="app-container" >
-<!--      <el-form :inline="true" class="demo-form-inline" style="position: relative ">-->
-<!--        <el-form-item>-->
+      <el-form :inline="true" class="demo-form-inline" style="position: relative ">
+        <el-form-item >
 <!--          <el-input v-model="queryCancelSlip.pName"  clearable placeholder="商品名称" style="width: 150px"/>-->
-<!--        </el-form-item>-->
+        </el-form-item>
 <!--        <el-form-item>-->
 <!--          <el-select v-model="queryCancelSlip.qdType" clearable placeholder="商品类型" style="width: 200px">-->
 <!--            <el-option :value="1" label="零件"/>-->
@@ -12,7 +12,12 @@
 <!--          </el-select>-->
 <!--        </el-form-item>-->
 <!--        <el-button type="primary" icon="el-icon-search" @click="getList(1)">查 询</el-button>-->
-<!--      </el-form>-->
+        <el-form-item style="position: absolute ;right: 10px">
+          <router-link :to="{path:'/returnGood/cancelSlipsManagement'}">
+            <el-button type="primary" icon="el-icon-d-arrow-left">返回</el-button>
+          </router-link>
+        </el-form-item >
+      </el-form>
       <el-table
         :data="CancelSlipDetailsList"
         border
@@ -27,7 +32,7 @@
             {{ (pageNum - 1) * pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="partName" label="名称"  width="200px" align="center"/>
+        <el-table-column prop="partName" label="名称"   align="center"/>
         <el-table-column prop="rdPartsType" label="类型" width="100px" align="center">
           <template slot-scope="scope">
             {{ scope.row.qdType===0?'整件':'零件'}}
@@ -43,8 +48,8 @@
             {{ scope.row.rdPartsType===0?'大':'小'}}
           </template>
         </el-table-column>
-        <el-table-column prop="rdRetailPrice" label="退货价格"  align="center"/>
-        <el-table-column prop="rdPartsNum" label="数量"  align="center"/>
+        <el-table-column prop="rdRetailPrice" width="100px" label="退货价格"  align="center"/>
+        <el-table-column prop="rdPartsNum" width="100px" label="数量"  align="center"/>
         <el-table-column label="操作" width="200px" align="center">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit"  @click="deleteSalesSlip(scope.row.qdId)">删除</el-button>

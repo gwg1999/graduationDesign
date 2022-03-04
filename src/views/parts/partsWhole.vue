@@ -81,50 +81,13 @@
               border
               fit
               highlight-current-row
-              style="width: 100%;font-size: 4px;line-height:20px;padding: 0">
+              style="width: 100%">
       <el-table-column
         label="序号"
         width="50%"
         align="center">
         <template slot-scope="scope">
           {{ (partQuery.pageNum - 1) * partQuery.pageSize + scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column type="expand" label="详情" width="50px">
-        <template slot-scope="props">
-          <el-form label-position="right" inline class="demo-table-expand" label-width="80px">
-            <el-form-item label="零件类目:">
-              <span>{{ props.row.pCategoryId }}</span>
-            </el-form-item>
-            <el-form-item label="厂家:">
-              <span>{{ props.row.factory.fName }}</span>
-            </el-form-item>
-            <el-form-item label="货物位置:">
-              <span>{{ props.row.pCategoryId }}</span>
-            </el-form-item>
-            <el-form-item label="图片:">
-            </el-form-item>
-            <el-form-item label="备注:" style="height: 180px;width: 50%">
-              <span>{{ props.row.pNote }}</span>
-            </el-form-item>
-            <el-form-item style="width: 50%;height: 180px;" >
-              <div class="demo-image__placeholder" style="width: 300px;height: 180px;margin-left: 50%">
-                <div class="block" style="width: 270px;height: 180px">
-                  <el-carousel trigger="click" height="180px">
-                    <el-carousel-item v-for="item in props.row.pictures" :key="item.pId">
-                      <el-image :src="item.path"
-                                :preview-src-list="[item.path]"
-                                style="height:95%;width: 95%;padding-top: 2px;padding-left: 10px">
-                        <div slot="placeholder" class="image-slot">
-                          加载中<span class="dot">...</span>
-                        </div>
-                      </el-image>
-                    </el-carousel-item>
-                  </el-carousel>
-                </div>
-              </div>
-            </el-form-item>
-          </el-form>
         </template>
       </el-table-column>
       <!--      <el-table-column prop="pId" label="零件号" width="50%" align="center" hidden/>-->
@@ -489,22 +452,5 @@ export default {
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;
-}
-.demo-table-expand {
-  border-top: 1px solid #000000;
-  border-left:1px solid #000000;
-  border-right:1px solid #000000;
-  font-size: 0;
-}
-.demo-table-expand label {
-  width: 90px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  border-bottom: 1px solid #000000;
-  border-right:1px solid #000000;
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 50%;
 }
 </style>

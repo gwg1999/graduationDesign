@@ -177,6 +177,7 @@ export default {
       },
       creditRecords: [],
       pageTotal: 0,
+      creditAllVisible: false,
     }
   },
   created(){

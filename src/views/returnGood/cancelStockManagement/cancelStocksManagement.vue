@@ -25,10 +25,10 @@
           </el-date-picker>
         </el-form-item>
         <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="getList(1)">查 询</el-button>
-        <router-link to="/Slips/addSalesSlip">
-          <el-button type="primary"
-                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>
-        </router-link>
+<!--        <router-link to="/Slips/addSalesSlip">-->
+<!--          <el-button type="primary"-->
+<!--                     icon="el-icon-circle-plus" style="position: absolute;right: 10px">添加</el-button>-->
+<!--        </router-link>-->
       </el-form>
       <el-table
         :data="CancelSlipList"

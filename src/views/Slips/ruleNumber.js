@@ -1,4 +1,5 @@
 export const validatePassCheck = (rule, value, callback) => {
+  console.log(value)
   if (/\D/.test(value)) {
     callback(new Error('请输入数字类型'));
   } else {

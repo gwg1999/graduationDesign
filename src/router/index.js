@@ -6,6 +6,33 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 
+
+/**
+ * Note: sub-menu only appear when route children.length >= 1
+ * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
+ *
+ * hidden: true                   if set true, item will not show in the sidebar(default is false)
+ * alwaysShow: true               if set true, will always show the root menu
+ *                                if not set alwaysShow, when item has more than one children route,
+ *                                it will becomes nested mode, otherwise not show the root menu
+ * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
+ * name:'router-name'             the name is used by <keep-alive> (must set!!!)
+ * meta : {
+    roles: ['admin','editor']    control the page roles (you can set multiple roles)
+    title: 'title'               the name show in sidebar and breadcrumb (recommend set)
+    icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
+    noCache: true                if set true, the page will no be cached(default is false)
+    affix: true                  if set true, the tag will affix in the tags-view
+    breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
+    activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
+  }
+ */
+
+/**
+ * constantRoutes
+ * a base page that does not have permission requirements
+ * all roles can be accessed
+ */
 export const constantRoutes=[
   {
     path: '/redirect',
@@ -142,12 +169,7 @@ export const constantRoutes=[
         meta: { title: '新增销售单商品', icon: 'table',roles:['admin'] },
         hidden: true
       },
-      // {
-      //   path: 'minusSlips',
-      //   name: '负数销售单',
-      //   component: () => import('@/views/Slips/princeSlips/minusSlipsManagement/minusSlips'),
-      //   meta: { title: '负数销售单', icon: 'table',roles:['admin'] }
-      // },
+
       // {
       //   path: 'minusSlipsDetails',
       //   name: '负数销售单详情表',
@@ -168,7 +190,6 @@ export const constantRoutes=[
         meta: { title: '新增销售单商品', icon: 'table',roles:['admin'] },
         hidden: true
       },
-
       {
         path: 'cancelSlipsManagement',
         name: '负数销售单',
@@ -182,13 +203,18 @@ export const constantRoutes=[
         meta: { title: '负数销售单详情表', icon: 'table' ,roles:['admin','editor']},
         hidden: true
       },
-
       {
         path: 'printTable',
         name: '打印单',
         component: () => import('@/views/Slips/princeSlips/printTable/printTable'),
         meta: { title: '打印单', icon: 'table',roles:['admin'] },
         hidden: true
+      },
+      {
+        path: 'extraPriceSlipsManagement',
+        name: '其他费用',
+        component: () => import('@/views/Slips/princeSlips/extraPriceSlips/extraPriceSlipsManagement'),
+        meta: { title: '其他费用', icon: 'table',roles:['admin'] }
       }
     ]
   },
@@ -310,8 +336,26 @@ export const constantRoutes=[
     redirect: '/returnGood/cancelSlipsManagement',
     name:'退货',
     meta:{title: '退货',icon: 'el-icon-s-help'},
-    hidden: true,
     children:[
+      {
+        path: 'cancelSlipsManagement',
+        name: '销售单退货管理',
+        component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsManagement'),
+        meta: { title: '销售单退货管理', icon: 'table' ,roles:['admin','editor']}
+      },
+      {
+        path: 'cancelSlipsDetails',
+        name: '销售单退货详情表',
+        component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsDetails'),
+        meta: { title: '销售单退货详情表', icon: 'table' ,roles:['admin','editor']},
+        hidden: true
+      },
+      {
+        path: 'cancelStocksManagement',
+        name: '进货单退货管理',
+        component: () => import('@/views/returnGood/cancelStockManagement/cancelStocksManagement'),
+        meta: { title: '进货单退货管理', icon: 'table' ,roles:['admin','editor']}
+      },
       {
         path: 'cancelStocksDetails',
         name: '进货单退货详情表',
@@ -404,6 +448,12 @@ export const constantRoutes=[
         name: '知识库管理',
         component: () => import('@/views/knowledgeBase/part'),
         meta: { title: '知识库管理',  icon:'tree',noCache: true },
+      },
+      {
+        path: '/parts/damagePartsManagement',
+        name: '坏件管理',
+        component: () => import('@/views/parts/damageParts/damagePartsManagement'),
+        meta: { title: '坏件管理', icon: 'table' },
       },
     ]
   },
