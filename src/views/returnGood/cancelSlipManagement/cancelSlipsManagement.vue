@@ -9,9 +9,11 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-select v-model="queryCancelSlip.rIsReceive"  clearable placeholder="是否收货" style="width: 120px">
+          <el-select v-model="queryCancelSlip.rIsReceive"  clearable placeholder="订单状态" style="width: 120px">
             <el-option label="正在退货" :value="0"/>
-            <el-option label="退货结束" :value="1"/>
+            <el-option label="已收货" :value="1"/>
+            <el-option label="发货中" :value="2"/>
+            <el-option label="结束" :value="3"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -58,64 +60,58 @@
           </template>
         </el-table-column>
         <el-table-column prop="rCreateTime" width="100px" label="创建时间"  align="center"/>
-        <el-table-column prop="rResultTime" width="100px"  label="结束时间"  align="center"/>
-        <el-table-column prop="rType" label="交易属性" width="80px" align="center">
+        <!--        <el-table-column prop="rResultTime" width="100px"  label="结束时间"  align="center"/>-->
+        <el-table-column prop="rType" label="交易属性" width="85px" align="center">
           <template slot-scope="scope">
-            {{ scope.row.rType===0?'退货退款':scope.row.rType===1?'退换货':'仅退款'}}
+            <el-tag effect="dark" :type="scope.row.rType === 0? 'info':scope.row.rType === 1?'warning':'danger'"
+            >{{scope.row.rType===0?'退货退款':scope.row.rType===1?'退换货':'仅退款'}}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="rIsPayment" label="是否打款" width="80px" align="center">
+        <el-table-column label="是否打款" prop="rIsPayment" width="80px" align="center">
           <template slot-scope="scope">
-            {{ scope.row.rIsPayment===1?'已打款':'未打款'}}
+            <span v-if="scope.row.rIsPayment ===1">
+              <span style="color:#00B46D">已打款</span>
+            </span>
+            <span v-else>
+              <span style="color:#D75C89">未打款</span>
+            </span>
           </template>
         </el-table-column>
-        <!--        <el-table-column prop="rReason" label="退货原因" width="100" align="center"/>-->
-        <el-table-column prop="rIsReceive" label="是否结束" width="80px" align="center">
+
+        <el-table-column prop="rIsReceive" label="订单状态" width="85px" align="center">
           <template slot-scope="scope">
-            {{scope.row.rIsReceive===0?'正在退货':"退货结束"}}
+            <el-tag effect="dark" :type="scope.row.rIsReceive === 0? '':scope.row.rIsReceive === 1?'success':scope.row.rIsReceive === 2?
+            'warning':'info'"
+            >{{scope.row.rIsReceive===0?'正在退货':scope.row.rIsReceive===1?"已收货":scope.row.rIsReceive===2?"发货中":"结束"}}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="rPrice" label="退货总价" width="80px" align="center"/>
-        <el-table-column label="操作" width="150" align="center">
+        <el-table-column label="操作" width="110px" align="center">
           <template slot-scope="scope">
-            <router-link :to="{path:'/Slips/cancelSlipsDetails',query:{qId:scope.row.rId}}">
+            <router-link :to="{path:'/returnGood/cancelSlipsDetails',query:{qId:scope.row.rId,rIsReceive:scope.row.rIsReceive,rIsPayment:scope.row.rIsPayment}}">
               <el-button type="primary"  size="mini" icon="el-icon-edit" >查看详情</el-button>
             </router-link>
           </template>
         </el-table-column>
-        <el-table-column label="操作"  align="center">
+        <el-table-column label="操作"  align="center" >
           <template slot-scope="scope">
-            <el-button  v-show="scope.row.rType===0" type="primary" size="mini" icon="el-icon-edit"  @click="openPaymentDialog(scope.row)">打款</el-button>
-            <el-button  v-show="scope.row.rType===1" type="primary" size="mini" icon="el-icon-edit"  @click="takeDelivery(scope.row)">收货</el-button>
-            <el-button  v-show="scope.row.rType===1" type="primary" size="mini" icon="el-icon-edit"  @click="deliverGood(scope.row)">发货</el-button>
-            <el-button  v-show="scope.row.rType===3" type="primary" size="mini" icon="el-icon-edit"  @click="refund(scope.row)">退款</el-button>
-            <el-button :disabled="scope.row.rIsReceive===0" type="primary" size="mini" icon="el-icon-edit"  @click="openReturnSheetDialog(scope.row)">修改</el-button>
-            <el-button :disabled="scope.row.rIsReceive===1"  type="danger" size="mini" icon="el-icon-edit"  @click="deleteReturnSlip(scope.row)" >删除</el-button>
+            <el-button :disabled="scope.row.rIsReceive!==0" v-show="scope.row.rType===1||scope.row.rType===0" type="primary" @click="takeOver(scope.row)" size="mini" icon="el-icon-edit">收货</el-button>
+            <el-button v-show="scope.row.rType!==1" :disabled="scope.row.rIsPayment===1" style="margin-right: 5px"   type="primary" size="mini" icon="el-icon-edit"  @click="openPaymentDialog(scope.row)">打款</el-button>
+            <el-button  v-show="scope.row.rType===1" :disabled="scope.rIsReceive===1||scope.row.rIsReceive===2" style="margin-left: 5px" type="primary" size="mini" icon="el-icon-edit"  @click="deliverGood(scope.row)">发货</el-button>
+            <el-button  v-show="scope.row.rType===1" type="danger" size="mini" icon="el-icon-edit"  @click="finishReturn(scope.row)">结束</el-button>
+            <el-button  type="primary" size="mini" icon="el-icon-edit"  @click="openReturnSheetDialog(scope.row)">修改</el-button>
+            <el-button v-show="scope.row.rIsReceive===0&&scope.row.rIsPayment===0"  type="danger" size="mini" icon="el-icon-edit"  @click="deleteReturnSlip(scope.row.rId)" >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-
       <!--修改-->
       <el-dialog :visible.sync="dialogSalesSheetFormVisible" title="修改退货单">
         <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">
-          <!--          <el-form-item label="退货物流号" prop="qdNumber">-->
-          <!--            <el-input v-model="returnGoodSlipsModify.rReturnLogistics"/>-->
-          <!--          </el-form-item>-->
-          <!--          <el-form-item label="发货物流号" prop="qdNumber">-->
-          <!--            <el-input v-model="returnGoodSlipsModify.rDeliverLogistics"/>-->
-          <!--          </el-form-item>-->
-          <el-form-item label="订单状态" prop="Type">
-            <el-select v-model="returnGoodSlipsModify.Type" placeholder="请选择订单状态">
-              <el-option label="退货退款" :value="0"/>
-              <el-option label="退换货" :value="1"/>
-              <el-option label="仅退款" :value="2"/>
-            </el-select>
+          <el-form-item label="退货物流号" prop="rReturnLogistics">
+            <el-input v-model="returnGoodSlipsModify.rReturnLogistics"/>
           </el-form-item>
-          <el-form-item label="是否已收款" prop="IsPayment">
-            <el-select v-model="returnGoodSlipsModify.IsPayment" placeholder="请选择是否已收款">
-              <el-option label="未收款" :value="0"/>
-              <el-option label="已收款" :value="1"/>
-            </el-select>
+          <el-form-item label="发货物流号" prop="rDeliverLogistics">
+            <el-input v-model="returnGoodSlipsModify.rDeliverLogistics"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -128,7 +124,10 @@
       <el-dialog :visible.sync="dialogPaymentFormVisible" title="打款">
         <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">
           <el-form-item label="退款金额" prop="qdNumber">
-            <el-input :disabled="true" v-model="returnGoodSlipsModify.rReturnLogistics"/>
+            <el-input :disabled="true" v-model="returnGoodSlipsModify.rPrice"/>
+          </el-form-item>
+          <el-form-item label="备注" prop="note">
+            <el-input v-model="returnGoodSlipsModify.note" style="width:80%"  rows="5" type="textarea"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -151,31 +150,31 @@
       <!--        </div>-->
       <!--      </el-dialog>-->
       <!--发货-->
-      <el-dialog :visible.sync="dialogPaymentFormVisible" title="发货">
-        <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">
-          <el-form-item label="退款金额" prop="qdNumber">
-            <el-input :disabled="true" v-model="returnGoodSlipsModify.rReturnLogistics"/>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogPaymentFormVisible = false">取 消</el-button>
-          <el-button :disabled="salesSheetBtnDisabled" type="primary"
-                     @click="UpdatePaymentSlips()">确 定</el-button>
-        </div>
-      </el-dialog>
+<!--      <el-dialog :visible.sync="dialogPaymentFormVisible" title="发货">-->
+<!--        <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">-->
+<!--          <el-form-item label="退款金额" prop="qdNumber">-->
+<!--            <el-input :disabled="true" v-model="returnGoodSlipsModify.rReturnLogistics"/>-->
+<!--          </el-form-item>-->
+<!--        </el-form>-->
+<!--        <div slot="footer" class="dialog-footer">-->
+<!--          <el-button @click="dialogPaymentFormVisible = false">取 消</el-button>-->
+<!--          <el-button :disabled="salesSheetBtnDisabled" type="primary"-->
+<!--                     @click="UpdatePaymentSlips()">确 定</el-button>-->
+<!--        </div>-->
+<!--      </el-dialog>-->
       <!--退款-->
-      <el-dialog :visible.sync="dialogPaymentFormVisible" title="退款">
-        <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">
-          <el-form-item label="退款金额" prop="qdNumber">
-            <el-input :disabled="true" v-model="returnGoodSlipsModify.rReturnLogistics"/>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogPaymentFormVisible = false">取 消</el-button>
-          <el-button :disabled="salesSheetBtnDisabled" type="primary"
-                     @click="UpdatePaymentSlips()">确 定</el-button>
-        </div>
-      </el-dialog>
+<!--      <el-dialog :visible.sync="dialogPaymentFormVisible" title="退款">-->
+<!--        <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">-->
+<!--          <el-form-item label="退款金额" prop="rPrice">-->
+<!--            <el-input :disabled="true" v-model="returnGoodSlipsModify.rPrice"/>-->
+<!--          </el-form-item>-->
+<!--        </el-form>-->
+<!--        <div slot="footer" class="dialog-footer">-->
+<!--          <el-button @click="dialogPaymentFormVisible = false">取 消</el-button>-->
+<!--          <el-button :disabled="salesSheetBtnDisabled" type="primary"-->
+<!--                     @click="UpdatePaymentSlips()">确 定</el-button>-->
+<!--        </div>-->
+<!--      </el-dialog>-->
 
       <el-pagination
         :current-page="pageNum"
@@ -193,6 +192,7 @@
 import returnGood from '@/api/returnGood/returnGood'
 import {PostData} from "@/api";
 import {getTime} from '@/views/Slips/myUtils'
+import {deleteReturnGood} from "@/views/returnGood/myApi";
 export default {
   data(){
     return{
@@ -201,7 +201,7 @@ export default {
       //修改退货单
       dialogSalesSheetFormVisible:false,
       salesSheetBtnDisabled:false,
-      pageSize:5,
+      pageSize:10,
       pageNum:1,
       queryCancelSlip:{
         rOrderType:0
@@ -224,8 +224,12 @@ export default {
     this.getList()
   },
   methods:{
+    //收货
+    takeOver(params){
+      this.$router.push({path:'/returnGood/takeDelivery',query:{qId:params}})
+    },
     //发货
-    deliverGood(){
+    deliverGood(params){
       this.$confirm('是否确认发货'+'?','提示',{
         confirmButtonText:'确定',
         cancelButtonText:'取消',
@@ -233,6 +237,8 @@ export default {
       }).then(()=>{
         this.returnGoodSlipsModify=JSON.parse(JSON.stringify(params))
         this.returnGoodSlipsModify.rIsReceive=2
+        this.returnGoodSlipsModify.rCreateTime=undefined
+        console.log(this.returnGoodSlipsModify)
         PostData('return/updateReturn', this.returnGoodSlipsModify)
           .then(res => {
             this.$message({
@@ -244,40 +250,21 @@ export default {
           })
       })
     },
-    //退款
-    refund(params){
+    //结束
+    finishReturn(params){
       this.$confirm('是否将进行退款'+'?','提示',{
         confirmButtonText:'确定',
         cancelButtonText:'取消',
         type:'warning'
       }).then(()=>{
         this.returnGoodSlipsModify=JSON.parse(JSON.stringify(params))
+        this.returnGoodSlipsModify.rCreateTime=undefined
         this.returnGoodSlipsModify.rIsReceive=3
         PostData('return/updateReturn', this.returnGoodSlipsModify)
           .then(res => {
             this.$message({
               type: 'success',
-              message: '退款成功'
-            })
-            this.dialogSalesSheetFormVisible = false
-            this.getList()
-          })
-      })
-    },
-    //收货
-    takeDelivery(params){
-      this.$confirm('是否收货'+'?','提示',{
-        confirmButtonText:'确定',
-        cancelButtonText:'取消',
-        type:'warning'
-      }).then(()=>{
-        this.returnGoodSlipsModify=JSON.parse(JSON.stringify(params))
-        this.returnGoodSlipsModify.rIsReceive=1
-        PostData('return/updateReturn', this.returnGoodSlipsModify)
-          .then(res => {
-            this.$message({
-              type: 'success',
-              message: '收货成功'
+              message: '已将改退货单结束'
             })
             this.dialogSalesSheetFormVisible = false
             this.getList()
@@ -290,14 +277,18 @@ export default {
       this.returnGoodSlipsModify=JSON.parse(JSON.stringify(params))
     },
     UpdatePaymentSlips(){
+      this.returnGoodSlipsModify.rIsPayment=1
       this.returnGoodSlipsModify.rIsReceive=3
+      this.returnGoodSlipsModify.rCreateTime=undefined
+      console.log(this.returnGoodSlipsModify)
+      this.returnGoodSlipsModify.returnNumber=this.returnGoodSlipsModify.rPrice
       PostData('return/updateReturn', this.returnGoodSlipsModify)
         .then(res => {
           this.$message({
             type: 'success',
             message: '打款成功'
           })
-          this.dialogSalesSheetFormVisible = false
+          this.dialogPaymentFormVisible = false
           this.getList()
         })
     },
@@ -313,6 +304,7 @@ export default {
       }
       returnGood.queryAll(this.queryCancelSlip,this.pageNum,this.pageSize)
         .then(res=>{
+          console.log(res)
           for (let i=0;i<res.list.length;i++){
             res.list[i].rCreateTime=getTime(res.list[i].rCreateTime)
             if(res.list[i].oResultTime)
@@ -326,7 +318,6 @@ export default {
     openReturnSheetDialog(params){
       this.dialogSalesSheetFormVisible=true
       this.returnGoodSlipsModify=JSON.parse(JSON.stringify(params))
-      console.log(this.returnGoodSlipsModify)
     },
     UpdateReturnSlips(){
       this.$refs['returnGoodSlipsModify'].validate((valid)=>{
@@ -335,11 +326,13 @@ export default {
           setTimeout(()=>{
             this.salesSheetBtnDisabled=false
           },1000);
+          this.returnGoodSlipsModify.rCreateTime=undefined
+          console.log(this.returnGoodSlipsModify)
           PostData('return/updateReturn', this.returnGoodSlipsModify)
             .then(res => {
               this.$message({
                 type: 'success',
-                message: '修改报价单信息成功'
+                message: '修改退货单信息成功'
               })
               this.dialogSalesSheetFormVisible = false
               this.getList()
@@ -349,21 +342,19 @@ export default {
     },
     //删除退货单成功
     deleteReturnSlip(params){
-      this.$confirm(`是否将此${params.orderType===1?'进货单':'销售单'}退货单删除?`,'提示',{
+      this.$confirm(`是否将此退货单删除?`,'提示',{
         confirmButtonText:'确定',
         cancelButtonText:'取消',
         type:'warning'
       }).then(()=>{
-        if(params.orderType===0){
-          returnGood.deleteReturnGood(params)
-            .then(res=>{
-              this.$message({
-                type:'success',
-                message:'删除退货单成功'
-              })
-              this.getList()
+        deleteReturnGood(params)
+          .then(res=>{
+            this.$message({
+              type:'success',
+              message:'删除退货单成功'
             })
-        }
+            this.getList()
+          })
       })
     }
   }
@@ -384,9 +375,9 @@ export default {
   color: #99a9bf;
 }
 .demo-table-expand .el-form-item {
-  border-right:1px solid #000000;
+  /*border-right:1px solid #000000;*/
   margin-right: 0;
   margin-bottom: 0;
-  width: 10%;
+  /*width: 90px;*/
 }
 </style>

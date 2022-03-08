@@ -8,3 +8,19 @@ export function getReturnDetail(returnId,pageNum,pageSize) {
 
   })
 }
+export function deleteSalesSlip(id) {
+  return request({
+    url: '/returnDetail/deleteReturnDetail',
+    method: 'post',
+    params:{id},
+
+  })
+}
+export function deleteReturnGood(rId) {
+  return request({
+    url: '/return/deleteReturn',
+    method: 'post',
+    params:{rId},
+
+  })
+}

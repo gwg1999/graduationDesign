@@ -33,14 +33,14 @@
           </template>
         </el-table-column>
         <el-table-column prop="partName" label="名称"   align="center"/>
-        <el-table-column prop="rdPartsType" label="类型" width="100px" align="center">
+        <el-table-column prop="rdType" label="类型" width="100px" align="center">
           <template slot-scope="scope">
-            {{ scope.row.qdType===0?'整件':'零件'}}
+            {{ scope.row.rdType===1?'整件':'零件'}}
           </template>
         </el-table-column>
         <el-table-column prop="rdType" width="150px" label="退货单类型"  align="center">
           <template slot-scope="scope">
-            {{ scope.row.Type===0?'销售单退货单':'进货单退货单'}}
+            {{ scope.row.rdType===0?'销售单退货单':'进货单退货单'}}
           </template>
         </el-table-column>
         <el-table-column prop="rdPartsType" width="100px" label="零件大小"  align="center">
@@ -52,7 +52,7 @@
         <el-table-column prop="rdPartsNum" width="100px" label="数量"  align="center"/>
         <el-table-column label="操作" width="200px" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" size="mini" icon="el-icon-edit"  @click="deleteSalesSlip(scope.row.qdId)">删除</el-button>
+            <el-button :disabled="Receive!==0||Payment!==0" type="danger" size="mini" icon="el-icon-edit"  @click="deleteSalesSlip(scope.row.rdId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,11 +70,12 @@
 </template>
 
 <script>
-import {getReturnDetail} from "../myApi"
-import {PostData} from "@/api";
+import {deleteSalesSlip, getReturnDetail} from "../myApi"
 export default {
   data(){
     return{
+      Receive:this.$route.query.rIsReceive,
+      Payment:this.$route.query.rIsPayment,
       pageSize:5,
       pageNum:1,
       total:0,
@@ -84,6 +85,7 @@ export default {
   },
   created() {
     this.getList()
+    console.log((this.Receive!==0&&this.Payment!==0))
   },
   methods:{
     getList(pageNum=1){
@@ -99,12 +101,20 @@ export default {
         cancelButtonText:'取消',
         type:'warning'
       }).then(()=>{
-        PostData("/returnDetail/deleteReturnDetail",params).then(res=>{
-          this.$message({
-            type:'success',
-            message:'删除退货单详情表成功'
+        if(this.CancelSlipDetailsList.length>1){
+          deleteSalesSlip(params).then(res=>{
+            this.$message({
+              type:'success',
+              message:'删除退货单详情表成功'
+            })
+            this.getList()
           })
-        })
+        }else {
+          this.$message({
+            type:'error',
+            message:'请移步去总表进行删除'
+          })
+        }
       })
     }
   }
