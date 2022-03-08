@@ -53,15 +53,20 @@
         <el-table-column prop="admin.aName" label="创建人姓名" width="100px" align="center" />
         <el-table-column prop="note" label="备注"  align="center" />
         <el-table-column prop="createTime" label="创建时间" width="100px" align="center" />
-        <el-table-column prop="status" label="备忘录状态"  width="100px" align="center">
+        <el-table-column label="备忘录状态" prop="status" width="80px" align="center">
           <template slot-scope="scope">
-            {{ scope.row.status===0?'未解决':'以解决'}}
+            <span v-if="scope.row.status ===1">
+              <span style="color:#00B46D">已打款</span>
+            </span>
+            <span v-else>
+              <span style="color:#D75C89">未打款</span>
+            </span>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope" >
             <el-button   type="primary" size="mini" icon="el-icon-edit"  @click="openUpdateMemorandum(scope.row)">修改</el-button>
-            <el-button   type="primary" size="mini" icon="el-icon-delete"  @click="deleteMemorandum(scope.row.id)">删除</el-button>
+            <el-button   type="danger" size="mini" icon="el-icon-delete"  @click="deleteMemorandum(scope.row.id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
