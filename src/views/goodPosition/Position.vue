@@ -6,7 +6,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form :model="positionForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="positionForm" status-icon :rules="rules" ref="positionForm" label-width="100px" class="demo-ruleForm">
         <!--      <el-form-item label="上级位置" prop="name" v-if="positionForm.parentid===0">-->
         <!--        <el-input type="text" v-model="positionForm.parentName" disabled></el-input>-->
         <!--      </el-form-item>-->
@@ -23,39 +23,40 @@
       <el-tree
         :data="positionList"
         node-key="id"
-        accordion
+        :props="defaultProps"
+        :default-expanded-keys="expandedKeys"
         :expand-on-click-node="false"
          class="tree">
       <span class="custom-tree-node" slot-scope="{ node, data }">
-        <span class="tree-data">{{ node.data.name }}</span>
+        <span class="tree-data">{{ data.name }}</span>
         <span>
           <el-button
             type="primary"
             size="small"
             class="posBtn"
             v-if="data.parentid===0"
-            @click="() => appendCurrentLevel(data)">
+            @click="() => appendCurrentLevel(data,node)">
             添加本层
           </el-button>
           <el-button
             type="primary"
             size="small"
             class="posBtn"
-            @click="() => append(data)">
+            @click="() => append(data,node)">
             添加下一层
           </el-button>
           <el-button
             type="success"
             size="small"
             class="posBtn"
-            @click="() => edit(data)">
+            @click="() => edit(data,node)">
             编辑
           </el-button>
           <el-button
             type="danger"
             size="small"
             class="posBtn"
-            @click="() => remove(data)">
+            @click="() => remove(data,node)">
             删除
           </el-button>
           <!--          <el-button type="primary" @click="show(node,data)">显示</el-button>-->
@@ -74,6 +75,15 @@ export default {
   name: "Position",
   data(){
     return {
+      //区分本层和下一层
+      flag:'',
+      //优化
+      defaultProps:{
+        children:"children",
+        label:'name'
+      },
+      copyNode:{},
+      expandedKeys:[],
       dialogVisible: false,
       positionForm:{
         parentName:'',
@@ -85,7 +95,8 @@ export default {
         status:1,
         type:0
       },
-      deleteQuery:{}
+      deleteQuery:{},
+      rules:{}
     }
   },
   created() {
@@ -102,24 +113,28 @@ export default {
         console.log(Cookie.get('username'));
       }))
     },
-    append(data) {
+    append(data,node) {
       this.positionForm={
         parentName:'',
         type:0,
         status:1
       }
+      this.flag=true
+      this.copyNode=node
       this.positionForm.parentName=data.name
       this.positionForm.parentid=data.id
       this.positionForm.grade=data.grade+1
       this.positionForm.userName=Cookie.get('username')
       this.dialogVisible=true
     },
-    appendCurrentLevel(data){
+    appendCurrentLevel(data,node){
       this.positionForm={
         parentName:'',
         type:0,
         status:1
       }
+      this.flag=false
+      this.copyNode=node
       this.positionForm.parentName=data.name
       this.positionForm.parentid=0
       this.positionForm.grade=1
@@ -137,14 +152,15 @@ export default {
       this.positionForm.userName=Cookie.get('username')
       this.dialogVisible=true
     },
-    edit(data){
+    edit(data,node){
       console.log(data);
       this.positionForm=Object.assign({},data)
       this.positionForm.userName=Cookie.get('username')
       this.positionForm.time=undefined
       this.dialogVisible=true
+      this.copyNode=node
     },
-    remove(data) {
+    remove(data,node) {
       this.deleteQuery.id=data.id
       console.log(this.deleteQuery);
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -158,6 +174,7 @@ export default {
             type:"success"
           })
           this.getPositionList()
+          this.expandedKeys=[node.parent.data.id]
         })
       }).catch(() => {
         this.$message({
@@ -188,8 +205,8 @@ export default {
       //   }
       // }
     },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm() {
+      this.$refs['positionForm'].validate((valid) => {
         if (valid) {
           if(this.positionForm.id){
             PostData('/position/updateCatalogue',qs.stringify(this.positionForm)).then((ref=>{
@@ -206,6 +223,8 @@ export default {
                 })
                 this.getPositionList()
                 this.dialogVisible=false
+                console.log(this.copyNode)
+                this.expandedKeys=[this.copyNode.parent.data.id]
               }
             }))
           }
@@ -224,6 +243,9 @@ export default {
                 })
                 this.getPositionList()
                 this.dialogVisible=false
+                if(this.flag){
+                  this.expandedKeys=[this.copyNode.data.id]
+                }
               }
             })
           }

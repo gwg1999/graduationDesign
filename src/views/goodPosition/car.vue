@@ -6,7 +6,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <el-form :model="carForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="carForm" status-icon :rules="rules" ref="carForm" label-width="100px" class="demo-ruleForm">
         <!--      <el-form-item label="上级位置" prop="name" v-if="positionForm.parentid===0">-->
         <!--        <el-input type="text" v-model="positionForm.parentName" disabled></el-input>-->
         <!--      </el-form-item>-->
@@ -23,38 +23,39 @@
       <el-tree
         :data="carList"
         node-key="id"
-        accordion
+        :props="defaultProps"
+        :default-expanded-keys="expandedKeys"
         :expand-on-click-node="false">
       <span class="custom-tree-node" slot-scope="{ node, data }">
-        <span>{{ node.data.name }}</span>
+        <span>{{ data.name }}</span>
         <span>
           <el-button
             type="primary"
             size="small"
             class="posBtn"
             v-if="data.parentid===0"
-            @click="() => appendCurrentLevel(data)">
+            @click="() => appendCurrentLevel(data,node)">
             添加本层
           </el-button>
           <el-button
             type="primary"
             size="small"
             class="posBtn"
-            @click="() => append(data)">
+            @click="() => append(data,node)">
             添加下一层
           </el-button>
           <el-button
             type="success"
             size="small"
             class="posBtn"
-            @click="() => edit(data)">
+            @click="() => edit(data,node)">
             编辑
           </el-button>
           <el-button
             type="danger"
             size="small"
             class="posBtn"
-            @click="() => remove(data)">
+            @click="() => remove(data,node)">
             删除
           </el-button>
           <!--          <el-button type="primary" @click="show(node,data)">显示</el-button>-->
@@ -73,6 +74,15 @@ export default {
   name: "Car",
   data(){
     return {
+      //区分本层和下一层
+      flag:'',
+      //优化
+      defaultProps:{
+        children:"children",
+        label:'name'
+      },
+      copyNode:{},
+      expandedKeys:[],
       dialogVisible: false,
       carForm:{
         parentName:'',
@@ -84,7 +94,8 @@ export default {
         status:1,
         type:1
       },
-      deleteQuery:{}
+      deleteQuery:{},
+      rules: {}
     }
   },
   created() {
@@ -97,24 +108,28 @@ export default {
         console.log(ref);
       }))
     },
-    append(data) {
+    append(data,node) {
       this.carForm={
         parentName:'',
         type:1,
         status:1
       }
+      this.flag=true
+      this.copyNode=node
       this.carForm.parentName=data.name
       this.carForm.parentid=data.id
       this.carForm.grade=data.grade+1
       this.carForm.userName=Cookie.get('username')
       this.dialogVisible=true
     },
-    appendCurrentLevel(data){
+    appendCurrentLevel(data,node){
       this.carForm={
         parentName:'',
         type:1,
         status:1
       }
+      this.flag=false
+      this.copyNode=node
       this.carForm.parentName=data.name
       this.carForm.parentid=0
       this.carForm.grade=1
@@ -132,14 +147,16 @@ export default {
       this.carForm.userName=Cookie.get('username')
       this.dialogVisible=true
     },
-    edit(data){
+    edit(data,node){
       console.log(data);
       this.carForm=Object.assign({},data)
       this.carForm.userName=Cookie.get('username')
       this.carForm.time=undefined
       this.dialogVisible=true
+      this.flag=false
+      this.copyNode=node
     },
-    remove(data) {
+    remove(data,node) {
       this.deleteQuery.id=data.id
       console.log(this.deleteQuery);
       this.$confirm('此操作将永久删除该目录, 是否继续?', '提示', {
@@ -153,6 +170,7 @@ export default {
             type:"success"
           })
           this.getCarList()
+          this.expandedKeys=[node.parent.data.id]
         })
       }).catch(() => {
         this.$message({
@@ -172,8 +190,8 @@ export default {
         })
         .catch(_ => {});
     },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+    submitForm() {
+      this.$refs["carForm"].validate((valid) => {
         if (valid) {
           if(this.carForm.id){
             PostData('/position/updateCatalogue',qs.stringify(this.carForm)).then((ref=>{
@@ -190,6 +208,8 @@ export default {
                 })
                 this.getCarList()
                 this.dialogVisible=false
+                console.log(this.copyNode)
+                this.expandedKeys=[this.copyNode.parent.data.id]
               }
             }))
           }
@@ -208,6 +228,9 @@ export default {
                 })
                 this.getCarList()
                 this.dialogVisible=false
+                if(this.flag){
+                  this.expandedKeys=[this.copyNode.data.id]
+                }
               }
             })
           }

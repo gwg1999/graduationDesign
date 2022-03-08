@@ -1,11 +1,17 @@
 <template>
-<div>
-  <el-tabs v-model="activeName">
-    <el-tab-pane label="货物位置管理" name="first"><Position></Position></el-tab-pane>
-    <el-tab-pane label="车型号目录管理" name="second"><Car></Car></el-tab-pane>
-    <el-tab-pane label="零件类目管理" name="three"><Pcategory></Pcategory></el-tab-pane>
-  </el-tabs>
-</div>
+  <div>
+    <el-tabs >
+      <el-tab-pane label="货物位置管理" name="first">
+        <Position></Position>
+      </el-tab-pane>
+      <el-tab-pane label="车型号目录管理" name="second">
+        <Car></Car>
+      </el-tab-pane>
+      <el-tab-pane label="零件类目管理" name="three">
+        <Pcategory></Pcategory>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 
 <script>
