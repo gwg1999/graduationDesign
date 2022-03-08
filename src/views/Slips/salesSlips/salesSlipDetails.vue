@@ -55,7 +55,7 @@
         <el-table-column label="操作"  align="center" width="200px">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit"  @click="openSalesSlipDialog(scope.row)">修改</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteSalesSlip(scope.row.qdId)">删除</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete"  @click="deleteSalesSlip(scope.row.qdId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

@@ -55,7 +55,7 @@
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit" @click="openInverseOrder(scope.row.qId)">转成销售单</el-button>
             <el-button type="primary" size="mini" icon="el-icon-edit"  @click="openSalesSheetDialog(scope.row)">修改</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteSalesSlips(scope.row.qId)">删除</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete"  @click="deleteSalesSlips(scope.row.qId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

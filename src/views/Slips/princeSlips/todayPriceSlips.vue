@@ -119,7 +119,7 @@
             <el-button :disabled="scope.row.oIsPackage===1||scope.row.oStatus===0" type="primary" size="mini" icon="el-icon-bottom" @click="openDeliverGood(scope.row.oId)">{{scope.row.oStatus===1?'发货':'已发货'}}</el-button>
             <el-button  :disabled="!(scope.row.oIsPackage===0&&scope.row.oStatus===0)" size="small" plain type="primary" @click="handlePrint(scope.row)">打印销售单</el-button>
             <el-button type="primary" size="mini" icon="el-icon-edit" :disabled="!(scope.row.oIsPackage===1&&scope.row.oStatus===1)"  @click="openUpdatePrinceSlips(scope.row)">修改</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deletePrinceSlips(scope.row.oId)">删除</el-button>
+            <el-button type="danger" size="mini" icon="el-icon-delete"  @click="deletePrinceSlips(scope.row.oId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

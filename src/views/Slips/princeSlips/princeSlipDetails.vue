@@ -60,7 +60,7 @@
         <el-table-column label="操作" width="180px" align="center">
           <template slot-scope="scope" >
             <el-button  :disabled="!(scope.row.odStatus===0)||parseInt(flag)===0" type="primary" size="mini" icon="el-icon-edit"  @click="openInquirySheetDialog(scope.row)">修改</el-button>
-            <el-button  :disabled="!(scope.row.odStatus===0)||parseInt(flag)===0" type="primary" size="mini" icon="el-icon-delete"  @click="deleteInquirySheet(scope.row.odId)">删除</el-button>
+            <el-button  :disabled="!(scope.row.odStatus===0)||parseInt(flag)===0" type="danger" size="mini" icon="el-icon-delete"  @click="deleteInquirySheet(scope.row.odId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -164,6 +164,7 @@ export default {
       this.querySerialNumber.orderId=this.$route.query.oId
       this.querySerialNumber.detailId=odId
       querySerialNumber(this.querySerialNumber,this.pageNum=1,this.pageSize=10).then(res=>{
+        console.log(res)
         if(res.list&&res.list.length>0)
           res.list.forEach((item) => {
             item.updateDate = getTime(item.updateDate)

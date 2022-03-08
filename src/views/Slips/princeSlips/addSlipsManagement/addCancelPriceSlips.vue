@@ -30,7 +30,18 @@
             <el-form>
               <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
                 <el-form-item>
+<!--                  数量:<el-input style="width: 100px" @keyup.native="scope.row.number = number(scope.row.number)"  v-model = "scope.row.number"  size="small"></el-input>-->
                   数量:<el-input-number :min="0"  v-model="scope.row.number"  size="small"></el-input-number>
+                </el-form-item>
+                <el-form-item>
+                  <el-switch
+                    style="border-top: 10px"
+                    v-model="scope.row.rdIsBad"
+                    active-text="好件"
+                    active-value="0"
+                    inactive-value="1"
+                    inactive-text="坏件">
+                  </el-switch>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" size="mini" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
@@ -92,7 +103,7 @@
         </el-container>
       </el-dialog>
       <!--下一步提交-->
-      <el-dialog :visible.sync="dialogSubmitVisible"  title="缺货备注提醒" width="70%">
+      <el-dialog :visible.sync="dialogSubmitVisible"  title="其他信息填写" width="70%">
         <el-form :model="priceSlip" label-width="120px" ref="priceSlip" :rules="rules">
           <el-form-item label="交易属性" prop="type">
             <el-select v-model="priceSlip.type"   clearable placeholder="交易属性" style="width: 200px"  >
@@ -101,15 +112,15 @@
               <el-option value="2" label="仅退款"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="总价格">
-            <el-input v-model="priceSlip.priceTotal" clearable style="width: 200px"/>
+          <el-form-item label="总价格" prop="priceTotal">
+            <el-input  @keyup.native="priceSlip.priceTotal = oninput(priceSlip.priceTotal)" v-model="priceSlip.priceTotal"  style="width: 200px"/>
           </el-form-item>
-          <el-form-item label="退货原因">
+          <el-form-item label="退货原因" prop="note">
             <el-input v-model="priceSlip.note" style="width:80%"  rows="5" type="textarea"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogNote = false">取 消</el-button>
+          <el-button @click="dialogSubmitVisible = false">取 消</el-button>
           <el-button  type="primary"
                       @click="submitForm()">确 定</el-button>
         </div>
@@ -145,6 +156,7 @@ export default {
   },
   data(){
     return{
+      dialogNote:false,
       queryDetails:{
         pageSize:1000,
         pageNum:1
@@ -152,6 +164,7 @@ export default {
       // 购物车
       dialogVisible:false,
       priceSlip:{
+        returnDetailList:[],
         orderDetailList:[]
       },
       //修改购物车零件信息
@@ -180,6 +193,9 @@ export default {
         ],
         odNumber: [
           { required: true, validator:validatePassCheck, trigger: 'change' }
+        ],
+        priceTotal:[
+          { required: true, message: '请输入总价格', trigger: 'change' }
         ]
       }
     }
@@ -217,7 +233,6 @@ export default {
         }
         if(!flag){
           if(temp.number<=temp.odNumber){
-            temp.odPartsId=temp.odId
             temp.priceTotal=temp.number*temp.odRetailPrice
             this.priceSlip.orderDetailList.push(temp)
             this.$message({
@@ -249,12 +264,15 @@ export default {
     },
     getList(){
       this.queryDetails.odOrderId = this.$route.query.row.oId
-      console.log(this.$route.query.row)
       princeSlips.queryAllDetails(this.queryDetails.odOrderId, this.queryDetails.pName,
         this.queryDetails.odType, this.queryDetails.pageNum, this.queryDetails.pageSize)
         .then(res => {
-          console.log(res)
-          this.returnGoodList= res.list.filter((value)=>value.odStatus!==1)
+          res.list.forEach((item)=>{
+            item.number=item.odNumber
+          })
+          this.returnGoodList=res.list
+          this.returnGoodList=this.returnGoodList.filter((value)=>value.odStatus!==1)
+          this.returnGoodList= JSON.parse(JSON.stringify(this.returnGoodList))
         })
     },
     //购物车
@@ -273,7 +291,7 @@ export default {
         type:'warning'
       }).then(()=>{
         for(let i=0;i<this.priceSlip.orderDetailList.length;i++){
-          if(this.priceSlip.orderDetailList[i].pId===record.pId){
+          if(this.priceSlip.orderDetailList[i].odId===record.odId){
             this.priceSlip.orderDetailList.splice(i, 1)
           }
         }
@@ -283,7 +301,7 @@ export default {
       this.$refs['partsModify'].validate((valid)=>{
         if(valid){
           for(let i=0;i<this.priceSlip.orderDetailList.length;i++){
-            if(this.priceSlip.orderDetailList[i].pId===this.partsModify.pId){
+            if(this.priceSlip.orderDetailList[i].odId===this.partsModify.odId){
               this.priceSlip.orderDetailList[i].odNumber=this.partsModify.odNumber
               this.priceSlip.orderDetailList[i].odRetailPrice=this.partsModify.odRetailPrice
             }
@@ -291,6 +309,77 @@ export default {
           this.dialogPartsVisible=false
         }
       })
+    },
+    //提交退货
+    openSubmitForm(){
+      if (this.$refs['priceSlip'] !== undefined)
+        this.$refs['priceSlip'].resetFields();
+      this.dialogSubmitVisible=true
+      let totalPrice=0
+      this.priceSlip.orderDetailList.forEach(value => {
+        totalPrice+=value.priceTotal
+      })
+      this.priceSlip.priceTotal=parseInt(totalPrice)
+      this.priceSlip=JSON.parse(JSON.stringify(this.priceSlip))
+    },
+    submitForm(){
+      this.$refs['priceSlip'].validate(valid=>{
+        let params = {}
+        params = this.$route.query.row
+        this.priceSlip.orderId = params.oId
+        this.priceSlip.orderType = 0
+        this.priceSlip.customerUnitName = params.customerName
+        this.priceSlip.operatorName = params.createPeopleName
+        this.priceSlip.returnNumber=this.priceSlip.priceTotal
+        this.priceSlip.returnDetailList=this.priceSlip.orderDetailList
+
+        this.priceSlip.rOperatorId = params.oWarehouseOperaterId
+        this.priceSlip.rOrderType = 0
+        this.priceSlip.rOderId = params.oId
+        this.priceSlip.rIsReceive = 0
+        this.priceSlip.rIsPayment = 0
+        this.priceSlip.rPrice=this.priceSlip.priceTotal
+        this.priceSlip.rType=this.priceSlip.type;
+        this.priceSlip.rReason=this.priceSlip.note
+        this.priceSlip.rIsReceive=0
+        for (let i = 0; i < this.priceSlip.orderDetailList.length; i++) {
+          console.log(this.priceSlip.returnDetailList)
+          this.priceSlip.returnDetailList[i].rdPartsNum = this.priceSlip.orderDetailList[i].number
+          this.priceSlip.returnDetailList[i].rdPartsType = this.priceSlip.orderDetailList[i].odType
+          this.priceSlip.returnDetailList[i].rdType = 0
+          this.priceSlip.returnDetailList[i].rdRealOrderId = this.priceSlip.orderDetailList[i].odId
+          this.priceSlip.returnDetailList[i].rdPartsId = this.priceSlip.orderDetailList[i].odPartsId
+          this.priceSlip.returnDetailList[i].rdRetailPrice = this.priceSlip.orderDetailList[i].priceTotal
+          this.priceSlip.returnDetailList[i].rdNumber=this.priceSlip.returnDetailList[i].parts.pNumber
+        }
+        console.log(this.priceSlip)
+        PostData('return/addReturn', this.priceSlip)
+          .then(res => {
+            this.$message({
+              type: "success",
+              message: '退货成功'
+            })
+            this.dialogVisible=false
+            this.dialogSubmitVisible=false
+            // this.$router.back()
+            this.$router.push({
+              path: "/returnGood/cancelSlipsManagement"
+            });
+          })
+      })
+    },
+    number(value){
+      let str = value;
+      let len1 = str.substr(0, 1);
+      let len2 = str.substr(1, 1);
+      //如果第一位是0，第二位不是点，就用数字把点替换掉
+      if (str.length > 1 && len1 == 0 && (len2 == "0"||len2 != "^^")) {
+        str = str.substr(1, 1);
+      }
+      //正则替换
+      str = str.replace(/[^\d]+/g, "");
+      str = str.replace(/^\D*([1-9]\d*)$/, "$1");
+      return str;
     },
     //数字验证
     oninput(value) {
@@ -323,94 +412,6 @@ export default {
       str = str.replace(/[^\d^\.]+/g, ""); // 保留数字和小数点
       str = str.replace(/^\D*([0-9]\d*\.?\d{0,2})?.*$/, "$1"); // 小数点后只能输 2 位
       return str;
-    },
-    //提交退货
-    openSubmitForm(){
-      this.dialogSubmitVisible=true
-      let totalPrice=0
-      this.priceSlip.orderDetailList.forEach(value => {
-        totalPrice+=value.priceTotal
-      })
-      this.priceSlip.priceTotal=parseInt(totalPrice)
-    },
-    submitForm(){
-      // let state=undefined
-      // if(this.princeSheetReturn.returnDetailList.length>=0)
-      //   this.princeSheetReturn.returnDetailList.forEach((item)=>{
-      //     if(item.number<item.odNumber)  {
-      //       state=1
-      //     }
-      //     else state=0
-      //   })
-      // if(state===0) {
-      //   this.$refs['priceSlip'].validate(value => {
-      //     if (value) {
-      //       let params = {}
-      //       params = this.$route.query.row
-      //       this.princeSheetReturn.operatorName = params.createPeopleName
-      //       this.princeSheetReturn.customerUnitName = params.customerName
-      //       this.princeSheetReturn.rOperatorId = params.oWarehouseOperaterId
-      //       this.princeSheetReturn.orderType = 0
-      //       this.princeSheetReturn.orderId = params.oId
-      //       this.princeSheetReturn.rOrderType = 0
-      //       this.princeSheetReturn.rOderId = params.oId
-      //       this.princeSheetReturn.rIsReceive = 0
-      //       this.princeSheetReturn.rIsPayment = 0
-      //       let rPrice = 0
-      //       for (let i = 0; i < this.princeSheetReturn.returnDetailList.length; i++) {
-      //         for (let j = 0; j < this.returnGoodList.length; j++) {
-      //           if (this.returnGoodList[j].odId === this.princeSheetReturn.returnDetailList[i].odId) {
-      //             rPrice += this.returnGoodList[j].odRetailPrice * this.returnGoodList[j].odNumber
-      //             this.princeSheetReturn.returnDetailList[i].rdPartsNum = this.returnGoodList[j].odNumber
-      //             this.princeSheetReturn.returnDetailList[i].rdPartsType = this.returnGoodList[j].odType
-      //             this.princeSheetReturn.returnDetailList[i].rdType = 0
-      //             this.princeSheetReturn.returnDetailList[i].rdRealOrderId = this.returnGoodList[j].odId
-      //             this.princeSheetReturn.returnDetailList[i].rdPartsId = this.returnGoodList[j].odPartsId
-      //             this.princeSheetReturn.returnDetailList[i].rdRetailPrice = this.returnGoodList[j].odRetailPrice * this.returnGoodList[j].odNumber
-      //           }
-      //         }
-      //       }
-      //       this.princeSheetReturn.rPrice = rPrice
-      this.$refs['priceSlip'].validate(valid=>{
-        let returnPoJo={}
-        let params = {}
-        params = this.$route.query.row
-        this.priceSlip.orderId = params.oId
-        this.priceSlip.orderType = 0
-        this.priceSlip.customerUnitName = params.customerName
-        this.priceSlip.operatorName = params.createPeopleName
-        this.priceSlip.returnNumber=this.priceSlip.priceTotal
-        this.priceSlip.returnDetailsList=this.priceSlip.orderDetailList
-
-        for (let i = 0; i < this.priceSlip.orderDetailList.length; i++) {
-          for (let j = 0; j < this.returnGoodList.length; j++) {
-            if (this.returnGoodList[j].odId === this.princeSheetReturn.returnDetailList[i].odId) {
-              this.princeSheetReturn.returnDetailList[i].rdPartsNum = this.returnGoodList[j].odNumber
-              this.princeSheetReturn.returnDetailList[i].rdPartsType = this.returnGoodList[j].odType
-              this.princeSheetReturn.returnDetailList[i].rdType = 0
-              this.princeSheetReturn.returnDetailList[i].rdRealOrderId = this.returnGoodList[j].odId
-              this.princeSheetReturn.returnDetailList[i].rdPartsId = this.returnGoodList[j].odPartsId
-              this.princeSheetReturn.returnDetailList[i].rdRetailPrice = this.returnGoodList[j].odRetailPrice * this.returnGoodList[j].odNumber
-            }
-          }
-        }
-        // returnPoJo=this.priceSlip
-        // console.log(this.priceSlip)
-        // console.log(returnPoJo)
-        PostData('return/addReturn', returnPoJo)
-          .then(res => {
-            this.$message({
-              type: "success",
-              message: '退货成功'
-            })
-            this.dialogVisible=false
-            this.dialogSubmitVisible=false
-            // this.$router.back()
-          })
-      })
-      //   }
-      // })
-
     }
   }
 }
