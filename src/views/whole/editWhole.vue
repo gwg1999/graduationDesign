@@ -176,6 +176,7 @@
         dialogVisible:false,
         selectCondition: {},
         pageTotal: 0,
+        rules:{}
       }
     },
     created() {//页面渲染之前执行，一般调用methods中定义的方法
@@ -189,14 +190,13 @@
     methods:{//创建具体的方法
       getList() {
         this.wholetQuery.wholeId = localStorage.getItem('wId')
+        console.log(this.wholetQuery)
         PostData('partsWhole/selectWholeParts',this.wholetQuery)
           .then(res=>{
             this.list = res
             console.log(this.list);
-            console.log(res);
           }).catch(err=>{
           this.$message.error(err.message);
-          console.log(err);
         })
       },
   // 跳转详情页

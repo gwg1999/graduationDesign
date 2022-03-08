@@ -336,7 +336,9 @@ export default {
         .then(res=>{
           this.list = res.list
           this.pageTotal=res.total
+          console.log("outer")
           console.log(res.list);
+          console.log("enter")
         }).catch(err=>{
         this.$message.error(err.message);
       })
