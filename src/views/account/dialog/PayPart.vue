@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="挂账结算" :visible.sync="partVisible" @close="creditPartCancel">
+    <el-dialog title="挂账结算" :visible.sync="partVisible" @close="creditPartCancel" :show-close="false">
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
@@ -35,7 +35,6 @@
           <el-table-column label="应收" prop="oSupposeIncome"></el-table-column>
           <el-table-column label="支付方式" prop="oPaymentWay"></el-table-column>
           <el-table-column label="账单状态" prop="oOrderClosingStatus"></el-table-column>
-          <el-table-column label="其他费用" prop="oOtherCostMoney"></el-table-column>
           <el-table-column label="状态" prop="oStatus"></el-table-column>
         </el-table>
       </div>
@@ -66,7 +65,6 @@
 <script>
 import {parseTime} from "@/utils";
 import princeSlips from "@/api/slips/princeSlips";
-import {getTime} from "@/views/Slips/myUtils";
 import {PostData} from "@/api";
 
 export default {
@@ -95,13 +93,19 @@ export default {
         ]
       },
       chargeInfo: {
-        alreadyIncome: null,
-        alreadyOutcome: null,
-        isDeal: null,
-        realIncome: null,
-        supposeIncome: null,
-        supposeOutcome: null,
-        wholePrice: null,
+        charge: {
+          alreadyIncome: 0,
+          alreadyOutcome: 0,
+          customId: null,
+          dealPicture: null,
+          isDeal: 0,
+          realIncome: 0,
+          realOutcome: 0,
+          supposeIncome: 0,
+          supposeOutcome: 0,
+          wholePrice: 0,
+        },
+        orderList: []
       },
     }
   },
@@ -118,8 +122,9 @@ export default {
     creditPartMoney: function (){
       let total = 0
       for(let selection of this.creditPartSelection){
-        total += selection.oSupposeIncome + selection.oOtherCostMoney
+        total += selection.oSupposeIncome
       }
+      this.chargeInfo.charge.supposeIncome = total
       return total
     }
   },
@@ -158,6 +163,9 @@ export default {
         type: 'warning'
       }).then(()=>{
         this.innerVisible = true
+        this.chargeInfo.charge.customId = this.creditPartSelection[0].oCustomerId
+        this.chargeInfo.orderList = this.creditPartSelection
+        console.log(this.creditPartSelection)
       })
     },
 
@@ -190,22 +198,22 @@ export default {
 
     // 挂账结算->金额弹窗取消
     payCancel(){
-      // this.$refs.payForm.$destroy()
       this.pay.payNumber = null
       this.innerVisible = false
     },
 
     // 挂账结算->确认金额
     payConfirm(){
-      console.log(this.pay.payNumber)
-      console.log(this.creditPartMoney)
+      console.log("chargeInfo");
+      console.log(this.chargeInfo)
       if(parseInt(this.pay.payNumber)>this.creditPartMoney){
         this.$message.error("实收金额大于应收金额，请重新确认")
       }else{
         this.$confirm('请确认金额','提示', {
           type:'warning'
         }).then(()=>{
-          PostData('/bill/charge',this.chargeInfo).then(res=>{
+          this.chargeInfo.charge.realIncome = this.pay.payNumber
+          PostData('/bill/charge',this.chargeInfo).then(()=>{
             this.$message.success('成功')
             this.innerVisible = false
             this.$emit('cancelClick')

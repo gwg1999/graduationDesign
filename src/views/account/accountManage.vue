@@ -3,7 +3,13 @@
     <div class="form-box">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="客户姓名：">
-          <el-input placeholder="请输入姓名" v-model="queryCondition.name" clearable></el-input>
+<!--          <el-input placeholder="请输入姓名" v-model="orderQuery.name" clearable></el-input>-->
+          <el-autocomplete
+            class="inline-input"
+            :fetch-suggestions="querySearch"
+            v-model="orderQuery.cuUnitName"
+            @select="handleSelect"
+          ></el-autocomplete>
         </el-form-item>
         <el-form-item label="交易时间">
           <el-date-picker
@@ -15,7 +21,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="订单类型">
-          <el-select v-model="queryCondition.orderType" placeholder="请选择类型" clearable>
+          <el-select v-model="orderQuery.orderType" placeholder="请选择类型" clearable>
             <el-option
               v-for="item in orderType"
               :key="item.label"
@@ -25,7 +31,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="交易类型">
-          <el-select v-model="queryCondition.dealType" placeholder="请选择类型" clearable>
+          <el-select v-model="orderQuery.dealType" placeholder="请选择类型" clearable>
             <el-option
               v-for="item in dealType"
               :key="item.label"
@@ -36,50 +42,33 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
-          <el-button type="primary" @click="testVisible = true">挂账结算</el-button>
+          <el-button type="primary" @click="creditPartVisible = true">挂账结算</el-button>
           <el-button type="primary" @click="creditAllVisible = true">挂账结清</el-button>
         </el-form-item>
       </el-form>
     </div>
 
-    <div>
-      <pay-part :part-visible="testVisible" @cancelClick="testVisible = false"></pay-part>
-    </div>
-
-    <div>
-      <pay-all :all-visible="creditAllVisible" @cancelClick="creditAllVisible = false"></pay-all>
-    </div>
-
     <div style="overflow: auto;flex: 1;" class="content-box">
       <div class="table-box">
-<!--        <div style="display: inline;">-->
-<!--          <credit-record-table :credit-records="creditRecords" :table-type="queryCondition.tableType"></credit-record-table>-->
-<!--        </div>-->
-<!--        可变表格-->
         <el-table
           :data="creditRecords"
           border
           fit
           highlight-current-row
-          style="width: 100%"
-          v-if="queryCondition.tableType===0">
-          <el-table-column label="序号" align="center"></el-table-column>
-          <el-table-column label="金额" align="center"></el-table-column>
-        </el-table>
-        <el-table
-          :data="creditRecords"
-          border
-          fit
-          highlight-current-row
-          style="width: 100%"
-          v-if="queryCondition.tableType===1">
-          <el-table-column label="序号" align="center"></el-table-column>
-          <el-table-column label="数量" align="center"></el-table-column>
+          style="width: 100%">
+          <el-table-column label="姓名" align="center" prop="customId"></el-table-column>
+          <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
+          <el-table-column label="应收" align="center" prop="supposeIncome"></el-table-column>
+          <el-table-column label="时间" align="center" prop="createTime"></el-table-column>
+          <el-table-column label="应付" align="center" prop="supposeOutcome"></el-table-column>
+          <el-table-column label="实付" align="center" prop="realOutcome"></el-table-column>
+          <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
+          <el-table-column label="已付" align="center" prop="alreadyOutcome"></el-table-column>
         </el-table>
         <el-pagination
           layout="total, prev, pager, next, jumper"
-          :page-size="queryCondition.pageSize"
-          :current-page="queryCondition.pageNum"
+          :page-size="orderQuery.pageSize"
+          :current-page="orderQuery.pageNum"
           :total="pageTotal"
           style="padding: 30px 0; text-align: right;"
           @current-change="getList"
@@ -87,8 +76,8 @@
       </div>
       <div class="total-box" >
         <div class="table-button-box">
-          <el-button type="primary" @click="changeTableType(0)" :disabled="queryCondition.tableType===0">挂账交易记录信息</el-button>
-          <el-button type="primary" @click="changeTableType(1)" :disabled="queryCondition.tableType===1">挂账交易结清信息</el-button>
+          <el-button type="primary" @click="chargeVisible = true">挂账交易记录信息</el-button>
+          <el-button type="primary" @click="chargeSettleVisible">挂账交易结清信息</el-button>
         </div>
         <div class="detail-box">
           <div class="partAccount" style="font-size: x-large">
@@ -117,17 +106,33 @@
         </div>
       </div>
     </div>
+
+<!--    挂账结算弹窗-->
+    <div>
+      <pay-part :part-visible="creditPartVisible" @cancelClick="creditPartVisible = false"></pay-part>
+    </div>
+
+<!--    挂账结清弹窗-->
+    <div>
+      <pay-all :all-visible="creditAllVisible" @cancelClick="creditAllVisible = false"></pay-all>
+    </div>
+
+    <div>
+      <charge-dialog :visible="chargeVisible" @chargeClose="chargeVisible = false"></charge-dialog>
+    </div>
   </div>
 </template>
 
 <script>
 
-import {parseTime} from "@/utils";
+// import {parseTime} from "@/utils";
 import PayPart from "@/views/account/dialog/PayPart";
 import PayAll from "@/views/account/dialog/PayAll";
 import CreditRecordTable from "@/views/account/table/creditRecordTable";
+import ChargeDialog from "@/views/account/dialog/ChargeDialog";
 import {PostData} from "@/api";
 import qs from "qs";
+import {parseTime} from "@/utils";
 
 export default {
   name: "accountManage",
@@ -135,18 +140,19 @@ export default {
     CreditRecordTable,
     PayPart,
     PayAll,
+    ChargeDialog
   },
   data(){
     return {
-      testVisible:false,
+      creditPartVisible:false,
       tempDate: null,
-      queryCondition: {
+      orderQuery: {
+        CustomerId: null,
         name: null,
         dealType: null,
         orderType: null,
         pageSize:10,
         pageNum: 1,
-        tableType: 0, // 0:记录信息，1：结清信息
       },
       orderType: [
         {
@@ -180,56 +186,30 @@ export default {
       creditRecords: [],
       pageTotal: 0,
       creditAllVisible: false,
+      chargeVisible: false,
+      chargeSettleVisible: false,
     }
-  },
-  created(){
-    this.getList()
   },
   computed: {
     totalMoney: function (){
       return this.accountDetail.cashMoney + this.accountDetail.buyerOnCredit + this.accountDetail.payOnLine
     },
-    creditPartMoney: function (){
-      let total = 0
-      for(let selection of this.creditPartSelection){
-        total += selection.money
-      }
-      return total
-    },
-    creditAllMoney: function (){
-      let total = 0
-      for(let selection of this.creditAllSelection){
-        total += selection.money
-      }
-      return total
-    }
   },
   methods: {
-    // 分页获取数据
-    handlePageChange(){
-
-    },
-
-    //更改表格内容
-    changeTableType(type){
-      this.queryCondition.tableType = type
-      this.getList()
-    },
-
     getList(){
-      if(this.queryCondition.tableType===0){
-        PostData('/bill/getChargeList', qs.stringify(this.queryCondition)).then((res)=>{
-          console.log(res)
-          this.creditRecords = res.list
-          this.pageTotal = res.total
-        })
-      }else if(this.queryCondition.tableType === 1){
-        PostData('/bill/getChargeSettleList', qs.stringify(this.queryCondition)).then((res)=>{
-          console.log(res)
-          this.creditRecords = res.list
-          this.pageTotal = res.total
-        })
-      }
+      PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{
+        console.log(res)
+      }).catch(err=>{
+        console.log(err);
+      })
+    },
+
+    querySearch(queryString, cb){
+
+    },
+
+    handleSelect(item){
+
     },
   },
 }

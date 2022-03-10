@@ -1,6 +1,6 @@
 const dev = {
   // baseUrl: "http://www.aishuhong.com:11504",
-  baseUrl: "http://192.168.31.201:11504",
+  baseUrl: "http://www.aishuhong.com:11504",
   // cdnUrl:"开发环境的cdn地址",
 };
 

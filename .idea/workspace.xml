@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="解决查看零件详情退货周期问题">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/account.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/account.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/dev.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/accountManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/accountManage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/accountManageBackUp.vue" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" afterDir="false" />
     </list>
@@ -120,6 +123,7 @@
       <workItem from="1646370892348" duration="1583000" />
       <workItem from="1646372597932" duration="1559000" />
       <workItem from="1646374209191" duration="4609000" />
+      <workItem from="1646875650493" duration="19740000" />
     </task>
     <servers />
   </component>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="挂账结清" :visible.sync="allVisible" @close="creditAllCancel">
+    <el-dialog title="挂账结清" :visible.sync="allVisible" @close="creditAllCancel" :show-close="false">
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
@@ -86,7 +86,6 @@ export default {
       },
       creditAllInnerVisible: false,
       tempDate2: null,
-      creditAllVisible: false,
       creditAllData: [],
       creditAllRules:{
         payNumber: [
