@@ -35,7 +35,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search">查询</el-button>
+          <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
           <el-button type="primary" @click="testVisible = true">挂账结算</el-button>
           <el-button type="primary" @click="creditAllVisible = true">挂账结清</el-button>
         </el-form-item>
@@ -82,7 +82,7 @@
           :current-page="queryCondition.pageNum"
           :total="pageTotal"
           style="padding: 30px 0; text-align: right;"
-          @current-change="handlePageChange"
+          @current-change="getList"
         />
       </div>
       <div class="total-box" >
@@ -126,6 +126,8 @@ import {parseTime} from "@/utils";
 import PayPart from "@/views/account/dialog/PayPart";
 import PayAll from "@/views/account/dialog/PayAll";
 import CreditRecordTable from "@/views/account/table/creditRecordTable";
+import {PostData} from "@/api";
+import qs from "qs";
 
 export default {
   name: "accountManage",
@@ -142,7 +144,7 @@ export default {
         name: null,
         dealType: null,
         orderType: null,
-        pageSize:5,
+        pageSize:10,
         pageNum: 1,
         tableType: 0, // 0:记录信息，1：结清信息
       },
@@ -181,7 +183,7 @@ export default {
     }
   },
   created(){
-    this.handlePageChange()
+    this.getList()
   },
   computed: {
     totalMoney: function (){
@@ -211,6 +213,23 @@ export default {
     //更改表格内容
     changeTableType(type){
       this.queryCondition.tableType = type
+      this.getList()
+    },
+
+    getList(){
+      if(this.queryCondition.tableType===0){
+        PostData('/bill/getChargeList', qs.stringify(this.queryCondition)).then((res)=>{
+          console.log(res)
+          this.creditRecords = res.list
+          this.pageTotal = res.total
+        })
+      }else if(this.queryCondition.tableType === 1){
+        PostData('/bill/getChargeSettleList', qs.stringify(this.queryCondition)).then((res)=>{
+          console.log(res)
+          this.creditRecords = res.list
+          this.pageTotal = res.total
+        })
+      }
     },
   },
 }

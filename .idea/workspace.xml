@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="">
+    <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="解决查看零件详情退货周期问题">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/slips/princeSlips.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/slips/princeSlips.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipManagement.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/todayPriceSlips.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/todayPriceSlips.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/parts/damageParts/damagePartsManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/parts/damageParts/damagePartsManagement.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/accountManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/accountManage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +52,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.general" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -118,6 +117,9 @@
       <workItem from="1646304906172" duration="595000" />
       <workItem from="1646353627111" duration="5379000" />
       <workItem from="1646363265830" duration="3872000" />
+      <workItem from="1646370892348" duration="1583000" />
+      <workItem from="1646372597932" duration="1559000" />
+      <workItem from="1646374209191" duration="4609000" />
     </task>
     <servers />
   </component>
@@ -140,5 +142,9 @@
     <MESSAGE value="解决零件查看详情退货周期问题" />
     <MESSAGE value="解决查看零件详情退货周期问题" />
     <option name="LAST_COMMIT_MESSAGE" value="解决查看零件详情退货周期问题" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

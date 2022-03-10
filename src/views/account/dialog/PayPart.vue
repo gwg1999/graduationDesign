@@ -30,15 +30,21 @@
           @selection-change="creditPartSelectionChange"
           ref="creditPartTable">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="序号" prop="id"></el-table-column>
-          <el-table-column label="时间" prop="sTime"></el-table-column>
-          <el-table-column label="应收" prop="money"></el-table-column>
+          <el-table-column label="客户名称" prop="customerName"></el-table-column>
+          <el-table-column label="时间" prop="oCreateTime"></el-table-column>
+          <el-table-column label="应收" prop="oSupposeIncome"></el-table-column>
+          <el-table-column label="支付方式" prop="oPaymentWay"></el-table-column>
+          <el-table-column label="账单状态" prop="oOrderClosingStatus"></el-table-column>
+          <el-table-column label="其他费用" prop="oOtherCostMoney"></el-table-column>
+          <el-table-column label="状态" prop="oStatus"></el-table-column>
         </el-table>
       </div>
       <div style="text-align: right;margin-top: 10px">
         <el-button type="primary" @click="creditPartCancel">取消</el-button>
         <el-button type="primary" @click="creditPartConfirm">确认</el-button>
       </div>
+
+
       <el-dialog width="30%" title="结算金额" :visible.sync="innerVisible" append-to-body>
         <el-form label-width="60px" :rules="creditPartRules" :model="pay" ref="payForm">
           <el-form-item label="应收">{{ creditPartMoney }}</el-form-item>
@@ -51,49 +57,23 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+
+
     </el-dialog>
   </div>
 </template>
 
 <script>
 import {parseTime} from "@/utils";
+import princeSlips from "@/api/slips/princeSlips";
+import {getTime} from "@/views/Slips/myUtils";
+import {PostData} from "@/api";
 
 export default {
   name: "PayPart",
   data(){
     return {
-      creditPartData: [
-        {
-          id:1,
-          sTime: '1-1-1',
-          money:100
-        },
-        {
-          id: 3,
-          sTime: '1-1-1',
-          money: 100
-        },
-        {
-          id:2,
-          sTime: '1-1-1',
-          money:100
-        },
-        {
-          id:1,
-          sTime: '1-1-1',
-          money:100
-        },
-        {
-          id:1,
-          sTime: '1-1-1',
-          money:100
-        },
-        {
-          id:1,
-          sTime: '1-1-1',
-          money:100
-        },
-      ],
+      creditPartData: [],
       pay: {
         payNumber: null,
       },
@@ -101,6 +81,10 @@ export default {
       creditPartCondition: {
         name: null,
         startTime: null,
+        beginTime: null,
+        createTimeSequence: 0,
+        endTimeSequence: 0,
+        isExistBill: 1,
         endTime: null,
       },
       tempDate1: null,
@@ -109,6 +93,15 @@ export default {
         payNumber: [
           {required: true, message: '请输入实收金额', trigger: ['change', 'blur']}
         ]
+      },
+      chargeInfo: {
+        alreadyIncome: null,
+        alreadyOutcome: null,
+        isDeal: null,
+        realIncome: null,
+        supposeIncome: null,
+        supposeOutcome: null,
+        wholePrice: null,
       },
     }
   },
@@ -125,7 +118,7 @@ export default {
     creditPartMoney: function (){
       let total = 0
       for(let selection of this.creditPartSelection){
-        total += selection.money
+        total += selection.oSupposeIncome + selection.oOtherCostMoney
       }
       return total
     }
@@ -135,12 +128,21 @@ export default {
     // 挂账结算查询
     creditPartSearch(){
       if(this.tempDate1){
-        this.creditPartCondition.startTime = parseTime(this.tempDate1[0],'{y}-{m}-{d}')
+        this.creditPartCondition.beginTime = parseTime(this.tempDate1[0],'{y}-{m}-{d}')
         this.creditPartCondition.endTime = parseTime(this.tempDate1[1],'{y}-{m}-{d}')
       }
-      //调用后端api查询，返回结果
-      console.log('查询条件：'+this.creditPartCondition)
-      console.log('调用api，返回结果')
+      console.log(this.creditPartCondition)
+      princeSlips.queryAll(this.creditPartCondition.name,this.creditPartCondition.beginTime
+        ,this.creditPartCondition.endTime,this.creditPartCondition.createTimeSequence,
+        this.creditPartCondition.endTimeSequence, this.creditPartCondition.pageNum,
+        this.creditPartCondition.pageSize,this.creditPartCondition.isExistBill)
+        .then(res=>{
+          console.log(res);
+          this.creditPartData = res.list
+          for(let data of this.creditPartData){
+            data.oCreateTime = parseTime(data.oCreateTime, '{y}-{m}-{d}')
+          }
+        })
     },
 
     // 挂账结算多选
@@ -167,6 +169,10 @@ export default {
       this.creditPartCondition = {
         name: null,
         startTime: null,
+        beginTime: null,
+        createTimeSequence: 0,
+        endTimeSequence: 0,
+        isExistBill: 1,
         endTime: null,
       }
     },
@@ -199,18 +205,22 @@ export default {
         this.$confirm('请确认金额','提示', {
           type:'warning'
         }).then(()=>{
-          console.log('金额确认')
-          console.log('重新获取挂账交易记录信息')
-          this.$message.success('成功')
-          this.innerVisible = false
-          this.$emit('cancelClick')
-          this.pay.payNumber = null
-          this.toggleSelection()
-          this.creditPartCondition = {
-            name: null,
-            startTime: null,
-            endTime: null,
-          }
+          PostData('/bill/charge',this.chargeInfo).then(res=>{
+            this.$message.success('成功')
+            this.innerVisible = false
+            this.$emit('cancelClick')
+            this.pay.payNumber = null
+            this.toggleSelection()
+            this.creditPartCondition = {
+              name: null,
+              startTime: null,
+              beginTime: null,
+              createTimeSequence: 0,
+              endTimeSequence: 0,
+              isExistBill: 1,
+              endTime: null,
+            }
+          })
         }).catch(()=>{
           this.$message.error('支付失败，请重试')
         })

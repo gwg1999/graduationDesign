@@ -81,42 +81,13 @@ export default {
         name: null,
         startTime: null,
         endTime: null,
+        pageNum: 1,
+        pageSize: 10,
       },
       creditAllInnerVisible: false,
       tempDate2: null,
       creditAllVisible: false,
-      creditAllData: [
-        {
-          id:1,
-          sTime: '1-1-1',
-          money:100
-        },
-        {
-          id: 3,
-          sTime: '1-1-1',
-          money: 100
-        },
-        {
-          id:2,
-          sTime: '1-1-1',
-          money:100
-        },
-        {
-          id:1,
-          sTime: '1-1-1',
-          money:100
-        },
-        {
-          id:1,
-          sTime: '1-1-1',
-          money:100
-        },
-        {
-          id:1,
-          sTime: '1-1-1',
-          money:100
-        },
-      ],
+      creditAllData: [],
       creditAllRules:{
         payNumber: [
           {required: true, message: '请输入实收金额', trigger: ['blur', 'change']}
@@ -126,6 +97,15 @@ export default {
         payNumber: null,
       },
       creditAllSelection: [],
+      chargeSettleInfo: {
+        alreadyIncome: null,
+        alreadyOutcome: null,
+        isDeal: null,
+        realIncome: null,
+        supposeIncome: null,
+        supposeOutcome: null,
+        wholePrice: null,
+      },
     }
   },
   methods: {
