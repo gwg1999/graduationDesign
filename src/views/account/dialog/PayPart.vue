@@ -1,10 +1,11 @@
 <template>
   <div>
-    <el-dialog title="挂账结算" :visible.sync="partVisible" @close="creditPartCancel" :show-close="false">
+    <el-dialog title="挂账结算" :visible.sync="dialogVisible" @close="creditPartCancel">
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
-            <el-input v-model="creditPartCondition.name" clearable></el-input>
+<!--            <el-input v-model="creditPartCondition.name" clearable></el-input>-->
+            <el-autocomplete v-model="creditPartCondition.name" :fetch-suggestions="querySearch" @select="handleSelect"></el-autocomplete>
           </el-form-item>
           <el-form-item label="交易时间">
             <el-date-picker
@@ -77,7 +78,7 @@ export default {
       },
       innerVisible: false,
       creditPartCondition: {
-        name: null,
+        customId: null,
         startTime: null,
         beginTime: null,
         createTimeSequence: 0,
@@ -105,8 +106,9 @@ export default {
           supposeOutcome: 0,
           wholePrice: 0,
         },
-        orderList: []
+        orderList: [],
       },
+      dialogVisible: false,
     }
   },
   props: {
@@ -128,7 +130,32 @@ export default {
       return total
     }
   },
+  watch: {
+    partVisible: {
+      handler:function (){
+        this.dialogVisible = this.partVisible
+      }
+    }
+  },
   methods: {
+
+    querySearch(queryString,cb){
+      PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 10000,pageNum: 1}).then(res=>{
+        console.log(res.list)
+        let customers = res.list
+        for(let i in customers){
+          customers[i].value = customers[i].cuUnitName
+        }
+        cb(customers)
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
+
+    handleSelect(item){
+      this.creditPartCondition.customId = item.id
+      console.log(item);
+    },
 
     // 挂账结算查询
     creditPartSearch(){

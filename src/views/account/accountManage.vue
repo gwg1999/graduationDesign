@@ -51,7 +51,7 @@
     <div style="overflow: auto;flex: 1;" class="content-box">
       <div class="table-box">
         <el-table
-          :data="creditRecords"
+          :data="orders"
           border
           fit
           highlight-current-row
@@ -77,7 +77,7 @@
       <div class="total-box" >
         <div class="table-button-box">
           <el-button type="primary" @click="chargeVisible = true">挂账交易记录信息</el-button>
-          <el-button type="primary" @click="chargeSettleVisible">挂账交易结清信息</el-button>
+          <el-button type="primary" @click="chargeSettleVisible = true">挂账交易结清信息</el-button>
         </div>
         <div class="detail-box">
           <div class="partAccount" style="font-size: x-large">
@@ -85,23 +85,19 @@
           </div>
           <div class="partAccount">
             挂账应收应付(￥)：
-            <div class="accountNumber" v-if="accountDetail.buyerOnCredit>=0" style="color: green">{{accountDetail.buyerOnCredit}}</div>
-            <div class="accountNumber" v-if="accountDetail.buyerOnCredit<0" style="color: red">{{accountDetail.buyerOnCredit}}</div>
+            <div class="accountNumber" :style="{color: accountDetail.chargeNumber>=0?'green':'red'}">{{accountDetail.chargeNumber}}</div>
           </div>
           <div class="partAccount">
             线上应收应付(￥)：
-            <div class="accountNumber" v-if="accountDetail.payOnLine>=0" style="color: green">{{accountDetail.payOnLine}}</div>
-            <div class="accountNumber" v-if="accountDetail.payOnLine<0" style="color: red">{{accountDetail.payOnLine}}</div>
+            <div class="accountNumber" :style="{color: accountDetail.chargeNumber>=0?'green':'red'}">{{accountDetail.chargeNumber}}</div>
           </div>
           <div class="partAccount">
             线下应收应付(￥)：
-            <div class="accountNumber" v-if="accountDetail.cashMoney>=0" style="color: green">{{accountDetail.cashMoney}}</div>
-            <div class="accountNumber" v-if="accountDetail.cashMoney<0" style="color: red">{{accountDetail.cashMoney}}</div>
+            <div class="accountNumber" :style="{color: accountDetail.chargeNumber>=0?'green':'red'}">{{accountDetail.chargeNumber}}</div>
           </div>
           <div class="totalAccount partAccount">
             总金额应收应付(￥)：
-            <div class="accountNumber" v-if="accountDetail.cashMoney>=0" style="color: green;font-size: xxx-large">{{totalMoney}}</div>
-            <div class="accountNumber" v-if="accountDetail.cashMoney<0" style="color: red;font-size: xxx-large">{{totalMoney}}</div>
+            <div class="accountNumber" :style="{color: accountDetail.allNumber>=0?'green':'red'}">{{accountDetail.chargeNumber}}</div>
           </div>
         </div>
       </div>
@@ -117,8 +113,14 @@
       <pay-all :all-visible="creditAllVisible" @cancelClick="creditAllVisible = false"></pay-all>
     </div>
 
+<!--    挂账交易记录弹窗-->
     <div>
       <charge-dialog :visible="chargeVisible" @chargeClose="chargeVisible = false"></charge-dialog>
+    </div>
+
+<!--    挂账结清记录弹窗-->
+    <div>
+      <charge-settle-dialog :visible="chargeSettleVisible" @chargeClose="chargeSettleVisible = false"></charge-settle-dialog>
     </div>
   </div>
 </template>
@@ -130,9 +132,8 @@ import PayPart from "@/views/account/dialog/PayPart";
 import PayAll from "@/views/account/dialog/PayAll";
 import CreditRecordTable from "@/views/account/table/creditRecordTable";
 import ChargeDialog from "@/views/account/dialog/ChargeDialog";
+import ChargeSettleDialog from "@/views/account/dialog/ChargeSettleDialog";
 import {PostData} from "@/api";
-import qs from "qs";
-import {parseTime} from "@/utils";
 
 export default {
   name: "accountManage",
@@ -140,19 +141,22 @@ export default {
     CreditRecordTable,
     PayPart,
     PayAll,
-    ChargeDialog
+    ChargeDialog,
+    ChargeSettleDialog,
   },
   data(){
     return {
       creditPartVisible:false,
       tempDate: null,
       orderQuery: {
-        CustomerId: null,
+        customerId: null,
         name: null,
         dealType: null,
         orderType: null,
-        pageSize:10,
+        pageSize: 10,
         pageNum: 1,
+        startTime: null,
+        endTime: null,
       },
       orderType: [
         {
@@ -179,11 +183,12 @@ export default {
         }
       ],
       accountDetail: {
-        buyerOnCredit: -10,  //挂账
-        payOnLine: 12.3,  //线上
-        cashMoney: 200,  //线下
+        chargeNumber: 0,  //挂账
+        onlineNumber: 0,  //线上
+        outlineNumber: 0,  //线下
+        allNumber: 0,
       },
-      creditRecords: [],
+      orders: [],
       pageTotal: 0,
       creditAllVisible: false,
       chargeVisible: false,
@@ -191,25 +196,41 @@ export default {
     }
   },
   computed: {
-    totalMoney: function (){
-      return this.accountDetail.cashMoney + this.accountDetail.buyerOnCredit + this.accountDetail.payOnLine
-    },
+
   },
   methods: {
     getList(){
+      console.log('orderQuery:')
+      console.log(this.orderQuery)
       PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{
+        console.log('res:')
         console.log(res)
+        this.accountDetail = res
+        this.orders = JSON.parse(res.orders).list
+        console.log('orders:')
+        console.log(this.orders)
       }).catch(err=>{
         console.log(err);
       })
     },
 
     querySearch(queryString, cb){
-
+      PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 5,pageNum: 1}).then(res=>{
+        console.log(res.list)
+        let customers = res.list
+        for(let i in customers){
+          customers[i].value = customers[i].cuUnitName
+        }
+        cb(customers)
+      }).catch(err=>{
+        console.log(err)
+      })
     },
 
     handleSelect(item){
-
+      console.log('selectItem:')
+      console.log(item)
+      this.orderQuery.customerId = item.cuId
     },
   },
 }

@@ -1,10 +1,11 @@
 <template>
   <div>
-    <el-dialog title="挂账结清" :visible.sync="allVisible" @close="creditAllCancel" :show-close="false">
+    <el-dialog title="挂账结清" :visible.sync="dialogVisible" @close="creditAllCancel">
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
-            <el-input v-model="creditAllCondition.name"></el-input>
+<!--            <el-input v-model="creditAllCondition.name"></el-input>-->
+            <el-autocomplete v-model="creditAllCondition.name" :fetch-suggestions="querySearch" @select="handleSelect"></el-autocomplete>
           </el-form-item>
           <el-form-item label="交易时间">
             <el-date-picker
@@ -30,9 +31,13 @@
           @selection-change="creditAllSelectionChange"
           ref="creditAllTable">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="序号" prop="id"></el-table-column>
-          <el-table-column label="时间" prop="sTime"></el-table-column>
-          <el-table-column label="应收" prop="money"></el-table-column>
+          <el-table-column label="时间" align="center" prop="createTime"></el-table-column>
+          <el-table-column label="未收" align="center" prop="supposeIncome"></el-table-column>
+          <el-table-column label="未付" align="center" prop="supposeOutcome"></el-table-column>
+          <el-table-column label="实付" align="center" prop="realOutcome"></el-table-column>
+          <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
+          <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
+          <el-table-column label="已付" align="center" prop="alreadyOutcome"></el-table-column>
         </el-table>
       </div>
       <div style="text-align: right;margin-top: 10px">
@@ -57,6 +62,7 @@
 
 <script>
 import {parseTime} from "@/utils";
+import {PostData} from "@/api";
 
 export default {
   name: "PayAll",
@@ -66,11 +72,18 @@ export default {
       default: false
     }
   },
+  watch: {
+    allVisible: {
+      handler: function (){
+        this.dialogVisible = this.allVisible
+      }
+    }
+  },
   computed: {
     creditAllMoney: function (){
       let total = 0
       for(let selection of this.creditAllSelection){
-        total += selection.money
+        total += selection.supposeIncome
       }
       return total
     }
@@ -78,6 +91,7 @@ export default {
   data(){
     return {
       creditAllCondition: {
+        customId: null,
         name: null,
         startTime: null,
         endTime: null,
@@ -97,17 +111,46 @@ export default {
       },
       creditAllSelection: [],
       chargeSettleInfo: {
-        alreadyIncome: null,
-        alreadyOutcome: null,
-        isDeal: null,
-        realIncome: null,
-        supposeIncome: null,
-        supposeOutcome: null,
-        wholePrice: null,
+        chargeSettle: {
+          alreadyIncome: 0,
+          alreadyOutcome: 0,
+          customId: 0,
+          isDeal: 0,
+          realIncome: 0,
+          realOutcome: 0,
+          supposeIncome: 0,
+          supposeOutcome: 0,
+          wholePrice: 0
+        },
+        chargeList: []
       },
+      dialogVisible: false,
     }
   },
   methods: {
+
+    // 输入框搜索建议
+    querySearch(queryString, cb){
+      PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 10000,pageNum: 1}).then(res=>{
+        console.log(res.list)
+        let customers = res.list
+        for(let i in customers){
+          customers[i].value = customers[i].cuUnitName
+        }
+        cb(customers)
+      }).catch(err=>{
+        console.log(err)
+      })
+    },
+
+
+    handleSelect(item){
+      this.creditAllCondition.customId = item.cuId
+      console.log('creditAllCondition')
+      console.log(item);
+    },
+
+
     // 挂账结清取消多选
     toggleAllSelection(rows){
       if(rows){
@@ -126,6 +169,19 @@ export default {
         this.creditAllCondition.endTime = parseTime(this.tempDate2[1], '{y}-{m}-{d}')
         console.log(this.creditAllCondition)
       }
+      if(!this.creditAllCondition.name){
+        this.$message.warning('请选择客户后搜索')
+      }else{
+        PostData('/bill/getChargeList', this.creditAllCondition).then((res)=>{
+          console.log("chargeList:")
+          console.log(res);
+          this.creditAllData = res.list
+          for(let record of this.creditAllData){
+            record.createTime = parseTime(record.createTime, '{y}-{m}-{d} {h}:{i}:{s}')
+          }
+          this.pageTotal = res.total
+        })
+      }
     },
 
     // 挂账结清弹窗取消
@@ -141,12 +197,17 @@ export default {
       this.$confirm('确认是否结清', '提示', {
         type: 'warning'
       }).then(()=>{
+        this.chargeSettleInfo.chargeList = this.creditAllSelection
+        this.chargeSettleInfo.chargeSettle.customId = this.creditAllCondition.customId
         this.creditAllInnerVisible = true
+        console.log('chargeSettleInfo:')
+        console.log(this.chargeSettleInfo)
       }).catch()
     },
 
     // 挂账结清->金额弹窗关闭
     payAllCancel(){
+
       this.creditAllInnerVisible = false
       this.pay.payNumebr = null
     },
@@ -160,18 +221,20 @@ export default {
         this.$confirm('请确认是否结清', '提示', {
           type: 'warning'
         }).then(()=>{
-          this.$message.success("结清成功")
-          this.pay.payNumebr = null
-          this.toggleAllSelection()
-          this.creditAllInnerVisible = false
-          this.$emit('cancelClick')
-          // this.creditAllVisible = false
-          this.creditAllCondition = {
-            name: null,
-            startTime: null,
-            endTime: null,
-          }
-          this.tempDate2 = null
+          PostData('/bill/chargeSettle', this.chargeSettleInfo).then(res=>{
+            console.log('res:')
+            console.log(res);
+            this.$message.success("结清成功")
+            this.pay.payNumebr = null
+            this.toggleAllSelection()
+            this.creditAllInnerVisible = false
+            this.$emit('cancelClick')
+            this.creditAllCondition = {}
+            this.tempDate2 = null
+          }).catch(err=>{
+            console.log('err:')
+            console.log(err);
+          })
         }).catch(()=>{
           this.$message.error("结清失败，请重试")
         })

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="挂账交易记录信息" :visible.sync="visible" @close="chargeClose" :show-close="false">
+    <el-dialog title="挂账交易记录信息" :visible.sync="dialogVisible" @close="chargeClose">
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
@@ -41,12 +41,12 @@
               {{ (chargeQuery.pageNum - 1) * chargeQuery.pageSize + scope.$index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
-          <el-table-column label="应收" align="center" prop="supposeIncome"></el-table-column>
           <el-table-column label="时间" align="center" prop="createTime"></el-table-column>
-          <el-table-column label="应付" align="center" prop="supposeOutcome"></el-table-column>
+          <el-table-column label="未收" align="center" prop="supposeIncome"></el-table-column>
+          <el-table-column label="未付" align="center" prop="supposeOutcome"></el-table-column>
           <el-table-column label="实付" align="center" prop="realOutcome"></el-table-column>
           <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
+          <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
           <el-table-column label="已付" align="center" prop="alreadyOutcome"></el-table-column>
         </el-table>
         <el-pagination
@@ -60,7 +60,7 @@
       </div>
       <div style="text-align: right;margin-top: 10px">
 <!--        <el-button type="primary" @click="creditPartCancel">取消</el-button>-->
-        <el-button type="primary" @click="creditPartConfirm">确认</el-button>
+        <el-button type="primary" @click="chargeClose">确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -80,7 +80,6 @@ export default {
         pageSize: 5,
         pageNum: 1,
         customId: null,
-        dealType: null,
         startTime: null,
         endTime: null,
       },
@@ -92,7 +91,7 @@ export default {
         pageNum: 1,
       },
       pageTotal: 0,
-
+      dialogVisible: false,
     }
   },
   props: {
@@ -132,8 +131,7 @@ export default {
     },
 
     querySearch(queryString,cb){
-      this.customerQuery.cuUnitName = queryString
-      PostData('customer/selectAllByLike', this.customerQuery).then(res=>{
+      PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 10000,pageNum: 1}).then(res=>{
         console.log(res.list)
         let customers = res.list
         for(let i in customers){
@@ -158,6 +156,13 @@ export default {
   computed: {
 
   },
+  watch: {
+    visible: {
+      handler: function (){
+        this.dialogVisible = this.visible
+      }
+    }
+  }
 }
 </script>
 
