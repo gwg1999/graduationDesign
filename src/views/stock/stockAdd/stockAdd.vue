@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-steps :active="1" process-status="wait" align-center style="margin-bottom: 40px;">
-      <el-step title="填写报价单信息" />
+      <el-step title="填写询价单信息" />
       <el-step title="添加零件" />
     </el-steps>
     <div>
@@ -18,7 +18,6 @@
             </el-select>
           </el-form-item>
           <el-form-item label="厂家名" prop="factoryId">
-<!--            <el-input v-model="salesSlip.qNote" style="width: 90%" rows="5" type="textarea"/>-->
             <el-select
               v-model="inPrice.factoryId" filterable clearable placeholder="请选择厂家" style="width: 640px" :filter-method="factoryFilter">
               <el-option
@@ -110,13 +109,10 @@ export default {
     },
     getList(){
       commonList("customer/selectAllByLike").then(res=>{
-        // console.log(res.list);
         this.totleCustomerList=res.list
-        console.log(this.totleCustomerList);
       })
       commonList("factory/selectAllByLike").then(res=>{
         this.totleFactoryList=res.list
-        console.log(this.totleFactoryList);
       })
     },
     saveSalesSlip() {
@@ -125,7 +121,7 @@ export default {
           this.$router.push({
             path: '/goodAdd',
             query:{
-              inPrice:JSON.stringify(this.inPrice)
+              inPrice:this.inPrice
             }
           });
         }

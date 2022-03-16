@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs >
+    <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="货物位置管理" name="first">
         <Position></Position>
       </el-tab-pane>
@@ -22,13 +22,18 @@ export default {
   name: "addGoodPosition",
   data() {
     return {
-      activeName: 'second'
+      activeName: localStorage.getItem('activeNameChange')?localStorage.getItem('activeNameChange'):'three'
     };
   },
   components:{
     Position,
     Car,
     Pcategory
+  },
+  methods: {
+    handleClick(tab) {
+      localStorage.setItem('activeNameChange', tab.name);
+    }
   }
 }
 </script>

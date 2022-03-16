@@ -33,9 +33,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="partName" label="名称"   align="center"/>
-        <el-table-column prop="rdType" label="类型" width="100px" align="center">
+        <el-table-column prop="rdPartsType" label="类型" width="100px" align="center">
           <template slot-scope="scope">
-            {{ scope.row.rdType===1?'整件':'零件'}}
+            {{ scope.row.rdPartsType===1?'整件':'零件'}}
           </template>
         </el-table-column>
         <el-table-column prop="rdType" width="150px" label="退货单类型"  align="center">
@@ -92,6 +92,7 @@ export default {
       this.pageNum=pageNum
       getReturnDetail(this.$route.query.qId,this.pageNum,this.pageSize).then(res=>{
         this.CancelSlipDetailsList=res.list
+        console.log(res.list)
         this.total=res.total
       })
     },

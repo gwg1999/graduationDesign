@@ -173,7 +173,6 @@ export default {
     voluation(){
       this.priceSlip.screateOperatorId=Cookie.get('aId')
       this.priceSlip.sCustomId=0
-      // this.buyList.sCustomId=0
     },
     warehouseOperatorListListFilter(query = '') {
       if(query!==''){
@@ -198,13 +197,8 @@ export default {
       }
     },
     getList(){
-      // commonList("customer/selectAllByLike").then(res=>{
-      //   console.log(res)
-      //   this.customerNameList=res.list
-      // })
       commonList("factory/selectAllByLike").then(res=>{
         this.totleFactoryList=res.list
-        console.log(this.totleFactoryList);
       })
       commonList('admin/selectAllByLike').then(res=>{
         this.WarehouseOperatorList=res.list
@@ -214,26 +208,15 @@ export default {
       this.$refs['priceSlip'].validate((valid) => {
         if (valid) {
           this.voluation()
-          console.log(this.priceSlip);
+          this.priceSlip.sOrderStatus=2
+          this.priceSlip.sExistBill=0
           this.$router.push({
             path: '/stock/goodAdd',
             query:{
               factoryId:this.priceSlip.sfactoryId,
-              stepOneInfo:JSON.stringify(this.priceSlip)
+              stepOneInfo:this.priceSlip
             }
           })
-          // PostData('/stock/addStock',this.priceSlip)
-          //   .then(res=>{
-          //     console.log(res.data);
-          //     this.$router.push({
-          //       path: '/stock/goodAdd',
-          //       query:{
-          //         orderId:res.data,
-          //         factoryId:this.priceSlip.sfactoryId,
-          //         stepOneInfo:JSON.stringify(this.priceSlip)
-          //       }
-          //     })
-          //   }).catch(()=>{})
         } else {
           alert('请输入正确的信息');
           return false;

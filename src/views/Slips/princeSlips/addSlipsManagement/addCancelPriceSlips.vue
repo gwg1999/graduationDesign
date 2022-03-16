@@ -30,7 +30,7 @@
             <el-form>
               <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
                 <el-form-item>
-<!--                  数量:<el-input style="width: 100px" @keyup.native="scope.row.number = number(scope.row.number)"  v-model = "scope.row.number"  size="small"></el-input>-->
+                  <!--                  数量:<el-input style="width: 100px" @keyup.native="scope.row.number = number(scope.row.number)"  v-model = "scope.row.number"  size="small"></el-input>-->
                   数量:<el-input-number :min="0"  v-model="scope.row.number"  size="small"></el-input-number>
                 </el-form-item>
                 <el-form-item>
@@ -121,8 +121,8 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogSubmitVisible = false">取 消</el-button>
-          <el-button  type="primary"
-                      @click="submitForm()">确 定</el-button>
+          <el-button :disabled="BtnDisabled" type="primary"
+                     @click="submitForm()">确 定</el-button>
         </div>
       </el-dialog>
 
@@ -138,8 +138,8 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogPartsVisible = false">取 消</el-button>
-          <el-button  type="primary"
-                      @click="UpdateParts()">确 定</el-button>
+          <el-button   type="primary"
+                       @click="UpdateParts()">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -156,6 +156,8 @@ export default {
   },
   data(){
     return{
+      //重复网络请求
+      BtnDisabled:false,
       dialogNote:false,
       queryDetails:{
         pageSize:1000,
@@ -323,6 +325,10 @@ export default {
       this.priceSlip=JSON.parse(JSON.stringify(this.priceSlip))
     },
     submitForm(){
+      this.BtnDisabled = true
+      setTimeout(() => {
+        this.BtnDisabled = false
+      }, 1000)
       this.$refs['priceSlip'].validate(valid=>{
         let params = {}
         params = this.$route.query.row
@@ -332,7 +338,6 @@ export default {
         this.priceSlip.operatorName = params.createPeopleName
         this.priceSlip.returnNumber=this.priceSlip.priceTotal
         this.priceSlip.returnDetailList=this.priceSlip.orderDetailList
-
         this.priceSlip.rOperatorId = params.oWarehouseOperaterId
         this.priceSlip.rOrderType = 0
         this.priceSlip.rOderId = params.oId
@@ -342,6 +347,7 @@ export default {
         this.priceSlip.rType=this.priceSlip.type;
         this.priceSlip.rReason=this.priceSlip.note
         this.priceSlip.rIsReceive=0
+        console.log(this.priceSlip)
         for (let i = 0; i < this.priceSlip.orderDetailList.length; i++) {
           console.log(this.priceSlip.returnDetailList)
           this.priceSlip.returnDetailList[i].rdPartsNum = this.priceSlip.orderDetailList[i].number
@@ -350,9 +356,10 @@ export default {
           this.priceSlip.returnDetailList[i].rdRealOrderId = this.priceSlip.orderDetailList[i].odId
           this.priceSlip.returnDetailList[i].rdPartsId = this.priceSlip.orderDetailList[i].odPartsId
           this.priceSlip.returnDetailList[i].rdRetailPrice = this.priceSlip.orderDetailList[i].priceTotal
-          this.priceSlip.returnDetailList[i].rdNumber=this.priceSlip.returnDetailList[i].parts.pNumber
+          if(this.priceSlip.returnDetailList[i].odType===1){
+            this.priceSlip.returnDetailList[i].rdNumber=this.priceSlip.returnDetailList[i].parts.pNumber
+          }
         }
-        console.log(this.priceSlip)
         PostData('return/addReturn', this.priceSlip)
           .then(res => {
             this.$message({
@@ -361,7 +368,6 @@ export default {
             })
             this.dialogVisible=false
             this.dialogSubmitVisible=false
-            // this.$router.back()
             this.$router.push({
               path: "/returnGood/cancelSlipsManagement"
             });

@@ -1,6 +1,5 @@
 <template>
   <div class="app-container" style="background: white">
-    <!--查询表单-->
     <el-dialog
       title="整件添加零件"
       :visible.sync="dialogVisible"
@@ -13,37 +12,24 @@
           </el-col>
           <el-col :span="12"><el-tag>零件数量:{{item.num}}</el-tag></el-col>
         </el-row>
-        <!--        <el-form-item :label="'零件'+index" v-for="(item,index) in this.whole.partsMap">-->
-        <!--          零件名:-->
-        <!--          <el-input v-model="item.pName" disabled style="width: 40%"></el-input>-->
-        <!--          零件数量:-->
-        <!--          <el-input v-model="item.num" disabled style="width: 40%"></el-input>-->
-        <!--        </el-form-item>-->
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
   </span>
     </el-dialog>
+    <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline" style="position: relative">
       <template slot-scope="scoped">
         <el-form-item>
-          <!--        <el-input v-model="partQuery.pName" clearable placeholder="零件名"  style="width: 150px"/>-->
-<!--          <el-input v-model="sequeNum" clearable placeholder="序列号" style="width: 100px" class="search"></el-input>-->
           <el-autocomplete
             v-model="state"
             :fetch-suggestions="querySearch"
             placeholder="请输入零件名"
             :trigger-on-focus="false"
             @select="handleSelect">
-            <!--      <i-->
-            <!--        class="el-icon-edit el-input__icon"-->
-            <!--        slot="suffix"-->
-            <!--        @click="handleIconClick">-->
-            <!--      </i>-->
             <template slot-scope="{ item }">
               <div>{{ item.pName }}</div>
-              <!--        <span class="addr">{{ item.address }}</span>-->
             </template>
           </el-autocomplete>
           <el-input v-model="pGoodsNum" placeholder="请输入零件号" style="width: 30%;margin-left: 3px;margin-right: 3px" class="search"></el-input>
@@ -68,13 +54,8 @@
           <el-button type="primary" @click="backPre">返 回</el-button>
           <el-button type="primary" icon="el-icon-view" @click="showSelected">查看已选零件({{computeNum}})</el-button>
         </div>
-
-        <!--        <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 10px" @click="toInsert()" >添加</el-button>-->
-
       </template>
-
     </el-form>
-
     <!-- 表格 -->
     <el-table use-virtual
               :data="list"
@@ -91,19 +72,18 @@
         </template>
       </el-table-column>
       <!--      <el-table-column prop="pId" label="零件号" width="50%" align="center" hidden/>-->
-<!--      <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />-->
+      <!--      <el-table-column prop="pCategoryId" label="零件类目" width="50%" align="center" />-->
       <el-table-column prop="pId" label="序列号" width="80px" align="center" />
       <el-table-column prop="pNumber" label="零件号" width="150px" align="center" />
       <el-table-column prop="pName" label="零件名" width="200px" align="center" />
-      <el-table-column prop="place.plName" label="产地或品牌" width="120"  align="center"/>
+      <el-table-column prop="place.plName" label="产地或品牌" width="120px"  align="center"/>
       <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
-      <el-table-column prop="pLowPrice" label="一级价格" width="80"  align="center"/>
-      <el-table-column prop="pMiddlePrice" label="二级价格" width="80" align="center" />
-      <el-table-column prop="pHighPrice" label="三级价格" width="80"  align="center"/>
-      <el-table-column prop="pBuyingPrice" label="进价" width="80"  align="center"/>
+      <el-table-column prop="pLowPrice" label="一级价格" width="80px"  align="center"/>
+      <el-table-column prop="pMiddlePrice" label="二级价格" width="80px" align="center" />
+      <el-table-column prop="pHighPrice" label="三级价格" width="80px"  align="center"/>
+      <el-table-column prop="pBuyingPrice" label="进价" width="80px"  align="center"/>
       <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>
-
-      <el-table-column prop="pReturnCycle" label="退货周期（天）" width="90"  align="center"/>
+      <el-table-column prop="pReturnCycle" label="退货周期（天）" width="90px"  align="center"/>
       <el-table-column prop="pId" label="零件数目" align="center">
         <template slot-scope="scope">
           <div style="display: flex;justify-content: space-between">
@@ -112,14 +92,12 @@
           </div>
         </template>
       </el-table-column>
-
-
     </el-table>
 
     <!--    <el-form>-->
-    <!--        <el-button :disabled="saveBtnDisabled" type="primary" @click="save" >保存</el-button>-->
+    <!--      <el-button :disabled="saveBtnDisabled" type="primary" @click="save" >保存</el-button>-->
     <!--    </el-form>-->
-<!--    <el-button type="primary" @click="backPre">返 回</el-button>-->
+    <!--    <el-button type="primary" @click="backPre">返 回</el-button>-->
     <el-pagination
       layout="total, prev, pager, next, jumper"
       :page-size="partQuery.pageSize"
@@ -197,7 +175,6 @@ export default {
   },
   computed:{
     computeNum:function (){
-      console.log(this.whole.partsMap.length);
       return this.whole.partsMap.length
     },
   },
@@ -242,13 +219,9 @@ export default {
         })
       }
     },
-    // backPre(){
-    //   this.$router.back()
-    // },
     getPCate(){
       PostData('/position/selectCatalogue',qs.stringify(this.pCateQuery)).then((ref)=>{
         this.categoryOption=this.getTreeData(ref)
-        console.log(this.categoryOption);
       })
     },
     getTreeData(data){
@@ -265,7 +238,6 @@ export default {
     },
     handleChange(value) {
       this.parts.pCarName=value.join("/")
-      console.log(this.parts.pCarName);
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -273,24 +245,18 @@ export default {
           console.log(this.whole);
           PostData('partsWhole/insertPartWhole',this.whole)
             .then(res=>{
-              console.log(res);
               this.$message({
                 type:'success',
                 message:'添加成功'
               })
             }).catch(()=>{})
-          //   }else{
-          //     this.$message.error('信息未完善')
-          //   }
           this.$router.push({path:'/whole'})
         } else {
-          console.log('error submit!!');
           return false;
         }
       });
     },
     showSelected(){
-      console.log(this.whole.partsMap);
       this.dialogVisible=true
     },
     handleClose(done) {
@@ -302,12 +268,8 @@ export default {
     },
     handleChangeNum(param) {
       this.flag = false;
-      // this.partsWhole.partsId = param.pId;
-      // this.partsWhole.partsNum = param.num;
-      // this.realInventory = param.pRealInventory;
       this.whole.amount = parseInt(param.pRealInventory) / parseInt(param.num);
       this.whole.amount = parseInt(this.whole.amount)
-      // = num.substring(0,num.indexOf(".")+1);
       if (parseInt(param.pRealInventory) < parseInt(param.num))
       {
         this.whole.amount = this.min = 0
@@ -315,7 +277,6 @@ export default {
       if(parseInt(this.amount) < parseInt(this.min))
       {
         this.min = this.amount
-        // this.amount = this.min
         this.whole.amount = parseInt(this.min)
       }
       for (var i in this.whole.partsMap){
@@ -336,24 +297,17 @@ export default {
         .then(res=>{
           this.list = res.list
           this.pageTotal=res.total
-          console.log(res.list);
         }).catch(err=>{
         this.$message.error(err.message);
-        console.log(err);
       })
     },
-    // toInsert(){
-    //   this.$router.push('/parts/addPart')
-    // },
     getPartList(){
       this.partQuery.pName = this.state
       PostData('parts/selectAllByLike',this.partQuery)
         .then(res=>{
           this.list=res
-          console.log(res);
         }).catch(err=>{
         this.$message.error(err.message);
-        console.log(err);
       })
     },
 
@@ -404,11 +358,9 @@ export default {
       PostData('parts/selectAllByLike',this.partQuery).then(ref=>{
         cb(ref.list)
       })
-      // 调用 callback 返回建议列表的数据
     },
 
     save(){
-      // this.whole.wId =
       PostData('partsWhole/insertPartWhole',this.whole)
         .then(res=>{
           console.log(res);
@@ -417,9 +369,6 @@ export default {
             message:'整件添加零件成功'
           })
         }).catch(()=>{})
-      //   }else{
-      //     this.$message.error('信息未完善')
-      //   }
       this.$router.push({path:'/whole'})
     },
 

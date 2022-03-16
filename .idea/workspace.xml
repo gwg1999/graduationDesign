@@ -3,11 +3,39 @@
   <component name="ChangeListManager">
     <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="解决查看零件详情退货周期问题">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+<<<<<<< Updated upstream
       <change beforePath="$PROJECT_DIR$/src/views/account/accountManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/accountManage.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/dialog/ChargeDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/ChargeDialog.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/dialog/ChargeSettleDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/ChargeSettleDialog.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/dev.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addPrice/addPriceDetailsGoods.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/addPrice/addPriceDetailsGoods.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addPrice/addPriceGoods.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/addPrice/addPriceGoods.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addPrice/addSPriceSlips.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/addPrice/addSPriceSlips.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipDetails.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipDetails.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/princeSlips/princeSlipManagement.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlips/addSlips.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlips/addSlips.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlips/addSlipsDetailsGoods.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlips/addSlipsDetailsGoods.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlips/addSlipsGoods.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/salesSlips/addSlips/addSlipsGoods.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Slips/salesSlips/salesSlipDetails.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Slips/salesSlips/salesSlipDetails.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/knowledgeBase/part.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/knowledgeBase/part.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/parts/addPart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/parts/addPart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/parts/part.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/parts/part.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/returnGood/cancelSlipManagement/cancelSlipsDetails.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/returnGood/cancelSlipManagement/cancelSlipsDetails.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/returnGood/cancelSlipManagement/cancelSlipsManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/returnGood/cancelSlipManagement/cancelSlipsManagement.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/stock/buyAdd/buyAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/stock/buyAdd/buyAdd.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/stock/buyAdd/goodAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/stock/buyAdd/goodAdd.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/stock/buyList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/stock/buyList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/stock/stockAdd/goodAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/stock/stockAdd/goodAdd.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/stock/stockAdd/stockAdd.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/stock/stockAdd/stockAdd.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vue.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/vue.config.js" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +73,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -54,7 +82,11 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+<<<<<<< Updated upstream
     <property name="settings.editor.selected.configurable" value="preferences.general" />
+=======
+    <property name="ts.external.directory.path" value="E:\webstorm\WebStorm 2021.1.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+>>>>>>> Stashed changes
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -118,12 +150,34 @@
       <workItem from="1646267466866" duration="25570000" />
       <workItem from="1646304906172" duration="595000" />
       <workItem from="1646353627111" duration="5379000" />
+<<<<<<< Updated upstream
       <workItem from="1646363265830" duration="3872000" />
       <workItem from="1646370892348" duration="1583000" />
       <workItem from="1646372597932" duration="1559000" />
       <workItem from="1646374209191" duration="4609000" />
       <workItem from="1646875650493" duration="26091000" />
       <workItem from="1646958974315" duration="3875000" />
+=======
+      <workItem from="1646363265830" duration="15247000" />
+      <workItem from="1646392436114" duration="6768000" />
+      <workItem from="1646447986551" duration="1329000" />
+      <workItem from="1646449347618" duration="555000" />
+      <workItem from="1646456618767" duration="8996000" />
+      <workItem from="1646544079950" duration="4092000" />
+      <workItem from="1646628793553" duration="27332000" />
+      <workItem from="1646699941728" duration="2495000" />
+      <workItem from="1646712840019" duration="11897000" />
+      <workItem from="1646724939543" duration="348000" />
+      <workItem from="1646728540753" duration="1410000" />
+      <workItem from="1646732942039" duration="85000" />
+      <workItem from="1646817428892" duration="715000" />
+      <workItem from="1646825989694" duration="2000" />
+      <workItem from="1646826397945" duration="50000" />
+      <workItem from="1646832335458" duration="29000" />
+      <workItem from="1646961279573" duration="16610000" />
+      <workItem from="1647135315420" duration="367000" />
+      <workItem from="1647136986273" duration="12185000" />
+>>>>>>> Stashed changes
     </task>
     <servers />
   </component>

@@ -169,14 +169,6 @@ export const constantRoutes=[
         meta: { title: '新增销售单商品', icon: 'table',roles:['admin'] },
         hidden: true
       },
-
-      // {
-      //   path: 'minusSlipsDetails',
-      //   name: '负数销售单详情表',
-      //   component: () => import('@/views/Slips/princeSlips/minusSlipsManagement/minusSlipsDetails'),
-      //   meta: { title: '负数销售单详情表', icon: 'table',roles:['admin'] },
-      //   hidden: true
-      // },
       {
         path: 'todayPriceSlips',
         name: '今日销售单',
@@ -191,19 +183,6 @@ export const constantRoutes=[
         hidden: true
       },
       {
-        path: 'cancelSlipsManagement',
-        name: '负数销售单',
-        component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsManagement'),
-        meta: { title: '负数销售单', icon: 'table' ,roles:['admin','editor']}
-      },
-      {
-        path: 'cancelSlipsDetails',
-        name: '负数销售单详情表',
-        component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsDetails'),
-        meta: { title: '负数销售单详情表', icon: 'table' ,roles:['admin','editor']},
-        hidden: true
-      },
-      {
         path: 'printTable',
         name: '打印单',
         component: () => import('@/views/Slips/princeSlips/printTable/printTable'),
@@ -212,9 +191,16 @@ export const constantRoutes=[
       },
       {
         path: 'extraPriceSlipsManagement',
-        name: '其他费用',
+        name: '支出费用',
         component: () => import('@/views/Slips/princeSlips/extraPriceSlips/extraPriceSlipsManagement'),
-        meta: { title: '其他费用', icon: 'table',roles:['admin'] }
+        meta: { title: '支出费用', icon: 'table',roles:['admin'] }
+      },
+      {
+        path: 'extraPriceSlipsDetails',
+        name: '支出费用详情',
+        component: () => import('@/views/Slips/princeSlips/extraPriceSlips/extraPriceSlipsDetails'),
+        meta: { title: '支出费用详情', icon: 'table',roles:['admin'] },
+        hidden: true
       }
     ]
   },
@@ -308,7 +294,7 @@ export const constantRoutes=[
       },
       {
         path: 'listPart/:parts',
-        name: 'part',
+        name: '修改零件信息',
         component: () => import('@/views/parts/editPart'),
         meta: { title: '修改零件信息',  noCache: true },
         hidden: true
@@ -339,37 +325,44 @@ export const constantRoutes=[
     children:[
       {
         path: 'cancelSlipsManagement',
-        name: '销售单退货管理',
+        name: '退货管理',
         component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsManagement'),
-        meta: { title: '销售单退货管理', icon: 'table' ,roles:['admin','editor']}
+        meta: { title: '退货管理', icon: 'table' ,roles:['admin','editor']}
       },
       {
         path: 'cancelSlipsDetails',
-        name: '销售单退货详情表',
+        name: '退货详情表',
         component: () => import('@/views/returnGood/cancelSlipManagement/cancelSlipsDetails'),
-        meta: { title: '销售单退货详情表', icon: 'table' ,roles:['admin','editor']},
+        meta: { title: '退货详情表', icon: 'table' ,roles:['admin','editor']},
         hidden: true
       },
-      {
-        path: 'cancelStocksManagement',
-        name: '进货单退货管理',
-        component: () => import('@/views/returnGood/cancelStockManagement/cancelStocksManagement'),
-        meta: { title: '进货单退货管理', icon: 'table' ,roles:['admin','editor']}
-      },
-      {
-        path: 'cancelStocksDetails',
-        name: '进货单退货详情表',
-        component: () => import('@/views/returnGood/cancelStockManagement/cancelStocksDetails'),
-        meta: { title: '进货单退货详情表', icon: 'table' ,roles:['admin','editor']},
-        hidden: true
-      },
+      // {
+      //   path: 'cancelStocksManagement',
+      //   name: '进货单退货管理',
+      //   component: () => import('@/views/returnGood/cancelStockManagement/cancelStocksManagement'),
+      //   meta: { title: '进货单退货管理', icon: 'table' ,roles:['admin','editor']}
+      // },
+      // {
+      //   path: 'cancelStocksDetails',
+      //   name: '进货单退货详情表',
+      //   component: () => import('@/views/returnGood/cancelStockManagement/cancelStocksDetails'),
+      //   meta: { title: '进货单退货详情表', icon: 'table' ,roles:['admin','editor']},
+      //   hidden: true
+      // },
       {
         path: 'addCancelPriceSlips',
         name: '新增销售单退货单',
         component: () => import('@/views/Slips/princeSlips/addSlipsManagement/addCancelPriceSlips'),
         meta: { title: '新增销售单退货单', icon: 'table' ,roles:['admin','editor']},
         hidden: true
-      }
+      },
+      {
+        path: 'takeDelivery',
+        name: '坏件收货',
+        component: () => import('@/views/returnGood/cancelSlipManagement/takeDelivery'),
+        meta: { title: '坏件收货', icon: 'table' ,roles:['admin','editor']},
+        hidden: true
+      },
     ]
   },
 
@@ -457,6 +450,7 @@ export const constantRoutes=[
       },
     ]
   },
+
   {
     path:'/productMaintain',
     component: Layout,
@@ -503,6 +497,7 @@ export const constantRoutes=[
       }
     ]
   },
+
   {
     path:'/systemMaintain',
     component: Layout,
@@ -609,7 +604,21 @@ export const constantRoutes=[
       },
     ]
   },
-
+  // {
+  //   path: '/statistics',
+  //   component: Layout,
+  //   redirect: '/statistics/statisticsManagement',
+  //   name:'统计',
+  //   meta:{title: '统计',icon: 'el-icon-s-promotion'},
+  //   children: [
+  //     {
+  //       path: 'statisticsManagement',
+  //       name: '统计管理',
+  //       component: () => import('@/views/statistics/statisticsManagement'),
+  //       meta: { title: '统计管理', icon: 'table'}
+  //     },
+  //   ]
+  // },
   {
     path: '/401',
     component: () => import('@/views/error-page/401'),

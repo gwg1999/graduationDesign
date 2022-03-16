@@ -1,24 +1,26 @@
 <template style="background: white">
-  <div style="border: 0px;margin: 0px">
-<!--    <div style="width: 20%;height:10%;float: left;margin-left: 5%;margin-top: -10%">-->
-<!--&lt;!&ndash;        <img src="@/assets/parts/luosi.jpeg" width="100%" alt="图片无法显示" style="margin-top: 150px">&ndash;&gt;-->
-<!--      <el-carousel :interval="5000" arrow="always">-->
-<!--        <el-carousel-item v-for="item in img" :key="item">-->
-<!--&lt;!&ndash;          <h3>{{ item }}</h3>&ndash;&gt;-->
-<!--          <el-image-->
-<!--            style="width: 100%"-->
-<!--            :src="require(item)"></el-image>-->
-<!--        </el-carousel-item>-->
-<!--      </el-carousel>-->
-<!--    </div>-->
-<!--    <div style="width:70%;background-color: aquamarine;float: left">零件详情</div>-->
+  <div style="border: 0;margin: 0">
+
+    <!--    <div style="width: 20%;height:10%;float: left;margin-left: 5%;margin-top: -10%">-->
+    <!--      <img src="@/assets/parts/luosi.jpeg" width="100%" alt="图片无法显示" style="margin-top: 150px">-->
+    <!--      <el-carousel :interval="5000" arrow="always">-->
+    <!--        <el-carousel-item v-for="item in img" :key="item">-->
+    <!--          <h3>{{ item }}</h3>-->
+    <!--          <el-image-->
+    <!--            style="width: 100%"-->
+    <!--            :src="require(item)"></el-image>-->
+    <!--        </el-carousel-item>-->
+    <!--      </el-carousel>-->
+    <!--    </div>-->
+    <!--    <div style="width:70%;background-color: aquamarine;float: left">零件详情</div>-->
+
     <el-dialog
       title="图片上传"
       :visible.sync="upLoadDialog"
       width="70%"
       top="3%"
       :before-close="handleClose">
-      <!--      <span>这是一段信息</span>-->
+      <!--<span>这是一段信息</span>-->
       <h3>内部图片</h3>
       <el-upload
         ref="inUpload"
@@ -83,166 +85,166 @@
     <div class="app-container" style="width: 75%;float: right">
       <el-form ref="partsB" :model="parts" label-width="150px" :rules="rules">
         <div style="width: 50%;float: left;background: white">
-        <el-form-item label="零件名称" prop="pName">
-          <el-input v-model="parts.pName" style="width: 100%"/>
-        </el-form-item>
-        <el-form-item label="零件号" prop="pNumber">
-          <el-input v-model="parts.pNumber" style="width: 100%"/>
-        </el-form-item>
-        <el-form-item label="一级售价" prop="pLowPrice">
-          <el-input v-model="parts.pLowPrice" style="width: 100%"/>
-        </el-form-item>
-        <el-form-item label="二级售价" prop="pMiddlePrice">
-          <el-input v-model="parts.pMiddlePrice" style="width: 100%"/>
-        </el-form-item>
-        <el-form-item label="三级售价" prop="pHighPrice">
-          <el-input v-model="parts.pHighPrice" style="width: 100%"/>
-        </el-form-item>
-        <el-form-item label="进价" prop="pBuyingPrice">
-          <el-input v-model="parts.pBuyingPrice" style="width: 100%"/>
-        </el-form-item>
-        <el-form-item label="上限" prop="pHighLimit">
-          <el-input v-model="parts.pHighLimit" style="width: 100%"/>
-        </el-form-item>
-        <el-form-item label="下限" prop="pLowLimit">
-          <el-input v-model="parts.pLowLimit" style="width: 100%"/>
-        </el-form-item>
-        <el-form-item label="实际库存数" prop="pRealInventory">
-          <el-input v-model="parts.pRealInventory" style="width: 100%"/>
-        </el-form-item>
-        <el-form-item label="货物位置" prop="positions">
-          <el-cascader
-            ref="cascader"
-            :options="positionList"
-            :props="{ multiple: true, checkStrictly: true, value:'name', label:'name'}"
-            v-model="parts.positions"
-            clearable>
-            <template slot-scope="{ node, data }">
-              <span>{{ data.name }}</span>
-              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-            </template>
-          </el-cascader>
-        </el-form-item>
-        <el-form-item>
-          <el-button :disabled="saveBtnDisabled" type="primary" @click="submitForm('partsB')">保存</el-button>
-          <el-button :disabled="saveBtnDisabled" type="primary" @click="backPre">返回</el-button>
-        </el-form-item>
-      </div>
+          <el-form-item label="零件名称" prop="pName">
+            <el-input v-model="parts.pName" style="width: 100%"/>
+          </el-form-item>
+          <el-form-item label="零件号" prop="pNumber">
+            <el-input v-model="parts.pNumber" style="width: 100%"/>
+          </el-form-item>
+          <el-form-item label="一级售价" prop="pLowPrice">
+            <el-input v-model="parts.pLowPrice" style="width: 100%"/>
+          </el-form-item>
+          <el-form-item label="二级售价" prop="pMiddlePrice">
+            <el-input v-model="parts.pMiddlePrice" style="width: 100%"/>
+          </el-form-item>
+          <el-form-item label="三级售价" prop="pHighPrice">
+            <el-input v-model="parts.pHighPrice" style="width: 100%"/>
+          </el-form-item>
+          <el-form-item label="进价" prop="pBuyingPrice">
+            <el-input v-model="parts.pBuyingPrice" style="width: 100%"/>
+          </el-form-item>
+          <el-form-item label="上限" prop="pHighLimit">
+            <el-input v-model="parts.pHighLimit" style="width: 100%"/>
+          </el-form-item>
+          <el-form-item label="下限" prop="pLowLimit">
+            <el-input v-model="parts.pLowLimit" style="width: 100%"/>
+          </el-form-item>
+          <el-form-item label="实际库存数" prop="pRealInventory">
+            <el-input v-model="parts.pRealInventory" style="width: 100%"/>
+          </el-form-item>
+          <el-form-item label="货物位置" prop="positions">
+            <el-cascader
+              ref="cascader"
+              :options="positionList"
+              :props="{ multiple: true, checkStrictly: true, value:'name', label:'name'}"
+              v-model="parts.positions"
+              clearable>
+              <template slot-scope="{ node, data }">
+                <span>{{ data.name }}</span>
+                <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+              </template>
+            </el-cascader>
+          </el-form-item>
+          <el-form-item>
+            <el-button :disabled="saveBtnDisabled" type="primary" @click="submitForm('partsB')">保存</el-button>
+            <el-button :disabled="saveBtnDisabled" type="primary" @click="backPre">返回</el-button>
+          </el-form-item>
+        </div>
 
-      <div style="width: 50% ;float: right ;background: white">
-            <el-form-item label="产地或品牌" prop="place.plName">
-              <el-select
-                v-model="parts.place.plName"
-                filterable
-                remote
-                reserve-keyword
-                placeholder="请输入产地或品牌"
-                :remote-method="remotePlace"
-                :loading="loading"
-                @focus="getPlace">
-                <el-option
-                  v-for="item in placeList"
-                  :key="item.plId"
-                  :label="item.plName"
-                  :value="item.plName"
-                  @click.native="handlePlaceChange(item)"
-                  >
-                </el-option>
-              </el-select>
-            </el-form-item>
-              <el-form-item label="单位" prop="unit.uName">
-                <el-select
-                  v-model="parts.unit.uName"
-                  placeholder="请选择单位"
-                 >
-                  <el-option
-                    v-for="item in unitList"
-                    :key="item.uId"
-                    :label="item.uName"
-                    :value="item.uName"
-                    >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-<!--            <el-form-item label="供应商名称">-->
-<!--              <el-input disabled style="width: 100%" v-model="parts.supplier.sName"/>-->
-<!--            </el-form-item>-->
+        <div style="width: 50% ;float: right ;background: white">
+          <el-form-item label="产地或品牌" prop="place.plName">
+            <el-select
+              v-model="parts.place.plName"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入产地或品牌"
+              :remote-method="remotePlace"
+              :loading="loading"
+              @focus="getPlace">
+              <el-option
+                v-for="item in placeList"
+                :key="item.plId"
+                :label="item.plName"
+                :value="item.plName"
+                @click.native="handlePlaceChange(item)"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="单位" prop="unit.uName">
+            <el-select
+              v-model="parts.unit.uName"
+              placeholder="请选择单位"
+            >
+              <el-option
+                v-for="item in unitList"
+                :key="item.uId"
+                :label="item.uName"
+                :value="item.uName"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <!--            <el-form-item label="供应商名称">-->
+          <!--              <el-input disabled style="width: 100%" v-model="parts.supplier.sName"/>-->
+          <!--            </el-form-item>-->
 
-           <el-form-item label="车型号" prop="pCarName">
-             <el-cascader
-               ref="carCascader"
-               :options="options"
-               :props="{value:'name', label:'name'}"
-               :show-all-levels="false"
-               v-model="parts.pCarName"
-               clearable>
-               <template slot-scope="{ node, data }">
-                 <span>{{ data.name }}</span>
-                 <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-               </template>
-             </el-cascader>
-           </el-form-item>
-        <el-form-item label="零件类目" prop="pCategoryId">
-          <el-cascader
-            ref="pCatCascader"
-            :options="categoryOption"
-            :props="{value:'name', label:'name'}"
-            :show-all-levels="false"
-            v-model="parts.pCategoryId"
-            clearable>
-            <template slot-scope="{ node, data }">
-              <span>{{ data.name }}</span>
-              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-            </template>
-          </el-cascader>
-        </el-form-item>
+          <el-form-item label="车型号" prop="pCarName">
+            <el-cascader
+              ref="carCascader"
+              :options="options"
+              :props="{value:'name', label:'name'}"
+              :show-all-levels="false"
+              v-model="parts.pCarName"
+              clearable>
+              <template slot-scope="{ node, data }">
+                <span>{{ data.name }}</span>
+                <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+              </template>
+            </el-cascader>
+          </el-form-item>
+          <el-form-item label="零件类目" prop="pCategoryId">
+            <el-cascader
+              ref="pCatCascader"
+              :options="categoryOption"
+              :props="{value:'name', label:'name'}"
+              :show-all-levels="false"
+              v-model="parts.pCategoryId"
+              clearable>
+              <template slot-scope="{ node, data }">
+                <span>{{ data.name }}</span>
+                <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+              </template>
+            </el-cascader>
+          </el-form-item>
 
-        <el-form-item label="零件尺寸" style="width: 400px" prop="pPartsSizeType">
-<!--          <el-input v-model="parts.pPartsSizeType" style="width: 400px"></el-input>-->
-          <el-select v-model="parts.pPartsSizeType" placeholder="请选择零件尺寸">
-            <el-option label="小" :value="1"></el-option>
-            <el-option label="大" :value="0"></el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="零件尺寸" style="width: 400px" prop="pPartsSizeType">
+            <!--          <el-input v-model="parts.pPartsSizeType" style="width: 400px"></el-input>-->
+            <el-select v-model="parts.pPartsSizeType" placeholder="请选择零件尺寸">
+              <el-option label="小" :value="1"></el-option>
+              <el-option label="大" :value="0"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="厂家名称" prop="factory.fName">
-          <el-select
-            v-model="parts.factory.fName"
-            filterable
-            remote
-            reserve-keyword
-            placeholder="请输入厂家"
-            :remote-method="remoteFactory"
-            :loading="loading"
-            @focus="getFactory">
-            <el-option
-              v-for="item in factoryList"
-              :key="item.fId"
-              :label="item.fName"
-              :value="item.fName"
-              @click.native="handleFactoryChange(item)">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="售后周期" prop="pReturnCycle">
-          <el-select v-model="parts.pReturnCycle" placeholder="请选择产品售后周期">
-            <el-option label="原厂无三包" :value="0"></el-option>
-            <el-option :label="item.rcAmount+'天'" :value="item.rcAmount" v-for="item in cycleList"></el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="厂家名称" prop="factory.fName">
+            <el-select
+              v-model="parts.factory.fName"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入厂家"
+              :remote-method="remoteFactory"
+              :loading="loading"
+              @focus="getFactory">
+              <el-option
+                v-for="item in factoryList"
+                :key="item.fId"
+                :label="item.fName"
+                :value="item.fName"
+                @click.native="handleFactoryChange(item)">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="售后周期" prop="pReturnCycle">
+            <el-select v-model="parts.pReturnCycle" placeholder="请选择产品售后周期">
+              <el-option label="原厂无三包" :value="0"></el-option>
+              <el-option :label="item.rcAmount+'天'" :value="item.rcAmount" v-for="item in cycleList"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="零件状态" prop="pPartsStatus">
-          <el-select v-model="parts.pPartsStatus" placeholder="请选择零件状态">
-            <el-option label="上架" :value="1"></el-option>
-            <el-option label="下架" :value="0"></el-option>
-          </el-select>
-        </el-form-item>
+          <el-form-item label="零件状态" prop="pPartsStatus">
+            <el-select v-model="parts.pPartsStatus" placeholder="请选择零件状态">
+              <el-option label="上架" :value="1"></el-option>
+              <el-option label="下架" :value="0"></el-option>
+            </el-select>
+          </el-form-item>
 
-        <el-form-item label="备注">
-          <el-input v-model="parts.pNote" :rows="5" type="textarea"/>
-        </el-form-item>
+          <el-form-item label="备注">
+            <el-input v-model="parts.pNote" :rows="5" type="textarea"/>
+          </el-form-item>
 
-      </div>
+        </div>
 
 
       </el-form>

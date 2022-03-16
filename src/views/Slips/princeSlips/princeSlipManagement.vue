@@ -71,25 +71,36 @@
               <el-form-item label="支付订单编号:">
                 <span>{{ props.row.oOrderNumber }}</span>
               </el-form-item>
-              <el-form-item label="打包图片:" style="width: 50%;height: 180px">
-                <div class="demo-image__placeholder"  style="width: 300px;height: 180px">
-                  <div class="block" style="width: 270px;height: 180px">
-                    <el-image  :src="props.row.packageUrl"
-                               :preview-src-list="[props.row.packageUrl]"
-                               style="height:95%;width: 95%;padding-top: 3px;margin-left: 20px">
+              <el-form-item label="打包图片:"  style="width: 50%;height: 180px">
+                <div class="demo-image__placeholder" style="width: 300px;height: 180px">
+                  <div class="block" style="width: 180px;height: 180px">
+                    <el-image :src="props.row.packageUrl"
+                              :preview-src-list="[props.row.packageUrl]"
+                              style="height:90%;width: 90%;padding-top: 10px;margin-left: 20px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
                     </el-image>
                   </div>
                 </div>
+<!--                <div class="demo-image__placeholder"  style="width: 300px;height: 180px">-->
+<!--                  <div class="block" style="width: 270px;height: 180px">-->
+<!--                    <el-image  :src="props.row.packageUrl"-->
+<!--                               :preview-src-list="[props.row.packageUrl]"-->
+<!--                               style="height:80%;width: 80%;padding-top: 10px;margin-left: 20px">-->
+<!--                      <div slot="placeholder" class="image-slot">-->
+<!--                        加载中<span class="dot">...</span>-->
+<!--                      </div>-->
+<!--                    </el-image>-->
+<!--                  </div>-->
+<!--                </div>-->
               </el-form-item>
               <el-form-item label="发货图片:" style="width: 50%;height: 180px">
                 <div class="demo-image__placeholder" style="width: 300px;height: 180px">
-                  <div class="block" style="width: 270px;height: 180px">
+                  <div class="block" style="width: 180px;height: 180px">
                     <el-image :src="props.row.deliverUrl"
                               :preview-src-list="[props.row.deliverUrl]"
-                              style="height:95%;width: 95%;padding-top: 3px;margin-left: 20px">
+                              style="height:90%;width: 90%;padding-top: 10px;margin-left: 20px">
                       <div slot="placeholder" class="image-slot">
                         加载中<span class="dot">...</span>
                       </div>
@@ -115,21 +126,21 @@
         </el-table-column>
         <el-table-column label="详情表信息"  align="center" width="120px">
           <template slot-scope="scope">
-            <router-link :to="{path:'/Slips/princeSlipDetails',query:{oId:scope.row.oId,oStatus:scope.row.oStatus,oCustomerId:scope.row.oCustomerId}}">
+            <router-link :to="{path:'/Slips/princeSlipDetails',query:{oId:scope.row.oId,oStatus:scope.row.oStatus,oCustomerId:scope.row.oCustomerId,oType:scope.row.oType}}">
               <el-button type="primary" size="mini" icon="el-icon-edit">查看详情</el-button>
             </router-link>
           </template>
         </el-table-column>
         <el-table-column label="操作"  align="center">
           <template slot-scope="scope">
-            <!--            <el-button type="primary" size="mini" icon="el-icon-edit" @click="InverseSales(scope.row.oId)">转成报价单</el-button>-->
             <router-link :to="{path:'/returnGood/addCancelPriceSlips',query:{row:scope.row}}" style="margin-right: 10px">
               <el-button v-if="scope.row.isReturn===1" type="primary" size="mini" icon="el-icon-edit" >退货</el-button>
             </router-link>
-            <el-button  type="primary" size="mini" icon="el-icon-bottom" @click="openPackageGood(scope.row.oId)">{{scope.row.oIsPackage===0?'已打包':'打包'}}</el-button>
-            <el-button :disabled="scope.row.oIsPackage===1||scope.row.oStatus===0" type="primary" size="mini" icon="el-icon-bottom" @click="openDeliverGood(scope.row.oId)">{{scope.row.oStatus===1?'发货':'已发货'}}</el-button>
-            <el-button type="primary" size="mini" icon="el-icon-edit" :disabled="!(scope.row.oIsPackage===1&&scope.row.oStatus===1)"  @click="openUpdatePrinceSlips(scope.row)">修改</el-button>
-            <el-button type="danger" size="mini" icon="el-icon-delete"  @click="deletePrinceSlips(scope.row.oId)">删除</el-button>
+            <el-button  :disabled="scope.row.oType===1" type="primary" size="mini" icon="el-icon-bottom" @click="openPackageGood(scope.row.oId)">{{scope.row.oIsPackage===0?'已打包':'打包'}}</el-button>
+            <el-button :disabled="scope.row.oIsPackage===1||scope.row.oStatus===0||scope.row.oType===1" type="primary" size="mini" icon="el-icon-bottom" @click="openDeliverGood(scope.row.oId)">{{scope.row.oStatus===1?'发货':'已发货'}}</el-button>
+            <el-button :disabled="scope.row.oType===1" v-show="scope.row.oIsPackage===0&&scope.row.oStatus===0" type="primary" size="mini" icon="el-icon-bottom" @click="enterAccount(scope.row)">入账</el-button>
+            <el-button type="primary" size="mini" icon="el-icon-edit" :disabled="!(scope.row.oIsPackage===1&&scope.row.oStatus===1)||scope.row.oType===1"  @click="openUpdatePrinceSlips(scope.row)">修改</el-button>
+            <el-button :disabled="scope.row.oType===1" type="danger" size="mini" icon="el-icon-delete"  @click="deletePrinceSlips(scope.row.oId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -157,9 +168,9 @@
               <el-option value="线上" label="线上"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="其他费用">
-            <el-input @keyup.native="princeSheetModify.oOtherCostMoney = oninput(princeSheetModify.oOtherCostMoney)" v-model="princeSheetModify.oOtherCostMoney"/>
-          </el-form-item>
+<!--          <el-form-item label="其他费用">-->
+<!--            <el-input @keyup.native="princeSheetModify.oOtherCostMoney = oninput(princeSheetModify.oOtherCostMoney)" v-model="princeSheetModify.oOtherCostMoney"/>-->
+<!--          </el-form-item>-->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogPrinceSheetFormVisible = false">取 消</el-button>
@@ -253,6 +264,8 @@ import {baseURL} from "@/api/http";
 export default {
   data(){
     return{
+      //图片高度
+      imgHeight:0,
       inPicPar:{},
       DeliverPicPar:{},
       //图片上传
@@ -334,12 +347,35 @@ export default {
     }
   },
   methods: {
+    //入账
+    enterAccount(params){
+      this.$confirm('是否确认入账'+'?','提示',{
+        confirmButtonText:'确定',
+        cancelButtonText:'取消',
+        type:'warning'
+      }).then(()=>{
+        params.oCreateTime=undefined
+        params.oResultTime=undefined
+        params.oOrderClosingStatus=2
+        params.oExistBill=1
+        PostData('/order/updateOrder',params).then((res)=>{
+          this.$message({
+            type:'success',
+            message:"入账成功"
+          })
+          this.getList()
+        })
+      })
+
+    },
     //打包
     openPackageGood(oId){
       this.PackageGoods={}
       this.dialogPackageGoodsVisible=true
       this.PackageGoods.orderId=oId
       this.PackageGoods.type=0
+      this.PackageGoods.oOrderClosingStatus=2
+      this.PackageGoods.oExistBill=0
     },
     //处理打包
     handlePackageGoods(){
@@ -390,6 +426,8 @@ export default {
       this.dialogDeliverGoodsVisible=true
       this.DeliverGoods.orderId=oId
       this.DeliverGoods.type=1
+      this.DeliverGoods.oOrderClosingStatus=2
+      this.DeliverGoods.oExistBill=0
     },
     //处理发货
     handleDeliverGoods(){
@@ -440,7 +478,6 @@ export default {
         this.queryPrinceSheet.endTimeSequence, this.queryPrinceSheet.pageNum,
         this.queryPrinceSheet.pageSize,this.queryPrinceSheet.isExistBill)
         .then(res=>{
-          console.log(res.list)
           this.total=res.total
           for (let i=0;i<res.list.length;i++){
             res.list[i].oCreateTime=getTime(res.list[i].oCreateTime)
@@ -473,18 +510,19 @@ export default {
           setTimeout(() => {
             this.princeSheetBtnDisabled = false
           }, 1000)
-          this.princeSheetModify.oCreateTime = null,
-            this.princeSheetModify.oResultTime = null,
-            PostData('order/updateOrder', this.princeSheetModify)
-              .then(res => {
-                console.log(res)
-                this.$message({
-                  type: 'success',
-                  message: '修改销售单信息成功'
-                })
-                this.dialogPrinceSheetFormVisible = false
-                this.getList()
+          this.princeSheetModify.oCreateTime = undefined
+          this.princeSheetModify.oResultTime = undefined
+          this.princeSheetModify.oOrderClosingStatus=2
+          this.princeSheetModify.oExistBill=0
+          PostData('order/updateOrder', this.princeSheetModify)
+            .then(res => {
+              this.$message({
+                type: 'success',
+                message: '修改销售单信息成功'
               })
+              this.dialogPrinceSheetFormVisible = false
+              this.getList()
+            })
         }
       })
     },
@@ -556,5 +594,6 @@ export default {
   margin-bottom: 0;
   width: 50%;
 }
+
 
 </style>

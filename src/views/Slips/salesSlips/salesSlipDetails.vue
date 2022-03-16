@@ -41,8 +41,8 @@
             {{ (querySalesSlip.pageNum - 1) * querySalesSlip.pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="pname" label="名称"   align="center"/>
-        <el-table-column prop="cname" label="客户名称" width="100px" align="center" />
+        <el-table-column prop="pName" label="名称"   align="center"/>
+        <el-table-column prop="cName" label="客户名称" width="200px" align="center" />
         <el-table-column prop="qdType" label="类型" width="70px" align="center">
           <template slot-scope="scope">
             {{ scope.row.qdType===0?'整件':'零件'}}
@@ -136,6 +136,7 @@ export default {
             res.list[i].qdUpdateTime=getTime(res.list[i].qdUpdateTime)
           }
           this.salesSlipList=res.list
+          console.log(this.salesSlipList)
         })
     },
     openSalesSlipDialog(params){

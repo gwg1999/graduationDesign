@@ -50,8 +50,7 @@
               border
               fit
               v-show="levelIV.qdType===1"
-              highlight-current-row
-              style="width: 100%;font-size: 4px;line-height:20px;padding: 0">
+              highlight-current-row>
       <el-table-column
         label="序号"
         width="50%"
@@ -118,23 +117,23 @@
       </el-table-column>
       <el-table-column prop="pNumber" label="零件号" width="80px" align="center" />
       <el-table-column prop="pName" label="零件名" width="100px" align="center" />
-      <el-table-column prop="place.plName" label="产地" width="80px"  align="center"/>
+      <el-table-column prop="place.plName" label="产地" width="60px"  align="center"/>
       <!--      <el-table-column prop="pCarName" label="车型号" width="80px"  align="center"/>-->
-      <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
-      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>
-      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />
-      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>
-      <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>
-      <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>
+      <el-table-column prop="unit.uName" label="单位" width="50px" align="center"/>
+      <el-table-column prop="pLowPrice" label="一级价格" width="60px"  align="center"/>
+      <el-table-column prop="pMiddlePrice" label="二级价格" width="60px" align="center" />
+      <el-table-column prop="pHighPrice" label="三级价格" width="60px"  align="center"/>
+      <el-table-column prop="pBuyingPrice" label="进价" width="60px"  align="center"/>
+      <el-table-column prop="pRealInventory" label="库存数" width="65px"  align="center"/>
       <el-table-column prop="pId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
-            <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
+            <div style="display: flex;justify-content: space-evenly;font-size: 4px">
               <el-form-item>
                 数量:<el-input style="width: 100px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.qdNumber = number(scope.row.qdNumber)"  v-model = "scope.row.qdNumber"  size="small"></el-input>
               </el-form-item>
               <el-form-item>
-                价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
+                价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 80px;" size="small" ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
@@ -160,7 +159,7 @@
           {{ (levelIV.pageNum - 1) * levelIV.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="wName" label="整件名" width="500px" align="center" />
+      <el-table-column prop="wName" label="整件名" width="400px" align="center" />
       <el-table-column prop="wNumber" label="整件数量"  width="100px" align="center" />
       <el-table-column prop="wAlarmNumber" label="告警量"  width="100px" align="center" />
       <el-table-column prop="wId" label="零件数目和价格" align="center">
@@ -340,7 +339,7 @@
                 <el-table-column label="操作"  align="center">
                   <template slot-scope="scope">
                     <el-button type="primary" size="mini" icon="el-icon-edit"  @click="openWholeRecordDialog(scope.row)">修改</el-button>
-                    <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteWholeRecord(scope.row)">删除</el-button>
+                    <el-button  type="primary" size="mini" icon="el-icon-delete"  @click="deleteWholeRecord(scope.row)">删除</el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -349,7 +348,7 @@
         </el-main>
         <el-footer style="padding-top: 10px">
           <el-button style="margin-left:70% " @click="dialogVisible = false">取 消</el-button>
-          <el-button style="margin-right:5% " type="primary" @click="submitForm">确 定</el-button>
+          <el-button :disabled="BtnDisabled" style="margin-right:5% " type="primary" @click="submitForm">确 定</el-button>
         </el-footer>
       </el-container>
     </el-dialog>
@@ -434,6 +433,7 @@ import {validatePassCheck} from "@/views/Slips/ruleNumber";
 export default {
   data() {
     return {
+      BtnDisabled:false,
       //该零件历史记录
       dialogNoCustomerHistoryPrice:false,
       historyNoCustomerPriceList:[],
@@ -636,6 +636,10 @@ export default {
       this.dialogVisible=true
     },
     submitForm(){
+      this.BtnDisabled = true
+      setTimeout(() => {
+        this.BtnDisabled = false
+      }, 1000)
       this.$refs['salesSlip'].validate((valid) => {
         if (valid) {
           this.salesSlip.qOrderStatus = 0
@@ -648,18 +652,21 @@ export default {
               value.qdPartsId=value.wId
             })
           }
-          this.salesSlip.quotationDetailList=[...this.salesSlip.quotationDetailList,...this.salesSlip.wholeDetailsList]
-          if(this.salesSlip.quotationDetailList&&this.salesSlip.quotationDetailList.length>0) {
-            this.salesSlip.quotationDetailList.forEach((value) => {
+          let salesSlipCopy={}
+          salesSlipCopy=JSON.parse(JSON.stringify(this.salesSlip))
+          salesSlipCopy.quotationDetailList=[...this.salesSlip.quotationDetailList,...this.salesSlip.wholeDetailsList]
+          // this.salesSlip.quotationDetailList=[...this.salesSlip.quotationDetailList,...this.salesSlip.wholeDetailsList]
+          if(salesSlipCopy.quotationDetailList&&salesSlipCopy.quotationDetailList.length>0) {
+            salesSlipCopy.quotationDetailList.forEach((value) => {
               value.qdPartsSizeType=value.pPartsSizeType
               value.qdRealTimePrice=parseInt(value.price)
               let partPrince = parseInt(value.price)
               qPrice += partPrince * value.qdNumber
-              value.qdCustomerId = this.salesSlip.qCustomerId
+              value.qdCustomerId = salesSlipCopy.qCustomerId
             })
-            this.salesSlip.qPrice = qPrice
+            salesSlipCopy.qPrice = qPrice
           }
-          PostData('quotation/addQuotation',this.salesSlip)
+          PostData('quotation/addQuotation',salesSlipCopy)
             .then(res=>{
               this.$message({
                 type:'success',

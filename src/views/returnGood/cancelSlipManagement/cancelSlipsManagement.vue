@@ -96,22 +96,27 @@
         <el-table-column label="操作"  align="center" >
           <template slot-scope="scope">
             <el-button :disabled="scope.row.rIsReceive!==0" v-show="scope.row.rType===1||scope.row.rType===0" type="primary" @click="takeOver(scope.row)" size="mini" icon="el-icon-edit">收货</el-button>
-            <el-button v-show="scope.row.rType!==1" :disabled="scope.row.rIsPayment===1" style="margin-right: 5px"   type="primary" size="mini" icon="el-icon-edit"  @click="openPaymentDialog(scope.row)">打款</el-button>
+            <!-- 退货退款-->
+            <el-button v-show="scope.row.rType===0" :disabled="scope.row.rIsPayment===1||scope.row.rIsReceive===0" style="margin-right: 5px"   type="primary" size="mini" icon="el-icon-edit"  @click="openPaymentDialog(scope.row)">打款</el-button>
+            <!-- 仅退款-->
+            <el-button v-show="scope.row.rType===2" :disabled="scope.row.rIsPayment===1" style="margin-right: 5px"   type="primary" size="mini" icon="el-icon-edit"  @click="openPayment(scope.row)">打款</el-button>
             <el-button  v-show="scope.row.rType===1" :disabled="scope.rIsReceive===1||scope.row.rIsReceive===2" style="margin-left: 5px" type="primary" size="mini" icon="el-icon-edit"  @click="deliverGood(scope.row)">发货</el-button>
             <el-button  v-show="scope.row.rType===1" type="danger" size="mini" icon="el-icon-edit"  @click="finishReturn(scope.row)">结束</el-button>
-            <el-button  type="primary" size="mini" icon="el-icon-edit"  @click="openReturnSheetDialog(scope.row)">修改</el-button>
+            <el-button v-show="scope.row.rType===1" type="primary" size="mini" icon="el-icon-edit"  @click="openReturnSheetDialog(scope.row)">修改</el-button>
+            <!--            退货退款-->
+            <el-button v-show="scope.row.rType===0" type="primary" size="mini" icon="el-icon-edit"  @click="openReturnDialog(scope.row)">修改</el-button>
             <el-button v-show="scope.row.rIsReceive===0&&scope.row.rIsPayment===0"  type="danger" size="mini" icon="el-icon-edit"  @click="deleteReturnSlip(scope.row.rId)" >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <!--修改-->
+      <!--退换货修改-->
       <el-dialog :visible.sync="dialogSalesSheetFormVisible" title="修改退货单">
         <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">
-          <el-form-item label="退货物流号" prop="rReturnLogistics">
-            <el-input v-model="returnGoodSlipsModify.rReturnLogistics"/>
+          <el-form-item label="退货物流号" prop="rReturnLogistics" >
+            <el-input v-model="returnGoodSlipsModify.rReturnLogistics" style="width: 400px"/>
           </el-form-item>
           <el-form-item label="发货物流号" prop="rDeliverLogistics">
-            <el-input v-model="returnGoodSlipsModify.rDeliverLogistics"/>
+            <el-input v-model="returnGoodSlipsModify.rDeliverLogistics" style="width: 400px"/>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -136,45 +141,38 @@
                      @click="UpdatePaymentSlips()">确 定</el-button>
         </div>
       </el-dialog>
-      <!--收货-->
-      <!--      <el-dialog :visible.sync="dialogPaymentFormVisible" title="收货">-->
-      <!--        <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">-->
-      <!--          <el-form-item label="退款金额" prop="qdNumber">-->
-      <!--            <el-input :disabled="true" v-model="returnGoodSlipsModify.rReturnLogistics"/>-->
-      <!--          </el-form-item>-->
-      <!--        </el-form>-->
-      <!--        <div slot="footer" class="dialog-footer">-->
-      <!--          <el-button @click="dialogPaymentFormVisible = false">取 消</el-button>-->
-      <!--          <el-button :disabled="salesSheetBtnDisabled" type="primary"-->
-      <!--                     @click="UpdatePaymentSlips()">确 定</el-button>-->
-      <!--        </div>-->
-      <!--      </el-dialog>-->
-      <!--发货-->
-<!--      <el-dialog :visible.sync="dialogPaymentFormVisible" title="发货">-->
-<!--        <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">-->
-<!--          <el-form-item label="退款金额" prop="qdNumber">-->
-<!--            <el-input :disabled="true" v-model="returnGoodSlipsModify.rReturnLogistics"/>-->
-<!--          </el-form-item>-->
-<!--        </el-form>-->
-<!--        <div slot="footer" class="dialog-footer">-->
-<!--          <el-button @click="dialogPaymentFormVisible = false">取 消</el-button>-->
-<!--          <el-button :disabled="salesSheetBtnDisabled" type="primary"-->
-<!--                     @click="UpdatePaymentSlips()">确 定</el-button>-->
-<!--        </div>-->
-<!--      </el-dialog>-->
-      <!--退款-->
-<!--      <el-dialog :visible.sync="dialogPaymentFormVisible" title="退款">-->
-<!--        <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">-->
-<!--          <el-form-item label="退款金额" prop="rPrice">-->
-<!--            <el-input :disabled="true" v-model="returnGoodSlipsModify.rPrice"/>-->
-<!--          </el-form-item>-->
-<!--        </el-form>-->
-<!--        <div slot="footer" class="dialog-footer">-->
-<!--          <el-button @click="dialogPaymentFormVisible = false">取 消</el-button>-->
-<!--          <el-button :disabled="salesSheetBtnDisabled" type="primary"-->
-<!--                     @click="UpdatePaymentSlips()">确 定</el-button>-->
-<!--        </div>-->
-<!--      </el-dialog>-->
+      <!--仅退款--打款-->
+      <el-dialog :visible.sync="dialogPaymentVisible" title="打款">
+        <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">
+          <el-form-item label="退款金额" prop="qdNumber">
+            <el-input  v-model="returnGoodSlipsModify.rPrice"/>
+          </el-form-item>
+          <el-form-item label="备注" prop="note">
+            <el-input v-model="returnGoodSlipsModify.note" style="width:80%"  rows="5" type="textarea"/>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogPaymentVisible = false">取 消</el-button>
+          <el-button :disabled="salesSheetBtnDisabled" type="primary"
+                     @click="UpdatePaymentSlips()">确 定</el-button>
+        </div>
+      </el-dialog>
+      <!--退货退款修改-->
+      <el-dialog :visible.sync="dialogSalesSheetVisible" title="修改退货单">
+        <el-form :model="returnGoodSlipsModify" label-width="120px" :rules="rules" ref="returnGoodSlipsModify">
+          <el-form-item label="退货物流号" prop="rReturnLogistics" >
+            <el-input v-model="returnGoodSlipsModify.rReturnLogistics" style="width: 400px"/>
+          </el-form-item>
+          <!--          <el-form-item label="发货物流号" prop="rDeliverLogistics">-->
+          <!--            <el-input v-model="returnGoodSlipsModify.rDeliverLogistics" style="width: 400px"/>-->
+          <!--          </el-form-item>-->
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogSalesSheetVisible = false">取 消</el-button>
+          <el-button :disabled="salesSheetBtnDisabled" type="primary"
+                     @click="UpdateReturnSlips()">确 定</el-button>
+        </div>
+      </el-dialog>
 
       <el-pagination
         :current-page="pageNum"
@@ -196,9 +194,13 @@ import {deleteReturnGood} from "@/views/returnGood/myApi";
 export default {
   data(){
     return{
+      //退货退款修改
+      dialogSalesSheetVisible:false,
+      //仅退款--打款
+      dialogPaymentVisible:false,
       //打款
       dialogPaymentFormVisible:false,
-      //修改退货单
+      //修改退换货退货单
       dialogSalesSheetFormVisible:false,
       salesSheetBtnDisabled:false,
       pageSize:10,
@@ -271,7 +273,11 @@ export default {
           })
       })
     },
-    //打款操作
+    //仅退款--打款操作
+    openPayment(params){
+      this.dialogPaymentVisible=true
+      this.returnGoodSlipsModify=JSON.parse(JSON.stringify(params))
+    },
     openPaymentDialog(params){
       this.dialogPaymentFormVisible=true
       this.returnGoodSlipsModify=JSON.parse(JSON.stringify(params))
@@ -289,6 +295,7 @@ export default {
             message: '打款成功'
           })
           this.dialogPaymentFormVisible = false
+          this.dialogPaymentVisible=false
           this.getList()
         })
     },
@@ -314,7 +321,12 @@ export default {
           this.total=res.total
         })
     },
-    //修改
+    //退货退款修改
+    openReturnDialog(params){
+      this.dialogSalesSheetVisible=true
+      this.returnGoodSlipsModify=JSON.parse(JSON.stringify(params))
+    },
+    //退换货修改
     openReturnSheetDialog(params){
       this.dialogSalesSheetFormVisible=true
       this.returnGoodSlipsModify=JSON.parse(JSON.stringify(params))
@@ -334,6 +346,7 @@ export default {
                 type: 'success',
                 message: '修改退货单信息成功'
               })
+              this.dialogSalesSheetVisible=false
               this.dialogSalesSheetFormVisible = false
               this.getList()
             })

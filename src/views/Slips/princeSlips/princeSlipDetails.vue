@@ -16,8 +16,7 @@
             <el-button type="primary" icon="el-icon-d-arrow-left">返回</el-button>
           </router-link>
         </el-form-item >
-
-        <el-form-item v-show="parseInt(flag)!==parseInt('0')" style="position: absolute ;right: 10px">
+        <el-form-item  v-show="Number($route.query.oType)===2" style="position: absolute ;right: 10px">
           <router-link :to="{path:'/Slips/addPriceDetailsGoods',query:{oCustomerId:this.$route.query.oCustomerId,oId:this.$route.query.oId}}">
             <el-button type="primary"
                        icon="el-icon-circle-plus">添加</el-button>
@@ -155,7 +154,6 @@ export default {
   },
   created() {
     this.getList()
-    console.log(this.$route.query.oStatus)
     this.flag=this.$route.query.oStatus
   },
   methods:{
@@ -164,12 +162,10 @@ export default {
       this.querySerialNumber.orderId=this.$route.query.oId
       this.querySerialNumber.detailId=odId
       querySerialNumber(this.querySerialNumber,this.pageNum=1,this.pageSize=10).then(res=>{
-        console.log(res)
         if(res.list&&res.list.length>0)
           res.list.forEach((item) => {
             item.updateDate = getTime(item.updateDate)
           })
-        console.log(res.list)
         this.serialNumberList=res.list
       })
       this.dialogSerialNumberVisible=true
@@ -180,7 +176,6 @@ export default {
       princeSlips.queryAllDetails(this.queryPrinceSheet.odOrderId,this.queryPrinceSheet.pName,
         this.queryPrinceSheet.odType,this.queryPrinceSheet.pageNum,this.queryPrinceSheet.pageSize)
         .then(res=>{
-          console.log(res.list)
           this.princeSheetList=res.list
           this.total=res.total
         })
@@ -192,24 +187,28 @@ export default {
       this.princeSheetModify=JSON.parse(JSON.stringify(params))
     },
     UpdateInquirySheet(){
-      this.$refs['princeSheetModify'].validate((valid)=>{
-        if(valid){
-          let orderDetailList = []
-          let SlipModify = {}
-          orderDetailList.push(this.princeSheetModify)
-          SlipModify.orderDetailList = orderDetailList
-          SlipModify.oId=this.$route.query.oId
-          PostData('OrderDetail/updateOrderDetail',SlipModify)
-            .then(res=>{
-              this.$message({
-                type:'success',
-                message:'修改销售单详情信息成功'
+      this.princeSheetBtnDisabled = true
+      setTimeout(() => {
+        this.princeSheetBtnDisabled = false
+      }, 1000)
+        this.$refs['princeSheetModify'].validate((valid)=>{
+          if(valid){
+            let orderDetailList = []
+            let SlipModify = {}
+            orderDetailList.push(this.princeSheetModify)
+            SlipModify.orderDetailList = orderDetailList
+            SlipModify.oId=this.$route.query.oId
+            PostData('OrderDetail/updateOrderDetail',SlipModify)
+              .then(res=>{
+                this.$message({
+                  type:'success',
+                  message:'修改销售单详情信息成功'
+                })
+                this.dialogPrinceSheetFormVisible=false
+                this.getList()
               })
-              this.dialogPrinceSheetFormVisible=false
-              this.getList()
-            })
-        }
-      })
+          }
+        })
     },
     deleteInquirySheet(params){
       this.$confirm('是否将此销售单信息删除'+'?','提示',{

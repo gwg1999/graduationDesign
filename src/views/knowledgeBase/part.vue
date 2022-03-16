@@ -162,17 +162,17 @@
         </template>
       </el-table-column>
       <!--      <el-table-column prop="cBrandId" label="车品牌ID" width="100%"  align="center"/>-->
-      <el-table-column prop="kName" label="零件名" width="200"  align="center"/>
+      <el-table-column prop="kName" label="零件名" width="200px"  align="center"/>
       <!--      <el-table-column prop="cFactoryId" label="车工场ID" width="100%"  align="center"/>-->
       <!--      <el-table-column prop="cFactoryName" label="车工厂名" width="120%" align="center" />-->
       <!--      <el-table-column prop="cModelId" label="车模型ID" width="120%" align="center"/>-->
-      <el-table-column prop="kNumber" label="零件号" width="200"  align="center"/>
+      <el-table-column prop="kNumber" label="零件号" width="200px"  align="center"/>
       <!--      <el-table-column prop="cPrice" label="车价格" width="80%"  align="center"/>-->
       <!--      <el-table-column prop="cStatus" label="车状态" width="110%" align="center"/>-->
       <!--      <el-table-column prop="cTypeId" label="车类型ID" width="130%" align="center"/>-->
-      <el-table-column prop="place.plName" label="产地名" width="100%"  align="center"/>
-      <el-table-column prop="unit.uName" label="单位" width="60%"  align="center"/>
-      <el-table-column prop="kPicture" label="图片" width="200" align="center">
+      <el-table-column prop="place.plName" label="产地名" width="100px"  align="center"/>
+      <el-table-column prop="unit.uName" label="单位" width="60px"  align="center"/>
+      <el-table-column prop="kPicture" label="图片" width="200px" align="center">
         <template slot-scope="scope">
           <el-image
             style="width: 100px; height: 100px"
@@ -182,7 +182,7 @@
           </el-image>
         </template>
       </el-table-column>
-      <el-table-column prop="kNote" label="备注" width="260"  align="center"/>
+      <el-table-column prop="kNote" label="备注" width="260px"  align="center"/>
 <!--      <el-table-column prop="kOtherModel" label="对应其他型号" width="200"  align="center"/>-->
       <!--      <el-table-column prop="cuDiscount" label="默认折扣" width="50%" align="center" />-->
       <!--      <el-table-column prop="cuDefaultPayment" label="默认支付方式" width="80%"  align="center"/>-->

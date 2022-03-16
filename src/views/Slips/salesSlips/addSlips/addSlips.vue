@@ -10,7 +10,10 @@
           <el-form-item label="客户单位" prop="qCustomerId" style="width: 650px">
             <el-select
               v-model="salesSlip.qCustomerId" filterable clearable placeholder="请选择客户单位"
-              :filter-method="userFilter" style="width: 640px">
+              ref="agentSelect"
+              :filter-method="userFilter" style="width: 640px"
+              @hook:mounted="cancalReadOnly"
+              @visible-change="cancalReadOnly">
               <el-option
                 v-for="customer in customerList"
                 :key="customer.cuId"
@@ -57,6 +60,17 @@ export default {
     }
   },
   methods: {
+    cancalReadOnly(onOff) {
+      this.$nextTick(() => {
+        if (!onOff) {
+          const Selects = this.$refs
+          if (Selects.agentSelect) {
+            const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }
+        }
+      })
+    },
     //客户单位模糊查询
     userFilter(query = '') {
       if(query!==''){

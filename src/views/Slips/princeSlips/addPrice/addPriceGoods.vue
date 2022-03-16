@@ -51,7 +51,7 @@
               fit
               v-show="levelIV.odType===1"
               highlight-current-row
-              style="width: 100%;font-size: 4px;line-height:20px;padding: 0">
+              style="width: 100%;padding: 0">
       <el-table-column
         label="序号"
         width="50%"
@@ -118,22 +118,22 @@
       </el-table-column>
       <el-table-column prop="pNumber" label="零件号" width="80px" align="center" />
       <el-table-column prop="pName" label="零件名" width="100px" align="center" />
-      <el-table-column prop="place.plName" label="产地或品牌" width="100px"  align="center"/>
-      <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
-      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>
-      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />
-      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>
-      <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>
-      <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>
+      <el-table-column prop="place.plName" label="产地" width="60px"  align="center"/>
+      <el-table-column prop="unit.uName" label="单位" width="50px" align="center"/>
+      <el-table-column prop="pLowPrice" label="一级价格" width="60px"  align="center"/>
+      <el-table-column prop="pMiddlePrice" label="二级价格" width="60px" align="center" />
+      <el-table-column prop="pHighPrice" label="三级价格" width="60px"  align="center"/>
+      <el-table-column prop="pBuyingPrice" label="进价" width="60px"  align="center"/>
+      <el-table-column prop="pRealInventory" label="库存数" width="65px"  align="center"/>
       <el-table-column prop="pId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
-            <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
+            <div style="display: flex;justify-content: space-evenly;font-size: 4px">
               <el-form-item>
-                数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
+                数量:<el-input-number   :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
               </el-form-item>
-              <el-form-item>
-                价格:<el-input  @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width: 100px;" size="small" ></el-input>
+              <el-form-item >
+                价格:<el-input style="width: 80px"  @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice"  size="small" ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
@@ -159,7 +159,7 @@
           {{ (levelIV.pageNum - 1) * levelIV.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="wName" label="整件名" width="500px" align="center" />
+      <el-table-column prop="wName" label="整件名" width="400px" align="center" />
       <el-table-column prop="wNumber" label="整件数量"  width="100px" align="center" />
       <el-table-column prop="wAlarmNumber" label="告警量"  width="100px" align="center" />
       <el-table-column prop="wId" label="零件数目和价格" align="center">
@@ -349,7 +349,7 @@
         </el-main>
         <el-footer style="padding-top: 10px">
           <el-button style="margin-left:70% " @click="dialogVisible = false">取 消</el-button>
-          <el-button style="margin-right:5% " type="primary" @click="submitForm">确 定</el-button>
+          <el-button :disabled="BtnDisabled" style="margin-right:5% " type="primary" @click="submitForm">确 定</el-button>
         </el-footer>
       </el-container>
     </el-dialog>
@@ -447,6 +447,7 @@ import {validatePassCheck} from "@/views/Slips/ruleNumber";
 export default {
   data() {
     return {
+      BtnDisabled:false,
       //零件负数添加备注
       dialogNote:false,
       priceNote:{},
@@ -655,15 +656,21 @@ export default {
       this.dialogVisible=true
     },
     submitForm(){
+      this.BtnDisabled = true
+      setTimeout(() => {
+        this.BtnDisabled = false
+      }, 1000)
       try {
         this.$refs['priceSlip'].validate((valid) => {
           if (valid) {
             this.priceSlip.oCustomerId=this.$route.query.priceSlip.oCustomerId
             this.priceSlip.qOrderStatus = 0
-            this.priceSlip.oType=3
+            this.priceSlip.oType=2
             this.priceSlip.oIsPackage=1
             this.priceSlip.oStatus=1
             this.priceSlip.oOrderClosingStatus=2
+            this.priceSlip.oOrderClosingSstatus=2
+            this.priceSlip.oExistBill=0
             this.priceSlip.oCreatePeopleId = parseInt(Cookie.get('aId'))
             if(this.priceSlip.wholeDetailsList&&this.priceSlip.wholeDetailsList.length>0){
               this.priceSlip.wholeDetailsList.forEach((value)=>{
@@ -671,17 +678,20 @@ export default {
                 value.odPartsId=value.wId
               })
             }
-            this.priceSlip.orderDetailList=[...this.priceSlip.orderDetailList,...this.priceSlip.wholeDetailsList]
+            let priceSlipCopy={}
+            priceSlipCopy=JSON.parse(JSON.stringify(this.priceSlip))
+            // this.priceSlip.orderDetailList=[...this.priceSlip.orderDetailList,...this.priceSlip.wholeDetailsList]
+            priceSlipCopy.orderDetailList=[...this.priceSlip.orderDetailList,...this.priceSlip.wholeDetailsList]
             let oSupposeIncome = 0
-            for (let i = 0; i < this.priceSlip.orderDetailList.length; i++) {
-              this.priceSlip.orderDetailList[i].odCustomerId = this.priceSlip.oCustomerId
-              this.priceSlip.orderDetailList[i].odStatus=0
-              this.priceSlip.orderDetailList[i].odSizeType= this.priceSlip.orderDetailList[i].pPartsSizeType
-              let partPrince = this.priceSlip.orderDetailList[i].odRetailPrice
-              oSupposeIncome += partPrince * this.priceSlip.orderDetailList[i].odNumber
+            for (let i = 0; i < priceSlipCopy.orderDetailList.length; i++) {
+              priceSlipCopy.orderDetailList[i].odCustomerId = priceSlipCopy.oCustomerId
+              priceSlipCopy.orderDetailList[i].odStatus=0
+              priceSlipCopy.orderDetailList[i].odSizeType= priceSlipCopy.orderDetailList[i].pPartsSizeType
+              let partPrince = priceSlipCopy.orderDetailList[i].odRetailPrice
+              oSupposeIncome += partPrince * priceSlipCopy.orderDetailList[i].odNumber
             }
-            this.priceSlip.oSupposeIncome = oSupposeIncome
-            PostData('order/addOrder',this.priceSlip)
+            priceSlipCopy.oSupposeIncome = oSupposeIncome
+            PostData('order/addOrder',priceSlipCopy)
               .then(res=>{
                 if (res.result === 'fails') {
                   let note=''
@@ -862,6 +872,7 @@ export default {
         PostData('/whole/selectAllByLike', this.levelIV).then(res => {
           this.wholeList=res.list
           this.total=res.total
+          console.log(res)
           this.list=[]
         })
       }
@@ -936,7 +947,7 @@ export default {
 </script>
 <style scoped>
 .dialog-footer{
-  padding: 0px;
+  padding: 0;
   margin-bottom: 20px;
 }
 .demo-table-expand {

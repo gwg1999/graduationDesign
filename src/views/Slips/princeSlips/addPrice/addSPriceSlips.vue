@@ -9,8 +9,13 @@
 
         <el-form-item label="客户单位" prop="oCustomerId" style="width: 650px">
           <el-select
-            v-model="priceSlip.oCustomerId" filterable clearable placeholder="请选择客户单位"
-            :filter-method="customerNameListFilter" style="width: 640px" @change="deliverWay($event)">
+            v-model="priceSlip.oCustomerId"
+            ref="agentSelect"
+            filterable clearable placeholder="请选择客户单位"
+            :filter-method="customerNameListFilter" style="width: 640px" @change="deliverWay($event)"
+            @hook:mounted="cancalReadOnly"
+            @visible-change="cancalReadOnly"
+          >
             <el-option
               v-for="customer in customerList"
               :key="customer.cuId"
@@ -22,8 +27,11 @@
         <el-form-item label="仓库管理员" prop="oWarehouseOperaterId" style="width: 500px">
           <el-select
             v-model="priceSlip.oWarehouseOperaterId" clearable
+            ref="agent2Select"
             :filter-method="warehouseOperatorListListFilter"
-            filterable placeholder="请选择仓库管理员" style="width: 500px">
+            filterable placeholder="请选择仓库管理员" style="width: 500px"
+            @hook:mounted="cancalReadOnly"
+            @visible-change="cancalReadOnly">
             <el-option
               v-for="WarehouseOperator in warehouseNameList"
               :key="WarehouseOperator.aId"
@@ -39,8 +47,15 @@
             <el-option :value="2" label="增值税发票"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="发货方式">
-          <el-select  id="selectInput" v-model="value" clearable filterable placeholder="请选择" ref="searchSelect" :filter-method="dataFilter" @visible-change="visibleChange" @focus="selectFocus">
+        <el-form-item label="发货方式" >
+          <el-select  id="selectInput" v-model="value"
+                      style="width: 200px"
+                      clearable filterable placeholder="请选择"
+                      ref="searchSelect" :filter-method="dataFilter"
+                      @hook:mounted="cancalReadOnly"
+                      @visible-change="cancalReadOnly"
+                      @focus="selectFocus"
+          >
             <el-option
               v-for="item in oDeliveryWayList"
               :key="item.cuCourier"
@@ -55,9 +70,9 @@
             <el-option value="线上" label="线上"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="其他费用">
-          <el-input @keyup.native="priceSlip.oOtherCostMoney = oninput(priceSlip.oOtherCostMoney)" v-model="priceSlip.oOtherCostMoney" style="width: 400px"/>
-        </el-form-item>
+        <!--        <el-form-item label="其他费用">-->
+        <!--          <el-input @keyup.native="priceSlip.oOtherCostMoney = oninput(priceSlip.oOtherCostMoney)" v-model="priceSlip.oOtherCostMoney" style="width: 400px"/>-->
+        <!--        </el-form-item>-->
         <el-form-item label="备注">
           <el-input v-model="priceSlip.oNote" style="width: 90%"  rows="5" type="textarea"/>
         </el-form-item>
@@ -73,10 +88,6 @@
 import {commonList} from "../../myApi"
 export default {
   created() {
-    if(this.$route.query.priceSlip){
-      this.priceSlip = Object.assign({}, this.$route.query.priceSlip)
-      this.value=this.$route.query.priceSlip.oDeliveryWay
-    }
     this.getList()
   },
   data(){
@@ -115,6 +126,27 @@ export default {
     }
   },
   methods:{
+    cancalReadOnly(onOff) {
+      this.$nextTick(() => {
+        if (!onOff) {
+          console.log(this)
+          const Selects = this.$refs
+          // console.log(Selects)　　　　　　// 如果只有1个下拉框，这段就足够了---start
+          if (Selects.agentSelect) {
+            const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }　　　　　　// 如果只有1个下拉框，这段就足够了---end　　　　　　// 如果有多个，就加多几个，代码可以优化，我懒了
+          if (Selects.agent2Select) {
+            const appinput = Selects.agent2Select.$el.querySelector('.el-input__inner')
+            appinput.removeAttribute('readonly')
+          }
+          if (Selects.searchSelect) {
+            const gameinput = Selects.searchSelect.$el.querySelector('.el-input__inner')
+            gameinput.removeAttribute('readonly')
+          }
+        }
+      })
+    },
     deliverWay(event){
       this.customerNameList.forEach((value)=>{
         if(value.cuId===event){
@@ -139,26 +171,26 @@ export default {
     },
     //客户单位模糊查询
     customerNameListFilter(query = '') {
-     if(query!==''){
-       let PinyinMatch = this.$pinyinmatch;
-       if (query) {
-         let result = [];
-         this.customerNameList.forEach(i => {
-           let m = PinyinMatch.match(i.cuUnitName, query);
-           if (m) {
-             result.push(i);
-           }
-         });
-         if(result.length>20){
-           this.customerList = result.slice(0, 20);
-         } else
-         {
-           this.customerList=result
-         }
-       }
-     }else {
-       this.customerList=[]
-     }
+      if(query!==''){
+        let PinyinMatch = this.$pinyinmatch;
+        if (query) {
+          let result = [];
+          this.customerNameList.forEach(i => {
+            let m = PinyinMatch.match(i.cuUnitName, query);
+            if (m) {
+              result.push(i);
+            }
+          });
+          if(result.length>20){
+            this.customerList = result.slice(0, 20);
+          } else
+          {
+            this.customerList=result
+          }
+        }
+      }else {
+        this.customerList=[]
+      }
     },
     warehouseOperatorListListFilter(query = '') {
       if(query!==''){
@@ -184,7 +216,6 @@ export default {
     },
     getList(){
       commonList("customer/selectAllByLike").then(res=>{
-        console.log(res)
         this.customerNameList=res.list
       })
       commonList('admin/selectAllByLike').then(res=>{
@@ -194,7 +225,6 @@ export default {
     saveSalesSlip(){
       this.$refs['priceSlip'].validate((valid) => {
         this.priceSlip.oDeliveryWay=this.value
-        console.log(this.priceSlip)
         if (valid) {
           this.$router.push({
             path: '/Slips/addPriceGoods',
@@ -254,16 +284,9 @@ export default {
     selectFocus(e){
       let value = e.target.value;
       setTimeout(() => {
-        console.log(this.$refs.searchSelect)
         let input = this.$refs.searchSelect.$children[0].$refs.input;
         input.value = value;
       })
-    },
-    visibleChange(val){
-      if(!val){
-        let input = this.$refs.searchSelect.$children[0].$refs.input;
-        input.blur();
-      }
     }
   }
 }
