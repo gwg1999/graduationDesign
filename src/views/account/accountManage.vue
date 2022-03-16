@@ -56,14 +56,20 @@
           fit
           highlight-current-row
           style="width: 100%">
-          <el-table-column label="姓名" align="center" prop="customId"></el-table-column>
-          <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
-          <el-table-column label="应收" align="center" prop="supposeIncome"></el-table-column>
-          <el-table-column label="时间" align="center" prop="createTime"></el-table-column>
-          <el-table-column label="应付" align="center" prop="supposeOutcome"></el-table-column>
-          <el-table-column label="实付" align="center" prop="realOutcome"></el-table-column>
-          <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
-          <el-table-column label="已付" align="center" prop="alreadyOutcome"></el-table-column>
+          <el-table-column
+            label="序号"
+            width="50%"
+            align="center">
+            <template slot-scope="scope">
+              {{ (orderQuery.pageNum - 1) * orderQuery.pageSize + scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column label="发货方式" align="center" prop="oDeliveryWay"></el-table-column>
+          <el-table-column label="支付方式" align="center" prop="oPaymentWay"></el-table-column>
+          <el-table-column label="时间" align="center" prop="oCreateTime"></el-table-column>
+          <el-table-column label="应收" align="center" prop="oSupposeIncome"></el-table-column>
+          <el-table-column label="实收" align="center" prop="oRealIncome"></el-table-column>
+<!--          <el-table-column label="结清状态" align="center"></el-table-column>-->
         </el-table>
         <el-pagination
           layout="total, prev, pager, next, jumper"
@@ -76,28 +82,28 @@
       </div>
       <div class="total-box" >
         <div class="table-button-box">
-          <el-button type="primary" @click="chargeVisible = true">挂账交易记录信息</el-button>
-          <el-button type="primary" @click="chargeSettleVisible = true">挂账交易结清信息</el-button>
+          <el-button type="primary" @click="chargeVisible = true">挂账结算记录</el-button>
+          <el-button type="primary" @click="chargeSettleVisible = true">挂账结清记录</el-button>
         </div>
         <div class="detail-box">
           <div class="partAccount" style="font-size: x-large">
             金额详细统计
           </div>
           <div class="partAccount">
-            挂账应收应付(￥)：
-            <div class="accountNumber" :style="{color: accountDetail.chargeNumber>=0?'green':'red'}">{{accountDetail.chargeNumber}}</div>
+            挂账应收(￥)：
+            <div class="accountNumber" style="color: red">{{accountDetail.chargeNumber}}</div>
           </div>
           <div class="partAccount">
-            线上应收应付(￥)：
-            <div class="accountNumber" :style="{color: accountDetail.chargeNumber>=0?'green':'red'}">{{accountDetail.chargeNumber}}</div>
+            线上应收(￥)：
+            <div class="accountNumber" style="color: red">{{accountDetail.onlineNumber}}</div>
           </div>
           <div class="partAccount">
-            线下应收应付(￥)：
-            <div class="accountNumber" :style="{color: accountDetail.chargeNumber>=0?'green':'red'}">{{accountDetail.chargeNumber}}</div>
+            线下应收(￥)：
+            <div class="accountNumber" style="color: red">{{accountDetail.outlineNumber}}</div>
           </div>
           <div class="totalAccount partAccount">
-            总金额应收应付(￥)：
-            <div class="accountNumber" :style="{color: accountDetail.allNumber>=0?'green':'red'}">{{accountDetail.chargeNumber}}</div>
+            总金额应收(￥)：
+            <div class="accountNumber" style="color: red">{{accountDetail.allNumber}}</div>
           </div>
         </div>
       </div>
@@ -134,6 +140,7 @@ import CreditRecordTable from "@/views/account/table/creditRecordTable";
 import ChargeDialog from "@/views/account/dialog/ChargeDialog";
 import ChargeSettleDialog from "@/views/account/dialog/ChargeSettleDialog";
 import {PostData} from "@/api";
+import {parseTime} from "@/utils";
 
 export default {
   name: "accountManage",
@@ -151,8 +158,9 @@ export default {
       orderQuery: {
         customerId: null,
         name: null,
-        dealType: null,
-        orderType: null,
+        closeStatus: 2,
+        dealType: null,  // 交易类型：挂账，线上，线下
+        orderType: 0,  // 订单类型：进货单、销售单
         pageSize: 10,
         pageNum: 1,
         startTime: null,
@@ -203,12 +211,15 @@ export default {
       console.log('orderQuery:')
       console.log(this.orderQuery)
       PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{
-        console.log('res:')
-        console.log(res)
         this.accountDetail = res
-        this.orders = JSON.parse(res.orders).list
-        console.log('orders:')
-        console.log(this.orders)
+        console.log(res)
+        let temp = JSON.parse(res.orders)
+        this.orders = temp.list
+        for(let order of this.orders){
+          order.oCreateTime = parseTime(order.oCreateTime,'{y}-{m}-{d} {h}:{i}:{s}')
+        }
+        this.pageTotal = temp.total
+        console.log(temp)
       }).catch(err=>{
         console.log(err);
       })
@@ -216,7 +227,6 @@ export default {
 
     querySearch(queryString, cb){
       PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 5,pageNum: 1}).then(res=>{
-        console.log(res.list)
         let customers = res.list
         for(let i in customers){
           customers[i].value = customers[i].cuUnitName

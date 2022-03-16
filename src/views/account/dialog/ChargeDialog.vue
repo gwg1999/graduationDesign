@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="挂账交易记录信息" :visible.sync="dialogVisible" @close="chargeClose">
+    <el-dialog title="挂账结算记录" :visible.sync="dialogVisible" @close="chargeClose">
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
@@ -42,12 +42,9 @@
             </template>
           </el-table-column>
           <el-table-column label="时间" align="center" prop="createTime"></el-table-column>
-          <el-table-column label="未收" align="center" prop="supposeIncome"></el-table-column>
-          <el-table-column label="未付" align="center" prop="supposeOutcome"></el-table-column>
-          <el-table-column label="实付" align="center" prop="realOutcome"></el-table-column>
+          <el-table-column label="应收" align="center" prop="supposeIncome"></el-table-column>
           <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
           <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
-          <el-table-column label="已付" align="center" prop="alreadyOutcome"></el-table-column>
         </el-table>
         <el-pagination
           layout="total, prev, pager, next, jumper"
@@ -113,6 +110,7 @@ export default {
       if(!this.chargeQuery.customId){
         this.$message.warning('请选择客户后再次搜索')
       }else{
+        console.log(this.chargeQuery)
         PostData('/bill/getChargeList', this.chargeQuery).then((res)=>{
           console.log("chargeList:")
           console.log(res);
@@ -146,7 +144,7 @@ export default {
     handleSelect(item){
       this.chargeQuery.customId = item.cuId
       console.log('selectItem:')
-      console.log(item);
+      console.log(this.chargeQuery);
     },
 
     creditPartConfirm(){

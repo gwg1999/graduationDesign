@@ -4,7 +4,6 @@
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
-<!--            <el-input v-model="creditPartCondition.name" clearable></el-input>-->
             <el-autocomplete v-model="creditPartCondition.name" :fetch-suggestions="querySearch" @select="handleSelect"></el-autocomplete>
           </el-form-item>
           <el-form-item label="交易时间">
@@ -31,13 +30,29 @@
           @selection-change="creditPartSelectionChange"
           ref="creditPartTable">
           <el-table-column type="selection" width="55"></el-table-column>
-          <el-table-column label="客户名称" prop="customerName"></el-table-column>
-          <el-table-column label="时间" prop="oCreateTime"></el-table-column>
-          <el-table-column label="应收" prop="oSupposeIncome"></el-table-column>
+          <el-table-column label="客户名称" prop="customerName" align="center"></el-table-column>
+          <el-table-column label="时间" prop="oCreateTime" align="center"></el-table-column>
+          <el-table-column label="应收" prop="oSupposeIncome" align="center"></el-table-column>
           <el-table-column label="支付方式" prop="oPaymentWay"></el-table-column>
-          <el-table-column label="账单状态" prop="oOrderClosingStatus"></el-table-column>
-          <el-table-column label="状态" prop="oStatus"></el-table-column>
+          <el-table-column label="账单状态" prop="oOrderClosingStatus" align="center">
+            <template slot-scope="scope">
+              <el-tag :type="scope.row.oOrderClosingStatus===2?'danger':'info'">{{scope.row.oOrderClosingStatus===2?'未结':'部分结清'}}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="状态" align="center">
+            <template slot-scope="scope">
+              <el-tag :type="scope.row.oStatus===1?'info':'success'">{{scope.row.oStatus===1?'未发货':'已发货'}}</el-tag>
+            </template>
+          </el-table-column>
         </el-table>
+<!--        <el-pagination-->
+<!--          layout="total, prev, pager, next, jumper"-->
+<!--          :page-size="orderQuery.pageSize"-->
+<!--          :current-page="orderQuery.pageNum"-->
+<!--          :total="pageTotal"-->
+<!--          style="padding: 30px 0; text-align: right;"-->
+<!--          @current-change="getList"-->
+<!--        />-->
       </div>
       <div style="text-align: right;margin-top: 10px">
         <el-button type="primary" @click="creditPartCancel">取消</el-button>
@@ -46,10 +61,13 @@
 
 
       <el-dialog width="30%" title="结算金额" :visible.sync="innerVisible" append-to-body>
-        <el-form label-width="60px" :rules="creditPartRules" :model="pay" ref="payForm">
-          <el-form-item label="应收">{{ creditPartMoney }}</el-form-item>
-          <el-form-item label="实收" prop="payNumber">
-            <el-input v-model="pay.payNumber"></el-input>
+        <el-form label-width="60px" :rules="creditPartRules" :model="chargeInfo.charge" ref="payForm">
+          <el-form-item label="应收">{{ chargeInfo.charge.supposeIncome }}</el-form-item>
+          <el-form-item label="已收" prop="alreadyIncome">
+            <el-input v-model="chargeInfo.charge.alreadyIncome"></el-input>
+          </el-form-item>
+          <el-form-item label="实收" prop="realIncome">
+            <el-input v-model="chargeInfo.charge.realIncome"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="payCancel">取消</el-button>
@@ -57,8 +75,6 @@
           </el-form-item>
         </el-form>
       </el-dialog>
-
-
     </el-dialog>
   </div>
 </template>
@@ -67,6 +83,7 @@
 import {parseTime} from "@/utils";
 import princeSlips from "@/api/slips/princeSlips";
 import {PostData} from "@/api";
+import qs from 'qs'
 
 export default {
   name: "PayPart",
@@ -78,31 +95,34 @@ export default {
       },
       innerVisible: false,
       creditPartCondition: {
-        customId: null,
+        OCustomerId: null,  // 客户id
         startTime: null,
-        beginTime: null,
-        createTimeSequence: 0,
-        endTimeSequence: 0,
-        isExistBill: 1,
+        OExistBill: 1,  //
         endTime: null,
+        OOrderClosingStatus: 2,  //结清状态
+        pageSize: 10,
+        pageNum: 1,
       },
       tempDate1: null,
       creditPartSelection: [],
       creditPartRules: {
-        payNumber: [
+        realIncome: [
           {required: true, message: '请输入实收金额', trigger: ['change', 'blur']}
+        ],
+        alreadyIncome: [
+          {required: true, message: '请输入已收金额', trigger: ['change', 'blur']}
         ]
       },
       chargeInfo: {
         charge: {
-          alreadyIncome: 0,
+          alreadyIncome: null,
           alreadyOutcome: 0,
           customId: null,
           dealPicture: null,
           isDeal: 0,
-          realIncome: 0,
+          realIncome: null,
           realOutcome: 0,
-          supposeIncome: 0,
+          supposeIncome: null,
           supposeOutcome: 0,
           wholePrice: 0,
         },
@@ -118,9 +138,6 @@ export default {
     }
   },
   computed: {
-    creditPartVisible: function (){
-      return this.partVisible
-    },
     creditPartMoney: function (){
       let total = 0
       for(let selection of this.creditPartSelection){
@@ -138,7 +155,6 @@ export default {
     }
   },
   methods: {
-
     querySearch(queryString,cb){
       PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 10000,pageNum: 1}).then(res=>{
         console.log(res.list)
@@ -153,7 +169,7 @@ export default {
     },
 
     handleSelect(item){
-      this.creditPartCondition.customId = item.id
+      this.creditPartCondition.OCustomerId = item.cuId
       console.log(item);
     },
 
@@ -164,17 +180,16 @@ export default {
         this.creditPartCondition.endTime = parseTime(this.tempDate1[1],'{y}-{m}-{d}')
       }
       console.log(this.creditPartCondition)
-      princeSlips.queryAll(this.creditPartCondition.name,this.creditPartCondition.beginTime
-        ,this.creditPartCondition.endTime,this.creditPartCondition.createTimeSequence,
-        this.creditPartCondition.endTimeSequence, this.creditPartCondition.pageNum,
-        this.creditPartCondition.pageSize,this.creditPartCondition.isExistBill)
-        .then(res=>{
-          console.log(res);
-          this.creditPartData = res.list
-          for(let data of this.creditPartData){
-            data.oCreateTime = parseTime(data.oCreateTime, '{y}-{m}-{d}')
-          }
-        })
+      PostData('/order/getOrderByObject', qs.stringify(this.creditPartCondition)).then(res=>{
+        this.creditPartData = res.list
+        for(let data of this.creditPartData){
+          data.oCreateTime = parseTime(data.oCreateTime,'{y}-{m}-{d} {h}:{i}:{s}')
+        }
+        console.log('order:')
+        console.log(res)
+      }).catch(err=>{
+        console.log(err)
+      })
     },
 
     // 挂账结算多选
@@ -190,8 +205,12 @@ export default {
         type: 'warning'
       }).then(()=>{
         this.innerVisible = true
-        this.chargeInfo.charge.customId = this.creditPartSelection[0].oCustomerId
+        this.chargeInfo.charge.customId = this.creditPartSelection[0].OCustomerId
         this.chargeInfo.orderList = this.creditPartSelection
+        for(let order of this.chargeInfo.orderList){
+          delete order.oCreateTime
+        }
+        this.chargeInfo.charge.supposeIncome = this.creditPartMoney
         console.log(this.creditPartSelection)
       })
     },
@@ -202,13 +221,13 @@ export default {
       this.$emit('cancelClick')
       this.tempDate1 = null
       this.creditPartCondition = {
-        name: null,
+        OCustomerId: null,  // 客户id
         startTime: null,
-        beginTime: null,
-        createTimeSequence: 0,
-        endTimeSequence: 0,
-        isExistBill: 1,
+        OExistBill: 1,  //
         endTime: null,
+        OOrderClosingStatus: 2,  //结清状态
+        pageSize: 10,
+        pageNum: 1,
       }
     },
 
@@ -231,37 +250,36 @@ export default {
 
     // 挂账结算->确认金额
     payConfirm(){
+      this.chargeInfo.charge.customId = this.creditPartCondition.OCustomerId
       console.log("chargeInfo");
       console.log(this.chargeInfo)
-      if(parseInt(this.pay.payNumber)>this.creditPartMoney){
-        this.$message.error("实收金额大于应收金额，请重新确认")
+      if(parseInt(this.chargeInfo.charge.alreadyIncome)>this.creditPartMoney){
+        this.$message.error("已收金额大于应收金额，请重新确认")
       }else{
         this.$confirm('请确认金额','提示', {
           type:'warning'
         }).then(()=>{
-          this.chargeInfo.charge.realIncome = this.pay.payNumber
-          PostData('/bill/charge',this.chargeInfo).then(()=>{
+          PostData('/bill/charge',this.chargeInfo).then((res)=>{
+            console.log(res)
             this.$message.success('成功')
             this.innerVisible = false
             this.$emit('cancelClick')
             this.pay.payNumber = null
             this.toggleSelection()
             this.creditPartCondition = {
-              name: null,
+              OCustomerId: null,  // 客户id
               startTime: null,
-              beginTime: null,
-              createTimeSequence: 0,
-              endTimeSequence: 0,
-              isExistBill: 1,
+              OExistBill: 1,  //
               endTime: null,
+              OOrderClosingStatus: 2,  //结清状态
+              pageSize: 10,
+              pageNum: 1,
             }
           })
         }).catch(()=>{
           this.$message.error('支付失败，请重试')
         })
       }
-
-
     },
   }
 }

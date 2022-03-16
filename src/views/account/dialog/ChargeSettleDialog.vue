@@ -43,11 +43,8 @@
           </el-table-column>
           <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
           <el-table-column label="应收" align="center" prop="supposeIncome"></el-table-column>
-          <el-table-column label="时间" align="center" prop="createTime"></el-table-column>
-          <el-table-column label="应付" align="center" prop="supposeOutcome"></el-table-column>
-          <el-table-column label="实付" align="center" prop="realOutcome"></el-table-column>
           <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
-          <el-table-column label="已付" align="center" prop="alreadyOutcome"></el-table-column>
+          <el-table-column label="时间" align="center" prop="createTime"></el-table-column>
         </el-table>
         <el-pagination
           layout="total, prev, pager, next, jumper"
@@ -107,13 +104,11 @@ export default {
 
     chargeSearch(){
       PostData('/bill/getChargeSettleList', this.chargeQuery).then(res=>{
-        this.total = res.total
+        this.pageTotal = res.total
         this.chargeSettleData = res.list
         for(let data of this.chargeSettleData){
-          data.createTime = parseTime(data.createTime, '{y}-{m}-{d} {h}-{i}-{s}')
+          data.createTime = parseTime(data.createTime, '{y}-{m}-{d} {h}:{i}:{s}')
         }
-        console.log('res:');
-        console.log(res)
       }).catch(err=>{
         console.log(err);
       })
@@ -134,7 +129,7 @@ export default {
 
     handleSelect(item){
       console.log(item);
-      this.chargeQuery.customId = item.id
+      this.chargeQuery.customId = item.cuId
     }
   },
 

@@ -32,12 +32,9 @@
           ref="creditAllTable">
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="时间" align="center" prop="createTime"></el-table-column>
-          <el-table-column label="未收" align="center" prop="supposeIncome"></el-table-column>
-          <el-table-column label="未付" align="center" prop="supposeOutcome"></el-table-column>
-          <el-table-column label="实付" align="center" prop="realOutcome"></el-table-column>
+          <el-table-column label="应收" align="center" prop="supposeIncome"></el-table-column>
           <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
           <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
-          <el-table-column label="已付" align="center" prop="alreadyOutcome"></el-table-column>
         </el-table>
       </div>
       <div style="text-align: right;margin-top: 10px">
@@ -45,10 +42,13 @@
         <el-button type="primary" @click="creditAllConfirm">确认</el-button>
       </div>
       <el-dialog width="30%" title="结算金额" :visible.sync="creditAllInnerVisible" append-to-body>
-        <el-form label-width="60px" :rules="creditAllRules" :model="pay">
+        <el-form label-width="60px" :rules="creditAllRules" :model="chargeSettleInfo.chargeSettle">
           <el-form-item label="应收">{{ creditAllMoney }}</el-form-item>
-          <el-form-item label="实收" prop="payNumber">
-            <el-input v-model="pay.payNumber"></el-input>
+          <el-form-item label="已收" prop="alreadyIncome">
+            <el-input v-model="chargeSettleInfo.chargeSettle.alreadyIncome"></el-input>
+          </el-form-item>
+          <el-form-item label="实收" prop="realIncome">
+            <el-input v-model="chargeSettleInfo.chargeSettle.realIncome"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="payAllCancel">取消</el-button>
@@ -83,8 +83,9 @@ export default {
     creditAllMoney: function (){
       let total = 0
       for(let selection of this.creditAllSelection){
-        total += selection.supposeIncome
+        total += (selection.supposeIncome-selection.alreadyIncome)
       }
+      this.chargeSettleInfo.chargeSettle.supposeIncome = total
       return total
     }
   },
@@ -198,6 +199,9 @@ export default {
         type: 'warning'
       }).then(()=>{
         this.chargeSettleInfo.chargeList = this.creditAllSelection
+        for(let charge of this.chargeSettleInfo.chargeList){
+          delete charge.createTime
+        }
         this.chargeSettleInfo.chargeSettle.customId = this.creditAllCondition.customId
         this.creditAllInnerVisible = true
         console.log('chargeSettleInfo:')
@@ -207,15 +211,15 @@ export default {
 
     // 挂账结清->金额弹窗关闭
     payAllCancel(){
-
       this.creditAllInnerVisible = false
       this.pay.payNumebr = null
     },
 
     // 挂账结清->金额确认
     payAllConfirm(){
-
-      if(parseInt(this.pay.payNumber)!==this.creditAllMoney){
+      console.log('chargeSettleInfo:')
+      console.log(this.chargeSettleInfo)
+      if(parseInt(this.chargeSettleInfo.chargeSettle.alreadyIncome)!==this.creditAllMoney){
         this.$message.error("实收与应收不符，请确认金额")
       }else{
         this.$confirm('请确认是否结清', '提示', {
