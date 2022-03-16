@@ -3,12 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="解决查看零件详情退货周期问题">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/dev.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/dev.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/accountManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/accountManage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/ChargeDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/ChargeDialog.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/ChargeSettleDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/ChargeSettleDialog.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/table/creditRecordTable.vue" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +125,7 @@
       <workItem from="1647012186253" duration="1255000" />
       <workItem from="1647304261917" duration="4849000" />
       <workItem from="1647342387863" duration="4526000" />
-      <workItem from="1647399123318" duration="1963000" />
+      <workItem from="1647399123318" duration="4396000" />
     </task>
     <servers />
   </component>

@@ -603,10 +603,16 @@ export const constantRoutes=[
     children: [
       {
         path: 'accountManage',
-        name: '账单管理',
+        name: '销售账单',
         component: () => import('@/views/account/accountManage'),
-        meta: { title: '账单管理', icon: 'table'}
+        meta: { title: '销售账单', icon: 'table'}
       },
+      {
+        path: 'stockBillManage',
+        name: '进货账单',
+        component: () => import('@/views/account/stockBillManage'),
+        meta: { title: '进货账单', icon: 'table'}
+      }
     ]
   },
 

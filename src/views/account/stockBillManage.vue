@@ -2,8 +2,8 @@
   <div style="display: flex;flex-flow:column nowrap;overflow: hidden;">
     <div class="form-box">
       <el-form :inline="true" class="demo-form-inline">
-        <el-form-item label="客户姓名：">
-<!--          <el-input placeholder="请输入姓名" v-model="orderQuery.name" clearable></el-input>-->
+        <el-form-item label="进货商：">
+          <!--          <el-input placeholder="请输入姓名" v-model="orderQuery.name" clearable></el-input>-->
           <el-autocomplete
             class="inline-input"
             :fetch-suggestions="querySearch"
@@ -69,7 +69,7 @@
           <el-table-column label="时间" align="center" prop="oCreateTime"></el-table-column>
           <el-table-column label="应收" align="center" prop="oSupposeIncome"></el-table-column>
           <el-table-column label="实收" align="center" prop="oRealIncome"></el-table-column>
-<!--          <el-table-column label="结清状态" align="center"></el-table-column>-->
+          <!--          <el-table-column label="结清状态" align="center"></el-table-column>-->
         </el-table>
         <el-pagination
           layout="total, prev, pager, next, jumper"
@@ -109,22 +109,22 @@
       </div>
     </div>
 
-<!--    挂账结算弹窗-->
+    <!--    挂账结算弹窗-->
     <div>
       <pay-part :part-visible="creditPartVisible" @cancelClick="creditPartVisible = false"></pay-part>
     </div>
 
-<!--    挂账结清弹窗-->
+    <!--    挂账结清弹窗-->
     <div>
       <pay-all :all-visible="creditAllVisible" @cancelClick="creditAllVisible = false"></pay-all>
     </div>
 
-<!--    挂账交易记录弹窗-->
+    <!--    挂账交易记录弹窗-->
     <div>
       <charge-dialog :visible="chargeVisible" @chargeClose="chargeVisible = false"></charge-dialog>
     </div>
 
-<!--    挂账结清记录弹窗-->
+    <!--    挂账结清记录弹窗-->
     <div>
       <charge-settle-dialog :visible="chargeSettleVisible" @chargeClose="chargeSettleVisible = false"></charge-settle-dialog>
     </div>
@@ -142,7 +142,7 @@ import {PostData} from "@/api";
 import {parseTime} from "@/utils";
 
 export default {
-  name: "accountManage",
+  name: "stockBillManage",
   components: {
     PayPart,
     PayAll,
