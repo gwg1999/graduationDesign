@@ -7,18 +7,20 @@
 <!--            <el-input v-model="creditAllCondition.name"></el-input>-->
             <el-autocomplete v-model="creditAllCondition.name" :fetch-suggestions="querySearch" @select="handleSelect"></el-autocomplete>
           </el-form-item>
-          <el-form-item label="交易时间">
-            <el-date-picker
-              v-model="tempDate2"
-              type="daterange"
-              start-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="creditAllSearch">查询</el-button>
-          </el-form-item>
+          <div v-if="creditAllCondition.name">
+            <el-form-item label="交易时间">
+              <el-date-picker
+                v-model="tempDate2"
+                type="daterange"
+                start-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="creditAllSearch">查询</el-button>
+            </el-form-item>
+          </div>
         </el-form>
       </div>
       <div>
@@ -97,7 +99,7 @@ export default {
         startTime: null,
         endTime: null,
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10000,
       },
       creditAllInnerVisible: false,
       tempDate2: null,
@@ -189,8 +191,16 @@ export default {
     creditAllCancel(){
       this.$emit('cancelClick')
       this.toggleAllSelection()
-      this.tempDate2=null
-
+      this.creditAllData=null
+      this.tempDate2 = null
+      this.creditAllCondition = {
+        customId: null,
+        name: null,
+        startTime: null,
+        endTime: null,
+        pageNum: 1,
+        pageSize: 10000,
+      }
     },
 
     // 挂账结清确认->打开金额弹窗
@@ -230,10 +240,18 @@ export default {
             console.log(res);
             this.$message.success("结清成功")
             this.pay.payNumebr = null
+            this.creditAllData = null
             this.toggleAllSelection()
             this.creditAllInnerVisible = false
             this.$emit('cancelClick')
-            this.creditAllCondition = {}
+            this.creditAllCondition = {
+              customId: null,
+              name: null,
+              startTime: null,
+              endTime: null,
+              pageNum: 1,
+              pageSize: 10000,
+            }
             this.tempDate2 = null
           }).catch(err=>{
             console.log('err:')

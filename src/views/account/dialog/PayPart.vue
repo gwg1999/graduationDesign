@@ -6,18 +6,20 @@
           <el-form-item label="客户姓名">
             <el-autocomplete v-model="creditPartCondition.name" :fetch-suggestions="querySearch" @select="handleSelect"></el-autocomplete>
           </el-form-item>
-          <el-form-item label="交易时间">
-            <el-date-picker
-              v-model="tempDate1"
-              type="daterange"
-              start-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="creditPartSearch">查询</el-button>
-          </el-form-item>
+          <div style="display: inline-block" v-if="creditPartCondition.name">
+            <el-form-item label="交易时间">
+              <el-date-picker
+                v-model="tempDate1"
+                type="daterange"
+                start-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="creditPartSearch">查询</el-button>
+            </el-form-item>
+          </div>
         </el-form>
       </div>
       <div>
@@ -100,7 +102,7 @@ export default {
         OExistBill: 1,  //
         endTime: null,
         OOrderClosingStatus: 2,  //结清状态
-        pageSize: 10,
+        pageSize: 10000,
         pageNum: 1,
       },
       tempDate1: null,
@@ -226,7 +228,7 @@ export default {
         OExistBill: 1,  //
         endTime: null,
         OOrderClosingStatus: 2,  //结清状态
-        pageSize: 10,
+        pageSize: 10000,
         pageNum: 1,
       }
     },
@@ -261,6 +263,7 @@ export default {
         }).then(()=>{
           PostData('/bill/charge',this.chargeInfo).then((res)=>{
             console.log(res)
+            this.creditPartData = []
             this.$message.success('成功')
             this.innerVisible = false
             this.$emit('cancelClick')
@@ -272,7 +275,7 @@ export default {
               OExistBill: 1,  //
               endTime: null,
               OOrderClosingStatus: 2,  //结清状态
-              pageSize: 10,
+              pageSize: 10000,
               pageNum: 1,
             }
           })

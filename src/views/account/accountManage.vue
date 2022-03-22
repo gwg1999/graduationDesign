@@ -153,7 +153,7 @@ export default {
         name: null,
         closeStatus: 2,
         dealType: null,  // 交易类型：挂账，线上，线下
-        orderType: 0,  // 订单类型：进货单、销售单
+        orderType: 0,  // 订单类型：销售单
         pageSize: 10,
         pageNum: 1,
         startTime: null,

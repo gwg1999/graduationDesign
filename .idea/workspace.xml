@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="解决查看零件详情退货周期问题">
-      <change beforePath="$PROJECT_DIR$/.idea/partsstock-web.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/partsstock-web.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/accountManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/accountManage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/stockBillManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/stockBillManage.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -131,7 +132,7 @@
       <workItem from="1647532401627" duration="467000" />
       <workItem from="1647609682877" duration="73000" />
       <workItem from="1647838348136" duration="724000" />
-      <workItem from="1647929724117" duration="113000" />
+      <workItem from="1647929724117" duration="2734000" />
     </task>
     <servers />
   </component>

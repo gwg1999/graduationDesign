@@ -21,16 +21,6 @@
               end-placeholder="结束日期"
             ></el-date-picker>
           </el-form-item>
-          <!--        <el-form-item label="订单类型">-->
-          <!--          <el-select v-model="orderQuery.orderType" placeholder="请选择类型" clearable>-->
-          <!--            <el-option-->
-          <!--              v-for="item in orderType"-->
-          <!--              :key="item.label"-->
-          <!--              :label="item.label"-->
-          <!--              :value="item.value"-->
-          <!--            ></el-option>-->
-          <!--          </el-select>-->
-          <!--        </el-form-item>-->
           <el-form-item label="交易类型">
             <el-select v-model="orderQuery.dealType" placeholder="请选择类型" clearable>
               <el-option
@@ -41,12 +31,14 @@
               ></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
+          </el-form-item>
         </div>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
-          <el-button type="primary" @click="creditPartVisible = true">挂账结算</el-button>
-          <el-button type="primary" @click="creditAllVisible = true">挂账结清</el-button>
-        </el-form-item>
+<!--        <el-form-item>-->
+<!--          <el-button type="primary" @click="creditPartVisible = true">挂账结算</el-button>-->
+<!--          <el-button type="primary" @click="creditAllVisible = true">挂账结清</el-button>-->
+<!--        </el-form-item>-->
       </el-form>
     </div>
 
@@ -83,28 +75,28 @@
         />
       </div>
       <div class="total-box" >
-        <div class="table-button-box">
-          <el-button type="primary" @click="chargeVisible = true">挂账结算记录</el-button>
-          <el-button type="primary" @click="chargeSettleVisible = true">挂账结清记录</el-button>
-        </div>
+<!--        <div class="table-button-box">-->
+<!--          <el-button type="primary" @click="chargeVisible = true">挂账结算记录</el-button>-->
+<!--          <el-button type="primary" @click="chargeSettleVisible = true">挂账结清记录</el-button>-->
+<!--        </div>-->
         <div class="detail-box">
           <div class="partAccount" style="font-size: x-large">
             金额详细统计
           </div>
           <div class="partAccount">
-            挂账应收(￥)：
+            挂账应付(￥)：
             <div class="accountNumber" style="color: red">{{accountDetail.chargeNumber}}</div>
           </div>
           <div class="partAccount">
-            线上应收(￥)：
+            线上应付(￥)：
             <div class="accountNumber" style="color: red">{{accountDetail.onlineNumber}}</div>
           </div>
           <div class="partAccount">
-            线下应收(￥)：
+            线下应付(￥)：
             <div class="accountNumber" style="color: red">{{accountDetail.outlineNumber}}</div>
           </div>
           <div class="totalAccount partAccount">
-            总金额应收(￥)：
+            总金额应付(￥)：
             <div class="accountNumber" style="color: red">{{accountDetail.allNumber}}</div>
           </div>
         </div>
@@ -160,22 +152,12 @@ export default {
         name: null,
         closeStatus: 2,
         dealType: null,  // 交易类型：挂账，线上，线下
-        orderType: 1,  // 订单类型：进货单、销售单
+        orderType: 1,  // 订单类型：进货单
         pageSize: 10,
         pageNum: 1,
         startTime: null,
         endTime: null,
       },
-      orderType: [
-        {
-          label: '销售单',
-          value: 0
-        },
-        {
-          label: '进货单',
-          value: 1
-        }
-      ],
       dealType: [
         {
           label: '挂账',
