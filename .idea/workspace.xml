@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="解决查看零件详情退货周期问题">
+      <change beforePath="$PROJECT_DIR$/.idea/partsstock-web.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/partsstock-web.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/account/accountManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/accountManage.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/account/table/creditRecordTable.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/stockBillManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/stockBillManage.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +43,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/node_modules/element-ui" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -52,7 +52,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.general" />
+    <property name="settings.editor.selected.configurable" value="JavaScript.Libraries" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -125,7 +125,13 @@
       <workItem from="1647012186253" duration="1255000" />
       <workItem from="1647304261917" duration="4849000" />
       <workItem from="1647342387863" duration="4526000" />
-      <workItem from="1647399123318" duration="4396000" />
+      <workItem from="1647399123318" duration="5914000" />
+      <workItem from="1647437066343" duration="2974000" />
+      <workItem from="1647513707486" duration="2886000" />
+      <workItem from="1647532401627" duration="467000" />
+      <workItem from="1647609682877" duration="73000" />
+      <workItem from="1647838348136" duration="724000" />
+      <workItem from="1647929724117" duration="113000" />
     </task>
     <servers />
   </component>

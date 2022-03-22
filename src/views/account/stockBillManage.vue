@@ -11,35 +11,37 @@
             @select="handleSelect"
           ></el-autocomplete>
         </el-form-item>
-        <el-form-item label="交易时间">
-          <el-date-picker
-            v-model="tempDate"
-            type="daterange"
-            start-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="订单类型">
-          <el-select v-model="orderQuery.orderType" placeholder="请选择类型" clearable>
-            <el-option
-              v-for="item in orderType"
-              :key="item.label"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="交易类型">
-          <el-select v-model="orderQuery.dealType" placeholder="请选择类型" clearable>
-            <el-option
-              v-for="item in dealType"
-              :key="item.label"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+        <div style="display: inline-block;" v-if="orderQuery.cuUnitName">
+          <el-form-item label="交易时间">
+            <el-date-picker
+              v-model="tempDate"
+              type="daterange"
+              start-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+          <!--        <el-form-item label="订单类型">-->
+          <!--          <el-select v-model="orderQuery.orderType" placeholder="请选择类型" clearable>-->
+          <!--            <el-option-->
+          <!--              v-for="item in orderType"-->
+          <!--              :key="item.label"-->
+          <!--              :label="item.label"-->
+          <!--              :value="item.value"-->
+          <!--            ></el-option>-->
+          <!--          </el-select>-->
+          <!--        </el-form-item>-->
+          <el-form-item label="交易类型">
+            <el-select v-model="orderQuery.dealType" placeholder="请选择类型" clearable>
+              <el-option
+                v-for="item in dealType"
+                :key="item.label"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
           <el-button type="primary" @click="creditPartVisible = true">挂账结算</el-button>
@@ -158,7 +160,7 @@ export default {
         name: null,
         closeStatus: 2,
         dealType: null,  // 交易类型：挂账，线上，线下
-        orderType: 0,  // 订单类型：进货单、销售单
+        orderType: 1,  // 订单类型：进货单、销售单
         pageSize: 10,
         pageNum: 1,
         startTime: null,
