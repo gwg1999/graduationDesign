@@ -617,6 +617,33 @@ export const constantRoutes=[
   },
 
   {
+    path: '/statistics',
+    component: Layout,
+    name: '账单统计',
+    meta: {title: '账单统计', icon: 'el-icon-s-promotion'},
+    children: [
+      {
+        path: 'otherCost',
+        name: '额外费用统计',
+        component: () => import('@/views/Statistics/otherCost'),
+        meta: {title: '额外费用统计', icon: 'table'}
+      },
+      {
+        path: 'accessorySell',
+        name: '零件售出统计',
+        component: () => import('@/views/Statistics/accessorySell'),
+        meta: {title: '零件售出统计', icon: 'table'}
+      },
+      {
+        path: 'accessoryStock',
+        name: '零件进货统计',
+        component: () => import('@/views/Statistics/accessoryStock'),
+        meta: { title: '零件进货统计', icon: 'table'}
+      }
+    ]
+  },
+
+  {
     path: '/401',
     component: () => import('@/views/error-page/401'),
     hidden: true
