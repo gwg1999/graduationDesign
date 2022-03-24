@@ -3,7 +3,6 @@
     <div class="form-box">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="进货商：">
-          <!--          <el-input placeholder="请输入姓名" v-model="orderQuery.name" clearable></el-input>-->
           <el-autocomplete
             class="inline-input"
             :fetch-suggestions="querySearch"
@@ -188,10 +187,11 @@ export default {
     },
 
     querySearch(queryString, cb){
-      PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 5,pageNum: 1}).then(res=>{
+      PostData('factory/selectAllByLike', {fName: queryString, pageSize: 5,pageNum: 1}).then(res=>{
+        console.log(res)
         let customers = res.list
         for(let i in customers){
-          customers[i].value = customers[i].cuUnitName
+          customers[i].value = customers[i].fName
         }
         cb(customers)
       }).catch(err=>{

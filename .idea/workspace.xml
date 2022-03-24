@@ -3,12 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="解决查看零件详情退货周期问题">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Statistics/accessorySell.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/accessorySell.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Statistics/accessoryStock.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/accessoryStock.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Statistics/component/orderSum.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/component/orderSum.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Statistics/component/otherCostPie.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/component/otherCostPie.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Statistics/incomeStatic.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/incomeStatic.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/accountManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/accountManage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/ChargeDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/ChargeDialog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/ChargeSettleDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/ChargeSettleDialog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayAll.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/dialog/PayPart.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/account/stockBillManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/stockBillManage.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,6 +137,7 @@
       <workItem from="1647929724117" duration="8581000" />
       <workItem from="1648002070557" duration="12855000" />
       <workItem from="1648030733594" duration="8896000" />
+      <workItem from="1648117377020" duration="4878000" />
     </task>
     <servers />
   </component>

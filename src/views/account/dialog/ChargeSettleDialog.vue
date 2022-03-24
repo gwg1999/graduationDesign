@@ -88,6 +88,12 @@ export default {
     visible: {
       type: Boolean,
       default: false,
+    },
+    customer: {
+      type: Object,
+      default(){
+        return {}
+      }
     }
   },
   watch: {
@@ -99,6 +105,7 @@ export default {
   },
   methods: {
     chargeClose(){
+      this.chargeSettleData = null
       this.$emit('chargeClose')
     },
 

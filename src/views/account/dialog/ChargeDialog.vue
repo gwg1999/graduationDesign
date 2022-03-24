@@ -79,6 +79,7 @@ export default {
         customId: null,
         startTime: null,
         endTime: null,
+        customerName: null,
       },
       customerQuery: {
         cuUnitName:null,
@@ -95,6 +96,12 @@ export default {
     visible: {
       type: Boolean,
       default: false,
+    },
+    customer: {
+      type: Object,
+      default(){
+        return {}
+      }
     }
   },
   methods: {
@@ -125,6 +132,7 @@ export default {
 
     // 挂账交易记录信息弹窗关闭
     chargeClose(){
+      this.chargeData = null
       this.$emit('chargeClose')
     },
 
@@ -148,6 +156,7 @@ export default {
     },
 
     creditPartConfirm(){
+
       this.$emit('chargeClose')
     },
   },
@@ -158,6 +167,8 @@ export default {
     visible: {
       handler: function (){
         this.dialogVisible = this.visible
+        this.chargeQuery.customerName = this.customer.name
+        this.chargeQuery.customId = this.customer.customerId
       }
     }
   }

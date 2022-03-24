@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="挂账结算" :visible.sync="dialogVisible" @close="creditPartCancel">
+    <el-dialog title="挂账结算" :visible.sync="dialogVisible" @close="creditPartCancel" width="1000px">
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
@@ -104,6 +104,7 @@ export default {
         OOrderClosingStatus: 2,  //结清状态
         pageSize: 10000,
         pageNum: 1,
+        name: this.custom
       },
       tempDate1: null,
       creditPartSelection: [],
@@ -137,7 +138,15 @@ export default {
     partVisible: {
       type: Boolean,
       default: false
-    }
+    },
+    custom: {
+      type: Object,
+      default(){
+        return {
+
+        }
+      }
+    },
   },
   computed: {
     creditPartMoney: function (){
@@ -153,8 +162,19 @@ export default {
     partVisible: {
       handler:function (){
         this.dialogVisible = this.partVisible
+        this.creditPartCondition.name = this.custom.name
+        this.creditPartCondition.OCustomerId = this.custom.customerId
+        console.log(this.dialogVisible)
       }
-    }
+    },
+    custom: {
+      handler: function (){
+        this.creditPartCondition.name = this.custom.name
+        this.creditPartCondition.OCustomerId = this.custom.customerId
+        console.log('customer:')
+        console.log(this.creditPartCondition.name)
+      }
+    },
   },
   methods: {
     querySearch(queryString,cb){
@@ -207,6 +227,7 @@ export default {
         type: 'warning'
       }).then(()=>{
         this.innerVisible = true
+        this.chargeInfo.charge.alreadyIncome = this.chargeInfo.charge.realIncome = 0
         this.chargeInfo.charge.customId = this.creditPartSelection[0].OCustomerId
         this.chargeInfo.orderList = this.creditPartSelection
         for(let order of this.chargeInfo.orderList){
@@ -222,8 +243,9 @@ export default {
       this.toggleSelection()
       this.$emit('cancelClick')
       this.tempDate1 = null
+      this.creditPartData = null
       this.creditPartCondition = {
-        OCustomerId: null,  // 客户id
+        OCustomerId: this.custom.customerId,  // 客户id
         startTime: null,
         OExistBill: 1,  //
         endTime: null,

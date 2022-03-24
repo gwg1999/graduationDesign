@@ -106,22 +106,22 @@
 
 <!--    挂账结算弹窗-->
     <div>
-      <pay-part :part-visible="creditPartVisible" @cancelClick="creditPartVisible = false"></pay-part>
+      <pay-part :part-visible="creditPartVisible" @cancelClick="creditPartVisible = false" :custom="orderQuery"></pay-part>
     </div>
 
 <!--    挂账结清弹窗-->
     <div>
-      <pay-all :all-visible="creditAllVisible" @cancelClick="creditAllVisible = false"></pay-all>
+      <pay-all :all-visible="creditAllVisible" @cancelClick="creditAllVisible = false" :customer="orderQuery"></pay-all>
     </div>
 
 <!--    挂账交易记录弹窗-->
     <div>
-      <charge-dialog :visible="chargeVisible" @chargeClose="chargeVisible = false"></charge-dialog>
+      <charge-dialog :visible="chargeVisible" @chargeClose="chargeVisible = false" :customer="orderQuery"></charge-dialog>
     </div>
 
 <!--    挂账结清记录弹窗-->
     <div>
-      <charge-settle-dialog :visible="chargeSettleVisible" @chargeClose="chargeSettleVisible = false"></charge-settle-dialog>
+      <charge-settle-dialog :visible="chargeSettleVisible" @chargeClose="chargeSettleVisible = false" :customer="orderQuery"></charge-settle-dialog>
     </div>
   </div>
 </template>
@@ -234,6 +234,7 @@ export default {
       console.log('selectItem:')
       console.log(item)
       this.orderQuery.customerId = item.cuId
+      this.orderQuery.name = item.cuUnitName
     },
   },
 }
