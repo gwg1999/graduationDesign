@@ -2,7 +2,7 @@
   <div>
     <div class="card-box">
       <el-row :gutter="12">
-        <el-col :span="(24/cardData.length)" v-for="item in cardData" :key="item.number">
+        <el-col :span="(24/cardData.length)" v-for="item in cardData" :key="item.label">
           <el-card shadow="hover" class="data-card">
             <div slot="header" style="text-align: center">
               {{ item.label }}
@@ -21,10 +21,6 @@
 export default {
   name: "orderSum",
   props: {
-    title: {
-      type: Array,
-      default: []
-    },
     cardData: Array,
   },
   data(){

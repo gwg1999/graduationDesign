@@ -29,7 +29,7 @@ export default {
       this.charts.setOption({
         tooltip: {
           trigger: 'item',
-          formatter: "{b} : {c} ({d}%)"
+          formatter: "{b} : {c} ({d}%)"  // 用匿名函数自定义格式
         },
         legend: {
           orient: 'vertical',
@@ -40,27 +40,8 @@ export default {
           {
             name: '性别',
             type: 'pie',
-            // radius: ['50%', '70%'],
             radius: '50%',
             avoidLabelOverlap: true,
-            // label: {
-            //   normal: {
-            //     show:false,
-            //     position: 'center'
-            //   },
-            //   emphasis: {
-            //     show: true,
-            //     textStyle: {
-            //       fontSize:  '30',
-            //       fontWeight: 'blod'
-            //     }
-            //   }
-            // },
-            // labelLine: {
-            //   normal: {
-            //     show: false,
-            //   }
-            // },
             data: this.opinionData
           }
         ]

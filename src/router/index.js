@@ -639,7 +639,25 @@ export const constantRoutes=[
         name: '零件进货统计',
         component: () => import('@/views/Statistics/accessoryStock'),
         meta: { title: '零件进货统计', icon: 'table'}
-      }
+      },
+      {
+        path: 'customPrefer',
+        name: '客户偏好统计',
+        component: () => import('@/views/Statistics/customPrefer'),
+        meta: { title: '客户偏好统计', icon: 'table'}
+      },
+      {
+        path: 'incomeStatic',
+        name: '财务入账统计',
+        component: () => import('@/views/Statistics/incomeStatic'),
+        meta: { title: '财务入账统计', icon: 'table'}
+      },
+      {
+        path: 'expenseStatic',
+        name: '财务支出统计',
+        component: () => import('@/views/Statistics/expenseStatic'),
+        meta: { title: '财务支出统计', icon: 'table'}
+      },
     ]
   },
 

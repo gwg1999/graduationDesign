@@ -3,10 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="fca6ba15-ce1f-4a7b-9762-32c6d6b424e2" name="Changes" comment="解决查看零件详情退货周期问题">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Statistics/expenseStatic.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/expenseStatic.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/account/stockBillManage.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/account/stockBillManage.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Statistics/accessorySell.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/accessorySell.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Statistics/accessoryStock.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/accessoryStock.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Statistics/component/orderSum.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/component/orderSum.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Statistics/component/otherCostPie.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/component/otherCostPie.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Statistics/incomeStatic.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Statistics/incomeStatic.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +136,7 @@
       <workItem from="1647838348136" duration="724000" />
       <workItem from="1647929724117" duration="8581000" />
       <workItem from="1648002070557" duration="12855000" />
-      <workItem from="1648030733594" duration="2482000" />
+      <workItem from="1648030733594" duration="8896000" />
     </task>
     <servers />
   </component>
