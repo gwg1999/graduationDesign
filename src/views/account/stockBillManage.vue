@@ -2,8 +2,7 @@
   <div style="display: flex;flex-flow:column nowrap;overflow: hidden;">
     <div class="form-box">
       <el-form :inline="true" class="demo-form-inline">
-        <el-form-item label="客户：">
-<!--          <el-input placeholder="请输入姓名" v-model="orderQuery.name" clearable></el-input>-->
+        <el-form-item label="进货商：">
           <el-autocomplete
             class="inline-input"
             :fetch-suggestions="querySearch"
@@ -11,7 +10,7 @@
             @select="handleSelect"
           ></el-autocomplete>
         </el-form-item>
-        <div v-if="orderQuery.cuUnitName" style="display: inline-block;">
+        <div style="display: inline-block;" v-if="orderQuery.cuUnitName">
           <el-form-item label="交易时间">
             <el-date-picker
               v-model="tempDate"
@@ -35,11 +34,10 @@
             <el-button type="primary" icon="el-icon-search" @click="getList">查询</el-button>
           </el-form-item>
         </div>
-        <el-form-item>
-
-          <el-button type="primary" @click="creditPartVisible = true">挂账结算</el-button>
-          <el-button type="primary" @click="creditAllVisible = true">挂账结清</el-button>
-        </el-form-item>
+<!--        <el-form-item>-->
+<!--          <el-button type="primary" @click="creditPartVisible = true">挂账结算</el-button>-->
+<!--          <el-button type="primary" @click="creditAllVisible = true">挂账结清</el-button>-->
+<!--        </el-form-item>-->
       </el-form>
     </div>
 
@@ -64,7 +62,7 @@
           <el-table-column label="时间" align="center" prop="oCreateTime"></el-table-column>
           <el-table-column label="应收" align="center" prop="oSupposeIncome"></el-table-column>
           <el-table-column label="实收" align="center" prop="oRealIncome"></el-table-column>
-<!--          <el-table-column label="结清状态" align="center"></el-table-column>-->
+          <!--          <el-table-column label="结清状态" align="center"></el-table-column>-->
         </el-table>
         <el-pagination
           layout="total, prev, pager, next, jumper"
@@ -76,52 +74,32 @@
         />
       </div>
       <div class="total-box" >
-        <div class="table-button-box">
-          <el-button type="primary" @click="chargeVisible = true">挂账结算记录</el-button>
-          <el-button type="primary" @click="chargeSettleVisible = true">挂账结清记录</el-button>
-        </div>
+<!--        <div class="table-button-box">-->
+<!--          <el-button type="primary" @click="chargeVisible = true">挂账结算记录</el-button>-->
+<!--          <el-button type="primary" @click="chargeSettleVisible = true">挂账结清记录</el-button>-->
+<!--        </div>-->
         <div class="detail-box">
           <div class="partAccount" style="font-size: x-large">
             金额详细统计
           </div>
           <div class="partAccount">
-            挂账应收(￥)：
+            挂账应付(￥)：
             <div class="accountNumber" style="color: red">{{accountDetail.chargeNumber}}</div>
           </div>
           <div class="partAccount">
-            线上应收(￥)：
+            线上应付(￥)：
             <div class="accountNumber" style="color: red">{{accountDetail.onlineNumber}}</div>
           </div>
           <div class="partAccount">
-            线下应收(￥)：
+            线下应付(￥)：
             <div class="accountNumber" style="color: red">{{accountDetail.outlineNumber}}</div>
           </div>
           <div class="totalAccount partAccount">
-            总金额应收(￥)：
+            总金额应付(￥)：
             <div class="accountNumber" style="color: red">{{accountDetail.allNumber}}</div>
           </div>
         </div>
       </div>
-    </div>
-
-<!--    挂账结算弹窗-->
-    <div>
-      <pay-part :part-visible="creditPartVisible" @cancelClick="creditPartVisible = false" :custom="orderQuery"></pay-part>
-    </div>
-
-<!--    挂账结清弹窗-->
-    <div>
-      <pay-all :all-visible="creditAllVisible" @cancelClick="creditAllVisible = false" :customer="orderQuery"></pay-all>
-    </div>
-
-<!--    挂账交易记录弹窗-->
-    <div>
-      <charge-dialog :visible="chargeVisible" @chargeClose="chargeVisible = false" :customer="orderQuery"></charge-dialog>
-    </div>
-
-<!--    挂账结清记录弹窗-->
-    <div>
-      <charge-settle-dialog :visible="chargeSettleVisible" @chargeClose="chargeSettleVisible = false" :customer="orderQuery"></charge-settle-dialog>
     </div>
   </div>
 </template>
@@ -137,7 +115,7 @@ import {PostData} from "@/api";
 import {parseTime} from "@/utils";
 
 export default {
-  name: "accountManage",
+  name: "stockBillManage",
   components: {
     PayPart,
     PayAll,
@@ -153,22 +131,12 @@ export default {
         name: null,
         closeStatus: 2,
         dealType: null,  // 交易类型：挂账，线上，线下
-        orderType: 0,  // 订单类型：销售单
+        orderType: 1,  // 订单类型：进货单
         pageSize: 10,
         pageNum: 1,
         startTime: null,
         endTime: null,
       },
-      orderType: [
-        {
-          label: '销售单',
-          value: 0
-        },
-        {
-          label: '进货单',
-          value: 1
-        }
-      ],
       dealType: [
         {
           label: '挂账',
@@ -219,10 +187,11 @@ export default {
     },
 
     querySearch(queryString, cb){
-      PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 5,pageNum: 1}).then(res=>{
+      PostData('factory/selectAllByLike', {fName: queryString, pageSize: 5,pageNum: 1}).then(res=>{
+        console.log(res)
         let customers = res.list
         for(let i in customers){
-          customers[i].value = customers[i].cuUnitName
+          customers[i].value = customers[i].fName
         }
         cb(customers)
       }).catch(err=>{
@@ -234,7 +203,6 @@ export default {
       console.log('selectItem:')
       console.log(item)
       this.orderQuery.customerId = item.cuId
-      this.orderQuery.name = item.cuUnitName
     },
   },
 }

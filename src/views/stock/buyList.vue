@@ -3,67 +3,31 @@
     <el-dialog
       title="进货单详情"
       :visible.sync="dialogVisible"
-      width="70%"
+      width="50%"
       :before-close="handleClose">
       <el-form  ref="oder" :model="order" label-width="120px" :rules="rules">
-        <div style="width: 50%;float: left;margin-bottom: 60px">
-          <!--          <el-form-item label="支付订单号" prop="sOrderNumber">-->
-          <!--            <el-input v-model="order.sOrderNumber" style="width: 300px" disabled/>-->
-          <!--          </el-form-item>-->
-          <el-form-item label="操作员" prop="adminName">
-            <el-input v-model="order.adminName" style="width: 300px" disabled/>
-          </el-form-item>
-          <el-form-item label="应付款" prop="sPrice">
-            <el-input v-model="order.sPrice" style="width: 300px" disabled/>
-          </el-form-item>
-          <el-form-item label="备注" prop="INote">
-            <el-input  v-model="order.iNote" style="width: 300px;" type="textarea"/>
-          </el-form-item>
-          <!--          <el-form-item label="实收价" prop="sRealIncome">-->
-          <!--            <el-input v-model="order.sRealIncome" style="width: 300px"/>-->
-          <!--          </el-form-item>-->
-        </div>
-        <div style="width: 50%;float: right;margin-bottom: 60px">
-          <el-form-item label="是否已支付" prop="sIsPayment">
-            <el-select v-model="order.sIsPayment" placeholder="选择订单状态" disabled>
-              <el-option label="未支付" :value="0"></el-option>
-              <el-option label="已支付" :value="1"></el-option>
-            </el-select>
-          </el-form-item>
-          <!--          <el-form-item label="进货单类型" prop="sType">-->
-          <!--            <el-select v-model="order.sType" placeholder="选择订单状态">-->
-          <!--              <el-option label="部分退货" :value="0"></el-option>-->
-          <!--              <el-option label="全部退货" :value="1"></el-option>-->
-          <!--              <el-option label="普通进货单" :value="2"></el-option>-->
-          <!--            </el-select>-->
-          <!--          </el-form-item>-->
-          <el-form-item label="订单状态" prop="sOrderStatus">
-            <el-select v-model="order.sOrderStatus" placeholder="选择订单状态">
-              <el-option label="未收货" :value="0"></el-option>
-              <el-option label="已收货" :value="1"></el-option>
-              <!--              <el-option label="全部发货" :value="2"></el-option>-->
-            </el-select>
-          </el-form-item>
-          <!--          <el-form-item label="订单状态" prop="sOrderStatus">-->
-          <!--            <img :src="order.stockPictures?order.stockPictures[0].path:''">-->
-          <!--          </el-form-item>-->
-          <!--          <el-form-item label="用户ID" prop="aId">-->
-          <!--            <el-input v-model="admin.aId" style="width: 300px"s/>-->
-          <!--          </el-form-item>-->
-
-          <!--          <el-form-item label="用户密码" prop="aPassword">-->
-          <!--            <el-input v-model="admin.aPassword" style="width: 300px"/>-->
-          <!--          </el-form-item>-->
-          <!--          <el-form-item label="二级密码" prop="aSecondaryPassword">-->
-          <!--            <el-input v-model="admin.aSecondaryPassword" style="width: 300px"/>-->
-          <!--          </el-form-item>-->
-        </div>
+        <el-form-item label="操作员" prop="adminName">
+          <el-input v-model="order.adminName" style="width: 300px" disabled/>
+        </el-form-item>
+        <el-form-item label="应付款" prop="sPrice">
+          <el-input v-model="order.sPrice" style="width: 300px" disabled/>
+        </el-form-item>
+        <el-form-item label="是否已支付" prop="sIsPayment">
+          <el-select v-model="order.sIsPayment" placeholder="选择订单状态" disabled>
+            <el-option label="未支付" :value="0"></el-option>
+            <el-option label="已支付" :value="1"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="备注" prop="INote">
+          <el-input  v-model="order.iNote" style="width: 400px" type="textarea"/>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="submitForm('oder')">确 定</el-button>
   </span>
     </el-dialog>
+    <!--    图片上传-->
     <el-dialog :visible.sync="receiveVisible" title="收货">
       <el-form :model="receiveGoods" label-width="120px" ref="PackageGoods">
         <el-form-item label="收货凭证上传">
@@ -85,9 +49,6 @@
             </el-dialog>
           </el-upload>
         </el-form-item>
-        <!--        <el-form-item label="备注">-->
-        <!--          <el-input v-model="PackageGoods.note" style="width: 90%" rows="5" type="textarea"/>-->
-        <!--        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="receiveVisible = false">取 消</el-button>
@@ -99,24 +60,6 @@
     <el-form :inline="true" class="demo-form-inline" style="position: relative">
       <template slot-scope="scoped">
         <el-form-item>
-          <!--          <el-input v-model="customerQuery.cuUnitName" clearable placeholder="用户名"  style="width: 150px"/>-->
-          <!--          <el-autocomplete-->
-          <!--            v-model="buyQuery.customerName"-->
-          <!--            :fetch-suggestions="querySearch"-->
-          <!--            placeholder="请输入客户名"-->
-          <!--            :trigger-on-focus="false"-->
-          <!--            @select="handleSelect"-->
-          <!--            clearable>-->
-          <!--            &lt;!&ndash;      <i&ndash;&gt;-->
-          <!--            &lt;!&ndash;        class="el-icon-edit el-input__icon"&ndash;&gt;-->
-          <!--            &lt;!&ndash;        slot="suffix"&ndash;&gt;-->
-          <!--            &lt;!&ndash;        @click="handleIconClick">&ndash;&gt;-->
-          <!--            &lt;!&ndash;      </i>&ndash;&gt;-->
-          <!--            <template slot-scope="{ item }">-->
-          <!--              <div>{{ item.cuUnitName }}</div>-->
-          <!--              &lt;!&ndash;        <span class="addr">{{ item.address }}</span>&ndash;&gt;-->
-          <!--            </template>-->
-          <!--          </el-autocomplete>-->
           <el-select v-model="buyQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员" clearable>
             <el-option :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>
           </el-select>
@@ -145,19 +88,19 @@
         label="序号"
         width="50%"
         align="center"
-      >
-        <template slot-scope="scope">
-          {{ (adminQuery.pageNum - 1) * adminQuery.pageSize + scope.$index + 1 }}
-        </template>
+        type="index">
+        <!--        <template slot-scope="scope">-->
+        <!--          {{ (adminQuery.pageNum - 1) * adminQuery.pageSize + scope.$index + 1 }}-->
+        <!--        </template>-->
       </el-table-column>
-      <el-table-column prop="factory.fName" label="工厂名" width="130px"  align="center"/>
-      <el-table-column prop="wareHouseName" label="仓库管理员" width="100px" align="center" />
-      <el-table-column prop="adminName" label="操作员" width="100px" align="center" />
+      <el-table-column prop="factory.fName" label="工厂名" width="130"  align="center"/>
+      <el-table-column prop="wareHouseName" label="仓库管理员" width="100" align="center" />
+      <el-table-column prop="adminName" label="操作员" width="100" align="center" />
       <!--      <el-table-column prop="sOrderNumber" label="支付订单号" width="220%"  align="center"/>-->
       <!--      <el-table-column prop="sPaymentWay" label="付款方式" width="100%"  align="center"/>-->
       <!--      <el-table-column prop="sBuyWay" label="进货方式" width="100%"  align="center"/>-->
       <!--      <el-table-column prop="sInvoiceType" label="发票类型" width="80%"  align="center"/>-->
-      <el-table-column prop="sIsPayment" label="是否已支付" width="100px"  align="center">
+      <el-table-column prop="sIsPayment" label="是否已支付" width="80%"  align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.sIsPayment===0?'success':'danger'">
             {{scope.row.sIsPayment===0?'未支付':'已支付'}}
@@ -212,7 +155,8 @@
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" style="margin-right: 2%" @click="showDetails(scope.row)">查看详情</el-button>
           <el-button type="warning" icon="el-icon-edit" style="margin-right: 2%" @click="recGoods(scope.row)">收 货</el-button>
-          <el-button type="primary" icon="el-icon-edit" style="margin-right: 2%" @click="enterPrice(scope.row)">入账</el-button>
+
+          <!--          <el-button type="danger" icon="el-icon-delete" circle @click="deleteOder(scope.row.sId)"></el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -282,6 +226,8 @@ export default {
       dialogVisible:false,
       selectedVisible:false,
       buyQuery:{
+        adminName:'',
+        SStatus:null,
         pageSize: 10,
         pageNum: 1
       },
@@ -323,55 +269,51 @@ export default {
   },
   resetData(){
     this.getList()
+    // this.getPageTotal()
   },
-  methods:{//创建具体的方法
-    //入账
-    enterPrice(params){
-      this.$confirm('是否确认入账'+'?','提示',{
-        confirmButtonText:'确定',
-        cancelButtonText:'取消',
-        type:'warning'
-      }).then(()=>{
-        params.sOrderStatus=2
-        params.sExistBill=1
-        PostData('/stock/updateStock',params).then((res=>{
-          this.$message({
-            type:'success',
-            message:"入账成功"
-          })
-          this.getList()
-        }))
-      })
+  methods:{
+    search(){
+      this.buyQuery.pageNum=1
+      this.getList()
     },
+    //创建具体的方法
     getList() {
       PostData('/stock/queryStock',qs.stringify(this.buyQuery))
         .then(res=>{
-          this.list = res.list.filter(value=> value.sExistBill=0)
+          this.list = res.list
           this.pageTotal=res.total
+          console.log(res.list);
         }).catch(err=>{
         this.$message.error(err.message);
       })
     },
+
+
     handleReceiveGoods(){
       this.$refs.inUpload.submit()
-      this.receiveVisible=false
-      this.$message({
-        type: 'success',
-        message: '收货成功'
+      PostData('stock/updateStock',{sId:this.inPicPar.stockId,sStatus:2}).then(res=>{
+        this.receiveVisible=false
+        this.$message({
+          type: 'success',
+          message: '收货成功'
+        })
       })
+      setTimeout(()=>{
+        this.getList()
+      },2000)
     },
     recGoods(data){
-      console.log(data);
       this.inPicPar.stockId=data.sId
       this.receiveVisible=true
     },
+
+
     getFactory(){
       PostData('/factory/selectAllByLike',this.factoryQuery)
         .then(res=>{
           this.factoryList=res.list
         }).catch(err=>{
         this.$message.error(err.message);
-        console.log(err);
       })
     },
     handlePageChange(val){
@@ -417,10 +359,6 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-    search(){
-      this.buyQuery.pageNum=1
-      this.getList()
-    },
     // 跳转详情页
     showDetails(data){
       this.order=data
@@ -438,6 +376,7 @@ export default {
     },
     deleteOder(id){
       this.deleteQuery.sId=id
+      console.log(id);
       PostData('/inquiry/deleteInquiry',qs.stringify(this.deleteQuery)).then((res)=>{
         this.$message({
           message: '删除成功',

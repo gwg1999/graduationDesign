@@ -1,24 +1,27 @@
 <template>
   <div>
-    <el-dialog title="挂账结清" :visible.sync="dialogVisible" @close="creditAllCancel">
+    <el-dialog title="挂账结清" :visible.sync="dialogVisible" @close="creditAllCancel" width="1000px">
       <div class="form-box">
         <el-form :inline="true" style="border-bottom: solid gainsboro 1px">
           <el-form-item label="客户姓名">
 <!--            <el-input v-model="creditAllCondition.name"></el-input>-->
             <el-autocomplete v-model="creditAllCondition.name" :fetch-suggestions="querySearch" @select="handleSelect"></el-autocomplete>
           </el-form-item>
-          <el-form-item label="交易时间">
-            <el-date-picker
-              v-model="tempDate2"
-              type="daterange"
-              start-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="creditAllSearch">查询</el-button>
-          </el-form-item>
+
+          <div v-if="creditAllCondition.name" style="display: inline-block">
+            <el-form-item label="交易时间">
+              <el-date-picker
+                v-model="tempDate2"
+                type="daterange"
+                start-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="creditAllSearch">查询</el-button>
+            </el-form-item>
+          </div>
         </el-form>
       </div>
       <div>
@@ -32,12 +35,9 @@
           ref="creditAllTable">
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column label="时间" align="center" prop="createTime"></el-table-column>
-          <el-table-column label="未收" align="center" prop="supposeIncome"></el-table-column>
-          <el-table-column label="未付" align="center" prop="supposeOutcome"></el-table-column>
-          <el-table-column label="实付" align="center" prop="realOutcome"></el-table-column>
+          <el-table-column label="应收" align="center" prop="supposeIncome"></el-table-column>
           <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
           <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
-          <el-table-column label="已付" align="center" prop="alreadyOutcome"></el-table-column>
         </el-table>
       </div>
       <div style="text-align: right;margin-top: 10px">
@@ -45,10 +45,17 @@
         <el-button type="primary" @click="creditAllConfirm">确认</el-button>
       </div>
       <el-dialog width="30%" title="结算金额" :visible.sync="creditAllInnerVisible" append-to-body>
-        <el-form label-width="60px" :rules="creditAllRules" :model="pay">
+        <el-form label-width="60px" :rules="creditAllRules" :model="chargeSettleInfo.chargeSettle">
           <el-form-item label="应收">{{ creditAllMoney }}</el-form-item>
-          <el-form-item label="实收" prop="payNumber">
-            <el-input v-model="pay.payNumber"></el-input>
+          <el-form-item label="已收" prop="alreadyIncome">
+<<<<<<< Updated upstream
+            {{chargeSettleInfo.chargeSettle.alreadyIncome}}
+=======
+            <el-input v-model="chargeSettleInfo.chargeSettle.alreadyIncome"></el-input>
+>>>>>>> Stashed changes
+          </el-form-item>
+          <el-form-item label="实收" prop="realIncome">
+            <el-input v-model="chargeSettleInfo.chargeSettle.realIncome"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="payAllCancel">取消</el-button>
@@ -70,12 +77,20 @@ export default {
     allVisible: {
       type: Boolean,
       default: false
+    },
+    customer: {
+      type: Object,
+      default(){
+        return {}
+      }
     }
   },
   watch: {
     allVisible: {
       handler: function (){
         this.dialogVisible = this.allVisible
+        this.creditAllCondition.name = this.customer.name
+        this.creditAllCondition.customId = this.customer.customerId
       }
     }
   },
@@ -83,8 +98,11 @@ export default {
     creditAllMoney: function (){
       let total = 0
       for(let selection of this.creditAllSelection){
-        total += selection.supposeIncome
+        total += (selection.supposeIncome-selection.alreadyIncome)
       }
+      this.chargeSettleInfo.chargeSettle.supposeIncome = total
+      this.chargeSettleInfo.chargeSettle.alreadyIncome = total
+      this.chargeSettleInfo.chargeSettle.realIncome = total
       return total
     }
   },
@@ -96,7 +114,7 @@ export default {
         startTime: null,
         endTime: null,
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 10000,
       },
       creditAllInnerVisible: false,
       tempDate2: null,
@@ -105,9 +123,6 @@ export default {
         payNumber: [
           {required: true, message: '请输入实收金额', trigger: ['blur', 'change']}
         ],
-      },
-      pay: {
-        payNumber: null,
       },
       creditAllSelection: [],
       chargeSettleInfo: {
@@ -188,8 +203,16 @@ export default {
     creditAllCancel(){
       this.$emit('cancelClick')
       this.toggleAllSelection()
-      this.tempDate2=null
-
+      this.creditAllData=null
+      this.tempDate2 = null
+      this.creditAllCondition = {
+        customId: null,
+        name: null,
+        startTime: null,
+        endTime: null,
+        pageNum: 1,
+        pageSize: 10000,
+      }
     },
 
     // 挂账结清确认->打开金额弹窗
@@ -197,7 +220,11 @@ export default {
       this.$confirm('确认是否结清', '提示', {
         type: 'warning'
       }).then(()=>{
+        this.chargeSettleInfo.chargeSettle.realIncome = this.chargeSettleInfo.chargeSettle.alreadyIncome
         this.chargeSettleInfo.chargeList = this.creditAllSelection
+        for(let charge of this.chargeSettleInfo.chargeList){
+          delete charge.createTime
+        }
         this.chargeSettleInfo.chargeSettle.customId = this.creditAllCondition.customId
         this.creditAllInnerVisible = true
         console.log('chargeSettleInfo:')
@@ -207,15 +234,15 @@ export default {
 
     // 挂账结清->金额弹窗关闭
     payAllCancel(){
-
       this.creditAllInnerVisible = false
-      this.pay.payNumebr = null
+
     },
 
     // 挂账结清->金额确认
     payAllConfirm(){
-
-      if(parseInt(this.pay.payNumber)!==this.creditAllMoney){
+      console.log('chargeSettleInfo:')
+      console.log(this.chargeSettleInfo)
+      if(parseInt(this.chargeSettleInfo.chargeSettle.alreadyIncome)!==this.creditAllMoney){
         this.$message.error("实收与应收不符，请确认金额")
       }else{
         this.$confirm('请确认是否结清', '提示', {
@@ -225,11 +252,18 @@ export default {
             console.log('res:')
             console.log(res);
             this.$message.success("结清成功")
-            this.pay.payNumebr = null
+            this.creditAllData = null
             this.toggleAllSelection()
             this.creditAllInnerVisible = false
             this.$emit('cancelClick')
-            this.creditAllCondition = {}
+            this.creditAllCondition = {
+              customId: null,
+              name: null,
+              startTime: null,
+              endTime: null,
+              pageNum: 1,
+              pageSize: 10000,
+            }
             this.tempDate2 = null
           }).catch(err=>{
             console.log('err:')

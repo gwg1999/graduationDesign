@@ -1,18 +1,25 @@
 <template>
   <div class="app-container">
-    <!--    <h6 style="float:right;margin-top:0;color: red">(在鼠标点击数量框内后)-&#45;&#45;F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,-->
-    <!--      在添加整件时F7查看该整件的零件关系</h6>-->
-    <!--    <h3>{{inPrice}}</h3>-->
+<!--    <h6 style="float:right;margin-top:0;color: red">(在鼠标点击数量框内后)-&#45;&#45;F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,-->
+<!--      在添加整件时F7查看该整件的零件关系</h6>-->
+<!--    <h3>{{inPrice}}</h3>-->
     <el-steps :active="2" process-status="wait" align-center style="margin-bottom: 40px;margin-top: 40px">
       <el-step title="填写询价单信息" />
       <el-step title="添加零件" />
     </el-steps>
     <!--    查询表格数据-->
     <el-form :inline="true" class="demo-form-inline" style="position: relative ">
+<!--      <el-form-item>-->
+<!--        <el-select   v-model="levelIV.qdType"   clearable placeholder="选择商品类型" style="width: 130px" @change="changeTotal($event)" >-->
+<!--          <el-option :value="1" label="零件"/>-->
+<!--          <el-option :value="0" label="整件"/>-->
+<!--        </el-select>-->
+<!--      </el-form-item>-->
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
         <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 250px">
+<!--        <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>-->
         <el-autocomplete
           v-model="levelIV.pName"
           :fetch-suggestions="querySearch"
@@ -22,10 +29,15 @@
           class="search"
           clearable
           style="width: 250px"
-          @keyup.enter.native="queryGoods"
         >
+          <!--      <i-->
+          <!--        class="el-icon-edit el-input__icon"-->
+          <!--        slot="suffix"-->
+          <!--        @click="handleIconClick">-->
+          <!--      </i>-->
           <template slot-scope="{ item }">
             <div>{{ item.pName }}</div>
+            <!--        <span class="addr">{{ item.address }}</span>-->
           </template>
         </el-autocomplete>
       </el-form-item>
@@ -51,6 +63,8 @@
       </el-form-item>
       <el-button :disabled="!(levelIV.qdType===0||levelIV.qdType===1)" type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>
       <el-button type="primary" icon="el-icon-view" style="position: absolute;right: 10px" @click="showSelected">查看已选零件</el-button>
+      <!--      <el-button @click="previous" type="primary" style="position: absolute;right: 10px">上一步</el-button>-->
+      <!--      <el-button  type="primary" @click="next"  style="position: absolute;right: 10px;width: 100px">下一步</el-button>-->
     </el-form>
     <!-- 零件添加表格 -->
     <el-table :data="list"
@@ -108,9 +122,13 @@
       <el-table-column prop="pNumber" label="零件号" width="150px" align="center" />
       <el-table-column prop="pName" label="零件名" width="200px" align="center" />
       <el-table-column prop="place.plName" label="产地" width="80px"  align="center"/>
+      <!--      <el-table-column prop="pCarName" label="车型号" width="80px"  align="center"/>-->
       <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
-      <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>
-      <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>
+<!--      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>-->
+<!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />-->
+<!--      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>-->
+<!--      <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>-->
+<!--      <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>-->
       <el-table-column prop="pId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
@@ -118,6 +136,9 @@
               <el-form-item>
                 数量:<el-input style="width: 100px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.qdNumber = number(scope.row.qdNumber)"  v-model = "scope.row.qdNumber"  size="small"></el-input>
               </el-form-item>
+<!--              <el-form-item>-->
+<!--                供货周期:<el-input style="width: 80px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.indDeliveryCycle = number(scope.row.indDeliveryCycle)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input>-->
+<!--              </el-form-item>-->
               <el-form-item>
                 价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
               </el-form-item>
@@ -158,6 +179,7 @@
               <el-form-item>
                 供货周期:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.wId)" @keyup.118.native="searchWhole(scope.row.wId)" @keyup.117.native="searchHistoryList(scope.row.wId)" @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input-number>
               </el-form-item>
+
               <el-form-item>
                 价格:<el-input @keyup.native="scope.row.price =oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
               </el-form-item>
@@ -309,6 +331,30 @@
                 </el-table-column>
               </el-table>
             </div>
+<!--            <h4>整件信息</h4>-->
+<!--            <div style="float: bottom">-->
+<!--              <el-table-->
+<!--                style="padding: 0"-->
+<!--                :data="salesSlip.wholeDetailsList"-->
+<!--                border-->
+<!--                fit-->
+<!--                highlight-current-row>-->
+<!--                <el-table-column prop="wName" label="整件名" width="200px" align="center"/>-->
+<!--                <el-table-column prop="qdNumber" label="数量" width="200px" align="center"/>-->
+<!--                <el-table-column prop="price" label="单价" width="150px" align="center"/>-->
+<!--                <el-table-column prop="totalPrice" label="总价" width="110px" align="center">-->
+<!--                  <template slot-scope="scope">-->
+<!--                    {{ scope.row.qdNumber*scope.row.price}}-->
+<!--                  </template>-->
+<!--                </el-table-column>-->
+<!--                <el-table-column label="操作"  align="center">-->
+<!--                  <template slot-scope="scope">-->
+<!--                    <el-button type="primary" size="mini" icon="el-icon-edit"  @click="openWholeRecordDialog(scope.row)">修改</el-button>-->
+<!--                    <el-button type="primary" size="mini" icon="el-icon-delete"  @click="deleteWholeRecord(scope.row)">删除</el-button>-->
+<!--                  </template>-->
+<!--                </el-table-column>-->
+<!--              </el-table>-->
+<!--            </div>-->
           </el-form>
         </el-main>
         <el-footer style="padding-top: 10px">
@@ -474,7 +520,6 @@ export default {
   created() {
     this.inPrice=this.$route.query.inPrice
     this.getList()
-    this.getPrince()
     this.queryGoods()
     stopF5F6()
   },
@@ -635,6 +680,7 @@ export default {
       else {
         this.$refs['salesSlip'].validate((valid) => {
           if (valid) {
+            this.salesSlip.iNote=this.inPrice.iNote
             this.salesSlip.qOrderStatus = 0
             this.salesSlip.qCreatePeopleId = parseInt(Cookie.get('aId'))
             let qPrice = 0
@@ -646,7 +692,7 @@ export default {
                 value.indPartsId=value.pId
                 value.indType=0
                 value.indNumber=parseInt(value.qdNumber)
-                value.indPrice=0
+                value.indPrice=value.price
                 value.indIsDelivery=0
                 value.indDeliveryNum=2
                 value.qdRealTimePrice=parseInt(value.price)
@@ -662,7 +708,7 @@ export default {
                 value.indDeliveryCycle=0
                 value.indType=1
                 value.indNumber=parseInt(value.qdNumber)
-                value.indPrice=0
+                value.indPrice=value.price
                 value.indIsDelivery=0
                 value.indDeliveryNum=2
                 value.qdRealTimePrice=parseInt(value.price)
@@ -672,8 +718,9 @@ export default {
               })
               this.salesSlip.qPrice = qPrice
             }
+            console.log(this.salesSlip)
             this.assignment()
-            console.log(this.submitInfo);
+            console.log(this.submitInfo)
             PostData('/inquiry/addInquiry',this.submitInfo)
               .then(res=>{
                 this.$message({
@@ -691,10 +738,10 @@ export default {
     },
     assignment(){
       this.submitInfo.icreateOperatorId=parseInt(Cookie.get('aId'))
-      this.submitInfo.icustomId=parseInt(this.inPrice.indCustomerId)
       this.submitInfo.ifactoryId=this.inPrice.factoryId
       this.submitInfo.istatus=0
-      this.submitInfo.iprice=0
+      this.submitInfo.iprice=this.salesSlip.qPrice
+      this.submitInfo.iNote=this.inPrice.iNote
       this.submitInfo.inquiryDetailList.splice(0,this.submitInfo.inquiryDetailList.length)
       this.submitInfo.inquiryDetailList.push(...this.salesSlip.quotationDetailList)
       this.submitInfo.inquiryDetailList.push(...this.salesSlip.wholeDetailsList)
@@ -796,10 +843,12 @@ export default {
             if (middleList && middleList.length > 0) {
               middleList.forEach(value => {
                 value.price = 0
+                value.pictures=value.pictures.filter(value=>{
+                  return value.type===0
+                })
               })
             }
             this.list = middleList
-            console.log(this.list);
             this.wholeList=[]
           })
       } else {
@@ -820,24 +869,6 @@ export default {
     getList(){
       levelIVDirectory().then(res=>{
         this.levelIVDirectoryList=res
-      })
-    },
-    getPrince(){
-      let query={
-        cuId:this.$route.query.inPrice.indCustomerId
-      }
-      PostData('/customer/selectAllByLike',query).then(res=>{
-        switch (res.list[0].cuDiscount){
-          case "一级价格":
-            this.customerPrince=0
-            break;
-          case "二级价格":
-            this.customerPrince=1
-            break;
-          case "三级价格":
-            this.customerPrince=2
-            break;
-        }
       })
     },
     previous() {

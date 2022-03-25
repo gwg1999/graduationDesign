@@ -114,8 +114,8 @@
 <!--      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>-->
 <!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />-->
 <!--      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>-->
-      <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>
-      <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>
+<!--      <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>-->
+<!--      <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>-->
       <el-table-column prop="pId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
@@ -513,6 +513,7 @@ export default {
     this.infomation.factoryId=this.$route.query.factoryId
     this.getList()
     // this.getPrice()
+    this.queryGoods()
     stopF5F6()
   },
   methods: {

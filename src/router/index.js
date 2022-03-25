@@ -598,9 +598,60 @@ export const constantRoutes=[
     children: [
       {
         path: 'accountManage',
-        name: '账单管理',
+        name: '销售账单',
         component: () => import('@/views/account/accountManage'),
-        meta: { title: '账单管理', icon: 'table'}
+        meta: { title: '销售账单', icon: 'table'}
+      },
+      {
+        path: 'stockBillManage',
+        name: '进货账单',
+        component: () => import('@/views/account/stockBillManage'),
+        meta: { title: '进货账单', icon: 'table'}
+      }
+    ]
+  },
+
+  {
+    path: '/statistics',
+    component: Layout,
+    name: '账单统计',
+    meta: {title: '账单统计', icon: 'el-icon-s-promotion'},
+    children: [
+      {
+        path: 'otherCost',
+        name: '额外费用统计',
+        component: () => import('@/views/Statistics/otherCost'),
+        meta: {title: '额外费用统计', icon: 'table'}
+      },
+      {
+        path: 'accessorySell',
+        name: '零件售出统计',
+        component: () => import('@/views/Statistics/accessorySell'),
+        meta: {title: '零件售出统计', icon: 'table'}
+      },
+      {
+        path: 'accessoryStock',
+        name: '零件进货统计',
+        component: () => import('@/views/Statistics/accessoryStock'),
+        meta: { title: '零件进货统计', icon: 'table'}
+      },
+      {
+        path: 'customPrefer',
+        name: '客户偏好统计',
+        component: () => import('@/views/Statistics/customPrefer'),
+        meta: { title: '客户偏好统计', icon: 'table'}
+      },
+      {
+        path: 'incomeStatic',
+        name: '财务入账统计',
+        component: () => import('@/views/Statistics/incomeStatic'),
+        meta: { title: '财务入账统计', icon: 'table'}
+      },
+      {
+        path: 'expenseStatic',
+        name: '财务支出统计',
+        component: () => import('@/views/Statistics/expenseStatic'),
+        meta: { title: '财务支出统计', icon: 'table'}
       },
     ]
   },
