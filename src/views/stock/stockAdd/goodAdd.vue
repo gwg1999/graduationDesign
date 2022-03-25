@@ -136,11 +136,11 @@
               <el-form-item>
                 数量:<el-input style="width: 100px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.qdNumber = number(scope.row.qdNumber)"  v-model = "scope.row.qdNumber"  size="small"></el-input>
               </el-form-item>
-<!--              <el-form-item>-->
-<!--                供货周期:<el-input style="width: 80px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.indDeliveryCycle = number(scope.row.indDeliveryCycle)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input>-->
-<!--              </el-form-item>-->
               <el-form-item>
-                价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
+                供货周期:<el-input style="width: 80px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.indDeliveryCycle = number(scope.row.indDeliveryCycle)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input>
+              </el-form-item>
+              <el-form-item>
+                价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 70px;" size="small" ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
@@ -705,7 +705,7 @@ export default {
                 value.qdPartsSizeType=value.pPartsSizeType
                 value.indCustomerId=this.inPrice.indCustomerId
                 value.indPartsId=value.pId
-                value.indDeliveryCycle=0
+                // value.indDeliveryCycle=0
                 value.indType=1
                 value.indNumber=parseInt(value.qdNumber)
                 value.indPrice=value.price

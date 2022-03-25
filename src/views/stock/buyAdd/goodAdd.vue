@@ -718,7 +718,6 @@ export default {
             this.priceSlip.oSupposeIncome = oSupposeIncome
             this.oldToNew()
             this.assignment()
-            console.log(6363);
             console.log(this.submitInfo);
             PostData("/stock/addStockDetail",this.submitInfo).then((ref)=>{
               this.$message({
@@ -892,7 +891,7 @@ export default {
     },
     assignment(){
       this.submitInfo.sCustomId=0
-      this.submitInfo.sStatus=0
+      this.submitInfo.sStatus=1
       this.submitInfo.orderId=this.orderId
       this.submitInfo.stockDetailList.splice(0,this.submitInfo.stockDetailList.length)
       this.submitInfo.stockDetailList.push(...this.priceSlip.orderDetailList)

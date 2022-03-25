@@ -718,7 +718,7 @@ export default {
                   this.dialogVisible=false
                   this.$message({
                     type: 'success',
-                    message: '增加销售单成功'
+                    message: '增加零件成功'
                   })
                   this.$router.back()
                 }

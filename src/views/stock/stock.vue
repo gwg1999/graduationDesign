@@ -1,14 +1,14 @@
 <template>
   <div class="app-container" style="background: white">
-
+<!--询价单-->
     <el-dialog
       title=""
       :visible.sync="dialogVisible"
-      width="30%"
+      width="60%"
       :before-close="handleClose">
       <el-form :model="buyList" ref="buyList" label-width="100px" class="demo-dynamic" :rules="rules">
-        <el-form-item label="仓库管理员" prop="warehouseOperaterId">
-          <el-select v-model="buyList.warehouseOperaterId" filterable placeholder="请选择" clearable>
+        <el-form-item label="仓库管理员" prop="sWarehouseOperaterId">
+          <el-select v-model="buyList.sWarehouseOperaterId" filterable placeholder="请选择" clearable>
             <el-option
               v-for="item in houseOperator"
               :key="item.aId"
@@ -17,9 +17,21 @@
             </el-option>
           </el-select>
         </el-form-item>
-
-        <el-form-item label="付款方式" prop="paymentWay">
-          <el-select v-model="buyList.paymentWay" filterable placeholder="请选择" clearable>
+        <el-form-item label="进货方式" prop="sBuyWay">
+          <el-input  v-model="buyList.sBuyWay" style="width: 200px"/>
+        </el-form-item>
+        <el-form-item label="应付款" prop="sPrice">
+          <el-input @keyup.native="buyList.sPrice = oninput(buyList.sPrice )" v-model="buyList.sPrice" style="width: 200px"/>
+        </el-form-item>
+        <el-form-item label="发票类型" prop="sInvoiceType">
+          <el-select v-model="buyList.sInvoiceType"   clearable placeholder="发票类型" style="width: 200px"  >
+            <el-option :value="0" label="无"/>
+            <el-option :value="1" label="普通发票"/>
+            <el-option :value="2" label="增值税发票"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="付款方式" prop="sPaymentWay">
+          <el-select v-model="buyList.sPaymentWay" filterable placeholder="请选择付款方式" clearable>
             <el-option
               v-for="item in spaymentWay"
               :key="item.value"
@@ -27,6 +39,9 @@
               :value="item.value">
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="buyList.sNote" style="width: 60%"  rows="5" type="textarea"/>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -151,6 +166,7 @@
 <script>
 import {GetData,PostData} from "../../api/index"
 import qs from 'qs'
+import Cookie from "js-cookie";
 export default {
   name: "staff",
   data(){//定义变量和初始值
@@ -177,12 +193,18 @@ export default {
       },
       oldOder:{},
       rules:{
-        warehouseOperaterId:[
+        sWarehouseOperaterId:[
           { required: true, message: '请输入选择仓库管理员', trigger: 'blur' }
         ],
-        paymentWay:[
+        sPaymentWay:[
           {required:true,message:'请选择付款方式',trigger:'blur'}
-        ]
+        ],
+        sBuyWay:[
+          {required:true,message:'请输入进货方式',trigger:'blur'}
+        ],
+        sInvoiceType:[
+          {required:true,message:'请选择发票类型',trigger:'blur'}
+        ],
       },
       visible:false,
       spaymentWay:[
@@ -347,10 +369,6 @@ export default {
         this.getList()
       })
     },
-    transOrder(data){
-      this.buyList.iId=data.iId
-      this.dialogVisible=true
-    },
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(_ => {
@@ -358,14 +376,25 @@ export default {
         })
         .catch(_ => {});
     },
+    transOrder(data){
+      console.log(data)
+      this.buyList.iId=data.iId
+      this.buyList.sFactoryId=data.iFactoryId
+      this.buyList.sCreateOperatorId=data.iCreateOperatorId
+      this.buyList.sIsPayment=0
+      this.buyList.sStatus=1
+      this.buyList.sType=2
+      this.buyList.sOrderStatus=2
+      this.buyList.sExistBill=0
+      this.buyList.sCustomId=0
+      this.buyList.sPrice=data.iPrice
+      this.dialogVisible=true
+    },
     submitForm() {
       this.$refs['buyList'].validate((valid) => {
         if (valid) {
-          this.buyList.iId=this.buyList.iId.toString()
-          this.buyList.warehouseOperaterId=this.buyList.warehouseOperaterId.toString()
           console.log(this.buyList)
-          console.log(qs.stringify(this.buyList))
-          PostData("inquiry/oneKeyConversionInquiry",qs.stringify(this.buyList)).then((ref)=>{
+          PostData("inquiry/oneKeyConversionInquiry",this.buyList).then((res)=>{
             this.$message({
               message: '转换成功',
               type: 'success'
@@ -373,9 +402,6 @@ export default {
             this.dialogVisible=false
             this.getList()
           })
-        } else {
-          console.log('error submit!!');
-          return false;
         }
       });
     },
@@ -399,6 +425,37 @@ export default {
         }
       });
     },
+    oninput(value) {
+      let str = value;
+      let len1 = str.substr(0, 1);
+      let len2 = str.substr(1, 1);
+      //如果第一位是0，第二位不是点，就用数字把点替换掉
+      if (str.length > 1 && len1 == 0 && len2 != ".") {
+        str = str.substr(1, 1);
+      }
+      //第一位不能是.
+      if (len1 == ".") {
+        str = "";
+      }
+      if (len1 == "+") {
+        str = "";
+      }
+      if (len1 == "-") {
+        str = "";
+      }
+
+      //限制只能输入一个小数点
+      if (str.indexOf(".") != -1) {
+        let str_ = str.substr(str.indexOf(".") + 1);
+        if (str_.indexOf(".") != -1) {
+          str = str.substr(0, str.indexOf(".") + str_.indexOf(".") + 1);
+        }
+      }
+      //正则替换
+      str = str.replace(/[^\d^\.]+/g, ""); // 保留数字和小数点
+      str = str.replace(/^\D*([0-9]\d*\.?\d{0,2})?.*$/, "$1"); // 小数点后只能输 2 位
+      return str;
+    }
   }
 }
 </script>

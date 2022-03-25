@@ -61,14 +61,14 @@
       <template slot-scope="scoped">
         <el-form-item>
           <el-select v-model="buyQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员" clearable>
-            <el-option :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>
+            <el-option  :key="item.aId" :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>
           </el-select>
           <el-select v-model="buyQuery.SStatus" placeholder="请选择订单状态" style="margin-left: 3px" clearable>
-            <el-option label="未收货" :value="0"></el-option>
-            <el-option label="已收货" :value="1"></el-option>
+            <el-option label="未收货" :value="1"></el-option>
+            <el-option label="已收货" :value="2"></el-option>
           </el-select>
           <el-select v-model="buyQuery.SFactoryId" style="margin-left: 3px" placeholder="请选择工厂" clearable>
-            <el-option :label="item.fName" :value="item.fId" v-for="item in factoryList"></el-option>
+            <el-option  :key="item.fId" :label="item.fName" :value="item.fId" v-for="item in factoryList"></el-option>
           </el-select>
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="search">查 询</el-button>
@@ -107,22 +107,8 @@
           </el-tag>
         </template>
       </el-table-column>
-      <!--      <el-table-column prop="sStatus" label="物流情况" width="80%"  align="center"/>-->
-      <!--      <el-table-column prop="sPicture" label="支付凭证" width="100%"  align="center">-->
-      <!--        <router-link to="">-->
-      <!--          <el-button type="primary">查看</el-button>-->
-      <!--        </router-link>-->
-      <!--      </el-table-column>-->
-      <!--      <el-table-column prop="sType" label="进货单类型" width="90%"  align="center">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          {{sType(scope.row.sType)}}-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
       <el-table-column prop="sPrice" label="应付款" width="90%"  align="center"/>
-      <!--      <el-table-column prop="sRealIncome" label="实收价" width="90%"  align="center"/>-->
-
-      <!--      <el-table-column prop="aPassword" label="用户密码" width="120%"  align="center"/>-->
-      <el-table-column prop="sOrderStatus" label="订单状态" width="80%"  align="center">
+      <el-table-column prop="sStatus" label="订单状态" width="80%"  align="center">
         <template slot-scope="scope">
           {{oderStatus(scope.row.sStatus)}}
         </template>
@@ -260,10 +246,10 @@ export default {
     },
     oderStatus(){
       return function (status){
-        if(status===0){
+        if(status===1){
           return '未收货'
         }
-        else return '已收货'
+        else if(status===2) return '已收货'
       }
     }
   },
@@ -282,6 +268,7 @@ export default {
         .then(res=>{
           this.list = res.list
           this.pageTotal=res.total
+          console.log("enter")
           console.log(res.list);
         }).catch(err=>{
         this.$message.error(err.message);
@@ -312,6 +299,7 @@ export default {
       PostData('/factory/selectAllByLike',this.factoryQuery)
         .then(res=>{
           this.factoryList=res.list
+          console.log(res.list)
         }).catch(err=>{
         this.$message.error(err.message);
       })
