@@ -15,6 +15,9 @@
         <el-form-item label="零件数量" prop="indNumber">
             <el-input-number v-model="editPartNum.indNumber" :min="1" label="描述文字"></el-input-number>
         </el-form-item>
+        <el-form-item label="供货周期" prop="indDeliveryCycle">
+          <el-input v-model="editPartNum.indDeliveryCycle" ></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -142,7 +145,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="indDeliveryCycle" label="供货周期" width="130%"  align="center"/>
-      <el-table-column prop="indDeliveryNum" label="发货数量" width="120%" align="center" />
+<!--      <el-table-column prop="indDeliveryNum" label="发货数量" width="120%" align="center" />-->
       <!--      <el-table-column prop="aPassword" label="用户密码" width="120%"  align="center"/>-->
 <!--      <el-table-column prop="indPrice" label="零件价格" width="200%"  align="center"/>-->
       <el-table-column prop="indIsDelivery" label="是否能供货" width="120%" align="center">
@@ -157,7 +160,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-            <el-button size="mini"  icon="el-icon-edit" type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改零件数量</el-button>
+            <el-button size="mini"  icon="el-icon-edit" type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改</el-button>
             <el-button size="mini" icon="el-icon-delete" type="danger" style="width: auto" @click="deletePart(scope.$index)" v-show="list.length>1">删除该零件</el-button>
         </template>
       </el-table-column>
@@ -239,16 +242,16 @@ export default {
   methods:{//创建具体的方法
     getList() {
       // this.list=this.$route.query.partList
-      this.detailQuery.indOrderId = JSON.parse(this.$route.query.iId)
-      this.detailQuery.factoryId= JSON.parse(this.$route.query.factoryId)
+      this.detailQuery.indOrderId = this.$route.query.iId
+      this.detailQuery.factoryId=this.$route.query.factoryId
       console.log(this.detailQuery.indOrderId);
       PostData('/inquiry/queryInquiryDetail',qs.stringify(this.detailQuery)).then(ref=>{
         this.list=ref
         console.log(this.list);
-        this.addPart.factoryId=JSON.parse(this.$route.query.factoryId)
+        this.addPart.factoryId=this.$route.query.factoryId
         this.addPart.indOrderId=this.list[0].indOrderId
         this.addPart.indCustomerId=this.list[0].indCustomerId
-        this.addWhole.factoryId=JSON.parse(this.$route.query.factoryId)
+        this.addWhole.factoryId=this.$route.query.factoryId
         this.addWhole.indOrderId=this.list[0].indOrderId
         this.addWhole.indCustomerId=this.list[0].indCustomerId
       })
@@ -265,12 +268,14 @@ export default {
         .catch(_ => {});
     },
     editPartNumMethod(row){
-      console.log(row);
       this.editPartNum.indPartsName=row.indPartsName
       this.editPartNum.indNumber=row.indNumber
       this.editPartNum.indId=row.indId
       this.editPartNum.indPrice=row.indPrice
       this.editPartNum.indOrderId=row.indOrderId
+      this.editPartNum.indDeliveryCycle=row.indDeliveryCycle
+      console.log(this.editPartNum)
+      this.editPartNum=JSON.parse(JSON.stringify(this.editPartNum))
       this.dialogVisible=true
     },
     confirmEdit(formName){
@@ -289,6 +294,7 @@ export default {
               message: '修改成功',
               type: 'success'
             })
+            this.getList()
             this.dialogVisible=false
           })
         } else {

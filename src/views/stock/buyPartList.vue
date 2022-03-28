@@ -15,6 +15,9 @@
         <el-form-item label="零件价格" prop="sdPrice">
           <el-input v-model="editPartNum.sdPrice"></el-input>
         </el-form-item>
+        <el-form-item label="供货周期" prop="sdDeliveryCycle">
+          <el-input v-model="editPartNum.sdDeliveryCycle" ></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -83,21 +86,12 @@
             </template>
           </el-autocomplete>
         </el-form-item>
-        <!--        <el-form-item label="类型" prop="indType">-->
-        <!--          <el-select v-model="addPart.indType" placeholder="请选择">-->
-        <!--            <el-option label="整件" :value="0"></el-option>-->
-        <!--            <el-option label="零件" :value="1"></el-option>-->
-        <!--          </el-select>-->
-        <!--        </el-form-item>-->
         <el-form-item label="整件数量" prop="sdNumber">
           <el-input-number v-model="addWhole.sdNumber" :min="1" label="描述文字"></el-input-number>
         </el-form-item>
         <el-form-item label="供货周期" prop="sdDeliveryCycle">
           <el-input v-model="addWhole.sdDeliveryCycle" style="width: 30%"></el-input>
         </el-form-item>
-<!--        <el-form-item label="发货周期" prop="indDeliveryNum">-->
-<!--          <el-input v-model="addWhole.indDeliveryNum" style="width: 30%"></el-input>-->
-<!--        </el-form-item>-->
         <el-form-item label="价格" prop="sdPrice">
           <el-input v-model="addWhole.sdPrice" style="width: 30%"></el-input>
         </el-form-item>
@@ -108,7 +102,6 @@
   </span>
     </el-dialog>
     <el-button type="primary" style="margin-bottom: 3px" @click="toAddParts">添加零件</el-button>
-<!--    <el-button type="primary" style="margin-bottom: 3px" @click="addWholeMethod">添加整件</el-button>-->
     <el-table
       :data="list"
       border
@@ -161,7 +154,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改数量或价格</el-button>
+          <el-button type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改</el-button>
           <el-button type="danger" style="width: auto" @click="deletePart(scope.row.sdId)" v-if="scope.row.sdStatus!==2">删除该零件</el-button>
           <el-button type="warning" style="width: auto" @click="received(scope.row)" v-if="scope.row.sdStatus!==2">收 货</el-button>
         </template>
@@ -177,6 +170,8 @@ export default {
   name: "staff",
   data(){//定义变量和初始值
     return{
+      //供货周期列表
+      cycleList:[],
       buyPartListQuery:{
         pageNum: 0,
         pageSize: 0
@@ -265,6 +260,9 @@ export default {
         this.addWhole.sdCustomerId=this.list[0].sdCustomerId
         this.addWhole.sdStatus=0
       })
+      PostData('returnCycle/selectAll',{pageNum:1,pageSize:10}).then(res=>{
+        this.cycleList=res.list
+      })
     },
     backPre(){
       this.$router.back()
@@ -301,6 +299,7 @@ export default {
       this.editPartNum.sdDeliveryCycle=row.sdDeliveryCycle
       this.editPartNum.sdPackedId=row.sdPackedId
       this.dialogVisible=true
+      this.editPartNum=JSON.parse(JSON.stringify(this.editPartNum))
     },
     confirmEdit(formName){
       this.$refs[formName].validate((valid) => {

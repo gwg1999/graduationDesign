@@ -107,9 +107,9 @@
         </template>
       </el-table-column>
       <el-table-column prop="pId" label="序列号" width="80px" align="center" />
-      <el-table-column prop="pNumber" label="零件号" width="150px" align="center" />
-      <el-table-column prop="pName" label="零件名" width="200px" align="center" />
-      <el-table-column prop="place.plName" label="产地或品牌" width="100px"  align="center"/>
+      <el-table-column prop="pNumber" label="零件号" width="120px" align="center" />
+      <el-table-column prop="pName" label="零件名" width="130px" align="center" />
+      <el-table-column prop="place.plName" label="产地" width="60px"  align="center"/>
       <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
 <!--      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>-->
 <!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />-->
@@ -124,7 +124,11 @@
                 数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
-                供货周期:<el-input  @keyup.native="scope.row.indDeliveryCycle = oninput(scope.row.indDeliveryCycle)" v-model = "scope.row.indDeliveryCycle" style="width: 80px;" size="small" ></el-input>
+                供货周期:
+                <el-select  v-model="scope.row.indDeliveryCycle" style="margin-left: 3px;width: 100px"  placeholder="请选择操作员" clearable>
+                  <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcId" ></el-option>
+                </el-select>
+<!--                供货周期:<el-input  @keyup.native="scope.row.indDeliveryCycle = oninput(scope.row.indDeliveryCycle)" v-model = "scope.row.indDeliveryCycle" style="width: 80px;" size="small" ></el-input>-->
               </el-form-item>
               <el-form-item>
                 价格:<el-input  @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width: 80px;" size="small" ></el-input>
@@ -477,6 +481,7 @@ export default {
         pageNum:1,
         pageSize:10
       },
+      cycleList:[],
       historyPriceList:[],
       whole:{},
       dialogVisible:false,
@@ -840,6 +845,7 @@ export default {
           .then(res=>{
             let middleList=res.list
             this.total=res.total
+            console.log(middleList)
             if(middleList&&middleList.length>0){
               middleList.forEach(value => {
                 let copyPositions=''
@@ -858,11 +864,13 @@ export default {
                 }else {
                   copyPositions='暂时未定'
                 }
+
+                value.odNumber=1
                 value.positions=copyPositions
                 value.pictures=value.pictures.filter(value=>{
                   return value.type===0
                 })
-                value.odRetailPrice=0
+                value.odRetailPrice=value.pLowPrice
               })
             }
             this.list=middleList
@@ -889,6 +897,10 @@ export default {
     getList(){
       levelIVDirectory().then(res=>{
         this.levelIVDirectoryList=res
+      })
+      PostData('returnCycle/selectAll',{pageNum:1,pageSize:10}).then(res=>{
+        this.cycleList=res.list
+        console.log(res.list)
       })
     },
     //该客户推荐价格

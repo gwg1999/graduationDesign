@@ -259,6 +259,7 @@ export default {
       if (this.$refs['warehouseOperatorModify'] !== undefined)
         this.$refs['warehouseOperatorModify'].resetFields();
       this.warehouseOperatorModify.qId=JSON.parse(JSON.stringify(params))
+      console.log()
     },
     //报价单转销售单
     inverseOrder(){
@@ -344,7 +345,7 @@ export default {
       if (this.$refs['salesSlipsModify'] !== undefined)
         this.$refs['salesSlipsModify'].resetFields();
       this.salesSlipsModify=JSON.parse(JSON.stringify(params))
-
+      console.log(this.salesSlipsModify)
     },
     enable(){
       setTimeout(()=>{

@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <!--   询价单 -->
 <!--    <h6 style="float:right;margin-top:0;color: red">(在鼠标点击数量框内后)-&#45;&#45;F5查看该零件本客户的历史记录,F8查看该零件的订单记录,F6查看进货历史记录,-->
 <!--      在添加整件时F7查看该整件的零件关系</h6>-->
 <!--    <h3>{{inPrice}}</h3>-->
@@ -30,14 +31,8 @@
           clearable
           style="width: 250px"
         >
-          <!--      <i-->
-          <!--        class="el-icon-edit el-input__icon"-->
-          <!--        slot="suffix"-->
-          <!--        @click="handleIconClick">-->
-          <!--      </i>-->
           <template slot-scope="{ item }">
             <div>{{ item.pName }}</div>
-            <!--        <span class="addr">{{ item.address }}</span>-->
           </template>
         </el-autocomplete>
       </el-form-item>
@@ -137,7 +132,12 @@
                 数量:<el-input style="width: 100px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.qdNumber = number(scope.row.qdNumber)"  v-model = "scope.row.qdNumber"  size="small"></el-input>
               </el-form-item>
               <el-form-item>
-                供货周期:<el-input style="width: 80px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.indDeliveryCycle = number(scope.row.indDeliveryCycle)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input>
+                供货周期:
+                <el-select  v-model="scope.row.indDeliveryCycle" style="margin-left: 3px;width: 100px"  placeholder="请选择操作员" clearable>
+                  <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcId" ></el-option>
+                </el-select>
+<!--                cycleList-->
+<!--                供货周期:<el-input style="width: 80px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.indDeliveryCycle = number(scope.row.indDeliveryCycle)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input>-->
               </el-form-item>
               <el-form-item>
                 价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 70px;" size="small" ></el-input>
@@ -506,6 +506,7 @@ export default {
         quotationDetailList:[],
         wholeDetailsList:[]
       },
+      cycleList:[],
       rules:{
         qdNumber: [
           {required: true, message: '请输入数量', trigger: 'change'},
@@ -842,7 +843,9 @@ export default {
             this.partTotal = res.total
             if (middleList && middleList.length > 0) {
               middleList.forEach(value => {
-                value.price = 0
+                value.price = value.pLowPrice
+                value.qdNumber=1
+                console.log(value)
                 value.pictures=value.pictures.filter(value=>{
                   return value.type===0
                 })
@@ -869,6 +872,10 @@ export default {
     getList(){
       levelIVDirectory().then(res=>{
         this.levelIVDirectoryList=res
+      })
+      PostData('returnCycle/selectAll',{pageNum:1,pageSize:10}).then(res=>{
+        this.cycleList=res.list
+        console.log(res.list)
       })
     },
     previous() {

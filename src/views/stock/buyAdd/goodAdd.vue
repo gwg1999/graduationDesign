@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+<!--   进货单 -->
 <!--    <h3>{{orderId}}&#45;&#45;{{factoryId}}</h3>-->
 <!--    <h6 style="float:right;margin-top:0;color: red">(在鼠标点击数量框内后)-&#45;&#45;F8查看该零件的订单记录,F6查看进货历史记录-->
 <!--      </h6>-->
@@ -72,7 +73,7 @@
               fit
               v-show="levelIV.odType===1"
               highlight-current-row
-              style="width: 100%;font-size: 4px;line-height:20px;padding: 0">
+              style="font-size: 4px;line-height:20px;padding: 0">
       <el-table-column
         label="序号"
         width="50%"
@@ -119,15 +120,15 @@
         </template>
       </el-table-column>
       <el-table-column prop="pId" label="序列号" width="80px" align="center" />
-      <el-table-column prop="pNumber" label="零件号" width="150px" align="center" />
-      <el-table-column prop="pName" label="零件名" width="200px" align="center" />
-      <el-table-column prop="place.plName" label="产地或品牌" width="100px"  align="center"/>
+      <el-table-column prop="pNumber" label="零件号" width="120px" align="center" />
+      <el-table-column prop="pName" label="零件名" width="150px" align="center" />
+      <el-table-column prop="place.plName" label="产地" width="70px"  align="center"/>
       <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
-<!--      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>-->
-<!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />-->
-<!--      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>-->
-<!--      <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>-->
-<!--      <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>-->
+<!--      <el-table-column prop="pLowPrice" label="一级价格" width="60px"  align="center"/>-->
+<!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="60px" align="center" />-->
+<!--      <el-table-column prop="pHighPrice" label="三级价格" width="60px"  align="center"/>-->
+      <el-table-column prop="pBuyingPrice" label="进价" width="60px"  align="center"/>
+      <el-table-column prop="pRealInventory" label="库存数" width="60px"  align="center"/>
       <el-table-column prop="pId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
@@ -532,8 +533,8 @@ export default {
   },
   created() {
     // this.priceSlip=this.$route.query.priceSlip
-    this.orderId=parseInt(this.$route.query.orderId)
-    this.factoryId=parseInt(this.$route.query.factoryId)
+    this.orderId=Number(this.$route.query.orderId)
+    this.factoryId=Number(this.$route.query.factoryId)
     this.getList()
     this.queryGoods()
     // this.getPrice()
@@ -839,12 +840,12 @@ export default {
         levelIVCopy.pFactoryId=this.factoryId
         PostData('parts/selectAllByEnabled',levelIVCopy)
           .then(res=>{
-            console.log(res.list);
             let middleList=res.list
             this.total=res.total
             if(middleList&&middleList.length>0){
               middleList.forEach(value => {
-                value.odRetailPrice=0
+                value.odRetailPrice=value.pLowPrice
+                value.odNumber=1
               })
             }
             this.list=middleList

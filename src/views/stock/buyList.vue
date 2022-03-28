@@ -1,5 +1,6 @@
 <template>
   <div class="app-container" style="background: white">
+    <!--进货单-->
     <el-dialog
       title="进货单详情"
       :visible.sync="dialogVisible"
@@ -60,16 +61,41 @@
     <el-form :inline="true" class="demo-form-inline" style="position: relative">
       <template slot-scope="scoped">
         <el-form-item>
-          <el-select v-model="buyQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员" clearable>
-            <el-option  :key="item.aId" :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>
-          </el-select>
+
+          <el-autocomplete
+            v-model="buyQuery.fName"
+            @change="handleOperator($event)"
+            :fetch-suggestions="querySearchAsync"
+            clearable
+            placeholder="请输入工厂名称"
+            :trigger-on-focus="false"
+            style="padding-right: 5px"
+            @select="handleSelect1(buyQuery,$event)"
+          >
+          </el-autocomplete>
+
+          <el-autocomplete
+            v-model="buyQuery.adminName"
+            @change="handleOperator1($event)"
+            :fetch-suggestions="querySearchAsync1"
+            clearable
+            placeholder="请输入操作员"
+            :trigger-on-focus="false"
+            @select="handleSelect2(buyQuery,$event)"
+          >
+          </el-autocomplete>
+<!--          <el-select v-model="buyQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员" clearable>-->
+<!--            <el-option  :key="item.aId" :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>-->
+<!--          </el-select>-->
+<!--          <el-select v-model="buyQuery.SFactoryId" style="margin-left: 3px" placeholder="请选择工厂" clearable>-->
+<!--            <el-option  :key="item.fId" :label="item.fName" :value="item.fId" v-for="item in factoryList"></el-option>-->
+<!--          </el-select>-->
+
           <el-select v-model="buyQuery.SStatus" placeholder="请选择订单状态" style="margin-left: 3px" clearable>
             <el-option label="未收货" :value="1"></el-option>
             <el-option label="已收货" :value="2"></el-option>
           </el-select>
-          <el-select v-model="buyQuery.SFactoryId" style="margin-left: 3px" placeholder="请选择工厂" clearable>
-            <el-option  :key="item.fId" :label="item.fName" :value="item.fId" v-for="item in factoryList"></el-option>
-          </el-select>
+
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="search">查 询</el-button>
 
@@ -258,6 +284,59 @@ export default {
     // this.getPageTotal()
   },
   methods:{
+    //操作员模糊查询
+    handleOperator(event){
+      if(event===''){
+        this.buyQuery.SFactoryId=undefined
+        this.getList()
+      }
+    },
+    querySearchAsync(queryString, cb) {
+      let adminQuery={}
+      adminQuery.fName=queryString
+      PostData('factory/selectAllByLike',adminQuery).then(res => {
+        res.list.forEach((v)=>{
+          v.value=v.fName
+        })
+        if(res.list.length>10) {
+          res.list = res.list.slice(0, 10);
+        }
+        console.log(res.list)
+        cb(res.list)
+      })
+    },
+    handleSelect1(item,event) {
+      this.buyQuery.SFactoryId=event.fId
+      this.getList()
+    },
+
+    //操作员模糊查询
+    handleOperator1(event){
+      if(event===''){
+        this.buyQuery.adminName=undefined
+        this.getList()
+      }
+    },
+    querySearchAsync1(queryString, cb) {
+      let adminQuery={}
+      adminQuery.aName=queryString
+      PostData('admin/selectAllByLike',qs.stringify(adminQuery)).then(res => {
+        res.list.forEach((v)=>{
+          v.value=v.aName
+        })
+        if(res.list.length>10) {
+          res.list = res.list.slice(0, 10);
+        }
+        cb(res.list)
+      })
+    },
+    handleSelect2(item,event) {
+      console.log(event)
+      this.buyQuery.adminName=event.aName
+      this.getList()
+    },
+
+    //查询
     search(){
       this.buyQuery.pageNum=1
       this.getList()
@@ -268,8 +347,6 @@ export default {
         .then(res=>{
           this.list = res.list
           this.pageTotal=res.total
-          console.log("enter")
-          console.log(res.list);
         }).catch(err=>{
         this.$message.error(err.message);
       })
@@ -299,7 +376,6 @@ export default {
       PostData('/factory/selectAllByLike',this.factoryQuery)
         .then(res=>{
           this.factoryList=res.list
-          console.log(res.list)
         }).catch(err=>{
         this.$message.error(err.message);
       })

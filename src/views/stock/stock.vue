@@ -53,16 +53,35 @@
     <el-form :inline="true" class="demo-form-inline" style="position: relative">
       <template slot-scope="scoped">
         <el-form-item>
-          <el-select v-model="stockQuery.iFactoryId" style="margin-left: 3px" placeholder="请选择工厂" clearable>
-            <el-option v-for="item in factoryList" :key="item.fId" :label="item.fName" :value="item.fId" ></el-option>
-          </el-select>
-          <el-select v-model="stockQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员" clearable>
-            <el-option v-for="item in adminList"  :key="item.aId" :label="item.aName" :value="item.aName" ></el-option>
-          </el-select>
+
+          <el-autocomplete
+            v-model="stockQuery.fName"
+            @change="handleOperator($event)"
+            :fetch-suggestions="querySearchAsync"
+            clearable
+            placeholder="请输入工厂名称"
+            :trigger-on-focus="false"
+            style="padding-right: 5px"
+            @select="handleSelect1(stockQuery,$event)"
+          >
+          </el-autocomplete>
+
+          <el-autocomplete
+            v-model="stockQuery.adminName"
+            @change="handleOperator1($event)"
+            :fetch-suggestions="querySearchAsync1"
+            clearable
+            placeholder="请输入操作员"
+            :trigger-on-focus="false"
+            @select="handleSelect2(stockQuery,$event)"
+          >
+          </el-autocomplete>
+
           <el-select v-model="stockQuery.iStatus" style="margin-left: 3px" placeholder="请选择订单状态" clearable>
             <el-option label="未询价" :value="0"></el-option>
             <el-option label="已询价" :value="1"></el-option>
           </el-select>
+
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" @click="search">查 询</el-button>
         <el-button type="primary" icon="el-icon-circle-plus"  style="position: absolute;right: 10px" @click="toInsert()">添加</el-button>
@@ -130,8 +149,11 @@
                   <el-input v-model="oder.fName" style="width: 200px" disabled/>
                 </el-form-item>
                 <el-form-item label="操作员" prop="adminName">
-                  <el-input v-model="oder.adminName" style="width: 200px" disabled/>
+                  <el-select v-model="oder.adminName" style="margin-left: 3px;width: 200px"  placeholder="请选择操作员" clearable>
+                    <el-option v-for="item in adminList"  :key="item.aId" :label="item.aName" :value="item.aId" ></el-option>
+                  </el-select>
                 </el-form-item>
+
                 <el-form-item label="总价格" prop="indPrice">
                   <el-input v-model="oder.iPrice" style="width: 200px" disabled/>
                 </el-form-item>
@@ -252,12 +274,62 @@ export default {
     // this.getPageTotal()
   },
   methods:{
+    //操作员模糊查询
+    handleOperator(event){
+      if(event===''){
+        this.stockQuery.iFactoryId=undefined
+        this.getList()
+      }
+    },
+    querySearchAsync(queryString, cb) {
+      let adminQuery={}
+      adminQuery.fName=queryString
+      PostData('factory/selectAllByLike',adminQuery).then(res => {
+        res.list.forEach((v)=>{
+          v.value=v.fName
+        })
+        if(res.list.length>10) {
+          res.list = res.list.slice(0, 10);
+        }
+          cb(res.list)
+      })
+    },
+    handleSelect1(item,event) {
+      this.stockQuery.iFactoryId=event.fId
+      this.getList()
+    },
+    //操作员模糊查询
+    handleOperator1(event){
+      if(event===''){
+        this.stockQuery.adminName=undefined
+        this.getList()
+      }
+    },
+    querySearchAsync1(queryString, cb) {
+      let adminQuery={}
+      adminQuery.aName=queryString
+      PostData('admin/selectAllByLike',qs.stringify(adminQuery)).then(res => {
+        res.list.forEach((v)=>{
+          v.value=v.aName
+        })
+        if(res.list.length>10) {
+          res.list = res.list.slice(0, 10);
+        }
+        cb(res.list)
+      })
+    },
+    handleSelect2(item,event) {
+      this.stockQuery.adminName=event.aName
+      this.getList()
+    },
+
+
+
+    //获得工厂列表
     getFactory(){
       PostData('/factory/selectAllByLike',{pageSize:0,pageNum:0})
         .then(res=>{
           this.factoryList=res.list
-          console.log("outer")
-          console.log(res.list)
         }).catch(err=>{
         this.$message.error(err.message);
       })
@@ -268,7 +340,6 @@ export default {
         .then(res=>{
           this.list = res.list
           this.pageTotal=res.total
-          console.log(res);
         }).catch(err=>{
         this.$message.error(err.message);
       })
@@ -304,10 +375,9 @@ export default {
     },
     // 跳转详情页
     showDetails(data){
-      this.oder=data
+      this.oder=JSON.parse(JSON.stringify(data))
       this.oder.fName=data.factory.fName
       Object.assign(this.oldOder,data)
-      console.log(this.oder);
     },
     isChange(){
       for(let key  in this.oder){
@@ -408,6 +478,8 @@ export default {
     submitUpdate(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          console.log(this.oder)
+          this.oder.iCreateOperatorId=this.oder.adminName
           if(this.isChange()){
             PostData('/inquiry/ediInquiry',this.oder)
               .then(res=>{
@@ -416,6 +488,7 @@ export default {
                   message:'修改成功'
                 })
                 this.visible=false
+                this.getList()
               }).catch(()=>{})
           }
           else {}

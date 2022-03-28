@@ -35,6 +35,9 @@
         <el-form-item >
           <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="getList()">查 询</el-button>
         </el-form-item >
+        <el-form-item   style="position: absolute ;right: 10px">
+            <el-button type="primary" icon="el-icon-circle-plus" @click="openAddMemorandum">添加</el-button>
+        </el-form-item >
       </el-form>
       <!--      备忘录表-->
       <el-table
@@ -56,10 +59,10 @@
         <el-table-column label="备忘录状态" prop="status" width="80px" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.status ===1">
-              <span style="color:#00B46D">已打款</span>
+              <span style="color:#00B46D">已解决</span>
             </span>
             <span v-else>
-              <span style="color:#D75C89">未打款</span>
+              <span style="color:#D75C89">未解决</span>
             </span>
           </template>
         </el-table-column>
@@ -108,6 +111,34 @@
                    @click="UpdateMemorandum()">确 定</el-button>
       </div>
     </el-dialog>
+    <!--备忘录添加-->
+    <el-dialog :visible.sync="addDialogMemorandumVisible" title="备忘录添加">
+      <el-form :model="addMemorandums" label-width="120px" :rules="rules" ref="addMemorandums">
+        <el-form-item label="选择创建人员" prop="operateId">
+          <el-select v-model="addMemorandums.operateId" filterable placeholder="选择仓库管理员" >
+            <el-option
+              v-for="admin in adminList"
+              :key="admin.aId"
+              :label="admin.aName"
+              :value="admin.aId"/>
+          </el-select>
+        </el-form-item>
+<!--        <el-form-item label="解决状态" prop="status">-->
+<!--          <el-select v-model="addMemorandum.status" clearable placeholder="是否解决" style="width: 200px"  >-->
+<!--            <el-option :value="0" label="未解决"/>-->
+<!--            <el-option :value="1" label="已解决"/>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
+        <el-form-item label="备注" prop="note">
+          <el-input v-model="addMemorandums.note" style="width: 90%" rows="5" type="textarea"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addDialogMemorandumVisible = false">取 消</el-button>
+        <el-button :disabled="memorandumBtnDisabled" type="primary"
+                   @click="addMemorandum()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -125,6 +156,9 @@ export default {
         pageNum:1,
         pageSize:8
       },
+      //备忘录添加
+      addDialogMemorandumVisible:false,
+      addMemorandums:{},
       memorandumList:[],
       memorandumModify:{},
       rules:{
@@ -204,6 +238,8 @@ export default {
       this.memorandumModify=JSON.parse(JSON.stringify(params))
     },
     UpdateMemorandum(){
+      console.log(this.memorandumModify)
+      this.memorandumModify.createTime=undefined
       this.$refs['memorandumModify'].validate((valid)=>{
         if(valid){
           PostData('note/update',this.memorandumModify)
@@ -235,6 +271,31 @@ export default {
             this.getList()
           })
       })
+    },
+    openAddMemorandum(){
+      if(this.$refs['addMemorandums']!==undefined)
+        this.$refs['addMemorandums'].resetField()
+      this.addDialogMemorandumVisible=true
+    },
+    addMemorandum(){
+      this.memorandumBtnDisabled = true
+      setTimeout(()=>{
+        this.memorandumBtnDisabled=false
+      },1000)
+      this.$refs['addMemorandums'].validate(value=>{
+        if(value){
+          this.addMemorandum.status=0
+          PostData('note/insert',this.addMemorandums).then(res=>{
+            this.$message({
+              type:'success',
+              message:'添加备忘录成功'
+            })
+            this.getList()
+            this.addDialogMemorandumVisible=false
+          })
+        }
+      })
+
     }
   }
 }
