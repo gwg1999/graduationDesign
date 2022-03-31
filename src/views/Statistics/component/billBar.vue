@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div id="incomeBar" style="width: 300px;height: 300px"></div>
+  <div  style="display: flex;align-items: center;justify-content: center">
+    <div id="incomeBar" style="width: 600px;height: 400px"></div>
   </div>
 </template>
 
@@ -29,7 +29,11 @@ export default {
     drawBar(id){
       this.charts = echarts.init(document.getElementById(id))
       this.charts.setOption({
-        title: {text: '收支记录'},
+        title: {
+          text: '收支记录',
+          left: 'center',
+          top: 'bottom'
+        },
         xAxis: [
           {
             type: 'category',
@@ -53,12 +57,20 @@ export default {
           {
             name:'收入',
             type: 'bar',
-            data: this.incomeData
+            data: this.incomeData,
+            label: {
+              show:true,
+              position: 'top'
+            }
           },
           {
             name:'支出',
             type: 'bar',
-            data: this.outcomeData
+            data: this.outcomeData,
+            label: {
+              show:true,
+              position: 'top'
+            }
           }
         ],
       })

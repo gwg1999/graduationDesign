@@ -60,8 +60,8 @@
           <el-table-column label="发货方式" align="center" prop="oDeliveryWay"></el-table-column>
           <el-table-column label="支付方式" align="center" prop="oPaymentWay"></el-table-column>
           <el-table-column label="时间" align="center" prop="oCreateTime"></el-table-column>
-          <el-table-column label="应收" align="center" prop="oSupposeIncome"></el-table-column>
-          <el-table-column label="实收" align="center" prop="oRealIncome"></el-table-column>
+          <el-table-column label="应付" align="center" prop="oSupposeIncome"></el-table-column>
+          <el-table-column label="实付" align="center" prop="oRealIncome"></el-table-column>
           <!--          <el-table-column label="结清状态" align="center"></el-table-column>-->
         </el-table>
         <el-pagination
@@ -174,7 +174,7 @@ export default {
       PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{
         this.accountDetail = res
         console.log(res)
-        let temp = JSON.parse(res.orders)
+        let temp = JSON.parse(res.stocks)
         this.orders = temp.list
         for(let order of this.orders){
           order.oCreateTime = parseTime(order.oCreateTime,'{y}-{m}-{d} {h}:{i}:{s}')

@@ -5,13 +5,32 @@
     </div>
     <div class="line"></div>
     <div>
-
+      <div style="display: flex;justify-content: space-around;align-items: center;padding: 10px">
+        <el-form :inline="true">
+          <el-form-item>
+            <el-date-picker
+              v-model="tempDate"
+              type="daterange"
+              start-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary">查询</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
-    <div style="overflow: auto;flex:1;">
+    <div class="line"></div>
+    <div style="display:flex;">
       <div class="chart-box">
         <bill-bar :opinion-data="[incomeData,outcomeData]" :opinion="['挂账','线上','线下']"></bill-bar>
       </div>
-      <div class="top10">
+      <div class="top10" style="display: flex;justify-content: center">
+        <div>
+          <bill-pie :data="this.totalBill"></bill-pie>
+        </div>
 
       </div>
     </div>
@@ -22,12 +41,14 @@
 import orderSum from "@/views/Statistics/component/orderSum";
 import echarts from "echarts";
 import billBar from "@/views/Statistics/component/billBar";
+import billPie from "@/views/Statistics/component/billPie";
 
 export default {
   name: "accessoryStock",
   components: {
     billBar,
     orderSum,
+    billPie,
   },
   created(){
     this.getChartData()
@@ -40,19 +61,19 @@ export default {
       topData: [],
       cardData: [
         {
-          label: '今日零件进货数',
+          label: '今日收入',
           number: 1,
         },
         {
-          label: '今日零件进货金额',
+          label: '今日支出',
           number: 1,
         },
         {
-          label: '当月零件进货数',
+          label: '当月收入',
           number: 1,
         },
         {
-          label: '当月零件进货金额',
+          label: '当月支出',
           number: 1,
         }
       ],
@@ -63,7 +84,12 @@ export default {
         {value: 130,name: '女'}
       ],
       incomeData: [10,20,15],
-      outcomeData: [20,12,10]
+      outcomeData: [20,12,10],
+      totalBill: [
+        {value: 300,name: '收入'},
+        {value:500,name: '支出'}
+      ],
+      tempDate: null,
     }
   },
   methods: {
@@ -118,6 +144,7 @@ export default {
   overflow: hidden;
   /*border: solid 2px blue;*/
   padding: 10px;
+  flex:1;
 }
 .line{
   height: 1px;

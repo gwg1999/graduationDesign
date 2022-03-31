@@ -643,16 +643,16 @@ export const constantRoutes=[
       },
       {
         path: 'incomeStatic',
-        name: '财务入账统计',
+        name: '财务统计',
         component: () => import('@/views/Statistics/incomeStatic'),
-        meta: { title: '财务入账统计', icon: 'table'}
+        meta: { title: '财务统计', icon: 'table'}
       },
-      {
-        path: 'expenseStatic',
-        name: '财务支出统计',
-        component: () => import('@/views/Statistics/expenseStatic'),
-        meta: { title: '财务支出统计', icon: 'table'}
-      },
+      // {
+      //   path: 'expenseStatic',
+      //   name: '财务支出统计',
+      //   component: () => import('@/views/Statistics/expenseStatic'),
+      //   meta: { title: '财务支出统计', icon: 'table'}
+      // },
     ]
   },
   // {

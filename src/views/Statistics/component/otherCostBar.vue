@@ -1,10 +1,17 @@
 <template>
-
+  <div>
+    <div id="otherCost"></div>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "otherCostBar"
+  name: "otherCostBar",
+  data(){
+    return {
+      charts: '',
+    }
+  }
 }
 </script>
 

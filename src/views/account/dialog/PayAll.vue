@@ -48,11 +48,7 @@
         <el-form label-width="60px" :rules="creditAllRules" :model="chargeSettleInfo.chargeSettle">
           <el-form-item label="应收">{{ creditAllMoney }}</el-form-item>
           <el-form-item label="已收" prop="alreadyIncome">
-<<<<<<< Updated upstream
             {{chargeSettleInfo.chargeSettle.alreadyIncome}}
-=======
-            <el-input v-model="chargeSettleInfo.chargeSettle.alreadyIncome"></el-input>
->>>>>>> Stashed changes
           </el-form-item>
           <el-form-item label="实收" prop="realIncome">
             <el-input v-model="chargeSettleInfo.chargeSettle.realIncome"></el-input>
