@@ -12,11 +12,13 @@
         <el-form-item label="单价" prop="indPrice">
           <el-input v-model="editPartNum.indPrice"></el-input>
         </el-form-item>
+        <el-form-item label="供货周期" prop="indDeliveryCycle">
+          <el-select  v-model="editPartNum.indDeliveryCycle" style="margin-left: 3px;width: 200px" clearable>
+            <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcAmount" ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="零件数量" prop="indNumber">
             <el-input-number v-model="editPartNum.indNumber" :min="1" label="描述文字"></el-input-number>
-        </el-form-item>
-        <el-form-item label="供货周期" prop="indDeliveryCycle">
-          <el-input v-model="editPartNum.indDeliveryCycle" ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -144,10 +146,11 @@
           <h3 v-else>零件</h3>
         </template>
       </el-table-column>
-      <el-table-column prop="indDeliveryCycle" label="供货周期" width="130%"  align="center"/>
-<!--      <el-table-column prop="indDeliveryNum" label="发货数量" width="120%" align="center" />-->
-      <!--      <el-table-column prop="aPassword" label="用户密码" width="120%"  align="center"/>-->
-<!--      <el-table-column prop="indPrice" label="零件价格" width="200%"  align="center"/>-->
+      <el-table-column prop="indDeliveryCycle" label="供货周期" width="100px"  align="center">
+        <template slot-scope="scope">
+          {{ `${scope.row.indDeliveryCycle}天`}}
+        </template>
+      </el-table-column>
       <el-table-column prop="indIsDelivery" label="是否能供货" width="120%" align="center">
         <template slot-scope="scope">
           <h3 v-if="scope.row.indIsDelivery===0">
@@ -183,6 +186,8 @@ export default {
         pageSize: 10,
         pageNum: 1
       },
+      //供货周期
+      cycleList:[],
       detailQuery:{
         indOrderId:null,
         factoryId:null
@@ -255,7 +260,9 @@ export default {
         this.addWhole.indOrderId=this.list[0].indOrderId
         this.addWhole.indCustomerId=this.list[0].indCustomerId
       })
-      console.log(this.list);
+      PostData('returnCycle/selectAll',{pageNum:1,pageSize:10}).then(res=>{
+        this.cycleList=res.list
+      })
     },
     backPre(){
       this.$router.back()

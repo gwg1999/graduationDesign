@@ -114,8 +114,8 @@
 <!--      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>-->
 <!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />-->
 <!--      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>-->
-<!--      <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>-->
-<!--      <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>-->
+      <el-table-column prop="pBuyingPrice" label="进价" width="60px"  align="center"/>
+      <el-table-column prop="pRealInventory" label="库存数" width="60px"  align="center"/>
       <el-table-column prop="pId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
@@ -125,7 +125,7 @@
               </el-form-item>
               <el-form-item>
                 供货周期:
-                <el-select  v-model="scope.row.indDeliveryCycle" style="margin-left: 3px;width: 100px"  placeholder="请选择操作员" clearable>
+                <el-select  v-model="scope.row.indDeliveryCycle" style="margin-left: 3px;width: 100px"   clearable>
                   <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcId" ></el-option>
                 </el-select>
 <!--                供货周期:<el-input  @keyup.native="scope.row.indDeliveryCycle = oninput(scope.row.indDeliveryCycle)" v-model = "scope.row.indDeliveryCycle" style="width: 80px;" size="small" ></el-input>-->

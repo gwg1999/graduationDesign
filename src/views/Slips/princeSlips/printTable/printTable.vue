@@ -151,7 +151,6 @@ export default {
   },
   methods:{
     printTables(){
-      setTimeout(()=>{
         print({
           printable: 'printJS-form',
           type: 'html',
@@ -160,19 +159,19 @@ export default {
           targetStyles: ['*'],
           maxWidth:1100
         })
-      },0)
-
     },
-    async CreateOneFormPage(msg) {
-      this.printData=msg
-      princeSlips.queryAllDetails(this.printData.oId,this.queryPrinceSheet.pName,
-        this.queryPrinceSheet.odType,0,0)
-        .then(res=>{
-          this.princeSheetList=res.list
-
-          this.printTables()
-        })
-
+     CreateOneFormPage(msg) {
+      new Promise((resolve,reject)=>{
+        this.printData=msg
+        princeSlips.queryAllDetails(this.printData.oId,this.queryPrinceSheet.pName,
+          this.queryPrinceSheet.odType,0,0)
+          .then(res=>{
+            this.princeSheetList=res.list
+            resolve()
+          })
+      }).then(()=>{
+        this.printTables()
+      })
     },
   }
 }

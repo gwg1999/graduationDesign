@@ -60,20 +60,20 @@
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline" style="position: relative">
       <template slot-scope="scoped">
+
         <el-form-item>
-
-          <el-autocomplete
-            v-model="buyQuery.fName"
-            @change="handleOperator($event)"
-            :fetch-suggestions="querySearchAsync"
-            clearable
-            placeholder="请输入工厂名称"
-            :trigger-on-focus="false"
-            style="padding-right: 5px"
-            @select="handleSelect1(buyQuery,$event)"
+          <el-select
+            v-model="buyQuery.SFactoryId"
+            ref="agentSelect"
+            filterable clearable placeholder="请选择客户单位"
+            :filter-method="factoryNameListFilter"
           >
-          </el-autocomplete>
-
+            <el-option
+              v-for="factory in factoryNameList"
+              :key="factory.fId"
+              :label="`${factory.fName}`"
+              :value="factory.fId"/>
+          </el-select>
           <el-autocomplete
             v-model="buyQuery.adminName"
             @change="handleOperator1($event)"
@@ -84,13 +84,6 @@
             @select="handleSelect2(buyQuery,$event)"
           >
           </el-autocomplete>
-<!--          <el-select v-model="buyQuery.adminName" style="margin-left: 3px" placeholder="请选择操作员" clearable>-->
-<!--            <el-option  :key="item.aId" :label="item.aName" :value="item.aName" v-for="item in adminList"></el-option>-->
-<!--          </el-select>-->
-<!--          <el-select v-model="buyQuery.SFactoryId" style="margin-left: 3px" placeholder="请选择工厂" clearable>-->
-<!--            <el-option  :key="item.fId" :label="item.fName" :value="item.fId" v-for="item in factoryList"></el-option>-->
-<!--          </el-select>-->
-
           <el-select v-model="buyQuery.SStatus" placeholder="请选择订单状态" style="margin-left: 3px" clearable>
             <el-option label="未收货" :value="1"></el-option>
             <el-option label="已收货" :value="2"></el-option>
@@ -165,7 +158,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" style="margin-right: 2%" @click="showDetails(scope.row)">查看详情</el-button>
+          <el-button type="primary" icon="el-icon-edit" style="margin-right: 2%" @click="showDetails(scope.row)">修改</el-button>
           <el-button type="warning" icon="el-icon-edit" style="margin-right: 2%" @click="recGoods(scope.row)">收 货</el-button>
 
           <!--          <el-button type="danger" icon="el-icon-delete" circle @click="deleteOder(scope.row.sId)"></el-button>-->
@@ -212,6 +205,7 @@ export default {
         pageNum: 0,
         pageSize: 0
       },
+      factoryNameList:[],
       factoryList:[],
       order: {
       },
@@ -284,32 +278,29 @@ export default {
     // this.getPageTotal()
   },
   methods:{
-    //操作员模糊查询
-    handleOperator(event){
-      if(event===''){
-        this.buyQuery.SFactoryId=undefined
-        this.getList()
+    //工厂过滤的方法
+    factoryNameListFilter(query = '') {
+      if(query!==''){
+        let PinyinMatch = this.$pinyinmatch;
+        if (query) {
+          let result = [];
+          this.factoryList.forEach(i => {
+            let m = PinyinMatch.match(i.fName, query);
+            if (m) {
+              result.push(i);
+            }
+          });
+          if(result.length>10){
+            this.factoryNameList = result.slice(0, 10);
+          } else
+          {
+            this.factoryNameList=result
+          }
+        }
+      }else {
+        this.factoryNameList=[]
       }
     },
-    querySearchAsync(queryString, cb) {
-      let adminQuery={}
-      adminQuery.fName=queryString
-      PostData('factory/selectAllByLike',adminQuery).then(res => {
-        res.list.forEach((v)=>{
-          v.value=v.fName
-        })
-        if(res.list.length>10) {
-          res.list = res.list.slice(0, 10);
-        }
-        console.log(res.list)
-        cb(res.list)
-      })
-    },
-    handleSelect1(item,event) {
-      this.buyQuery.SFactoryId=event.fId
-      this.getList()
-    },
-
     //操作员模糊查询
     handleOperator1(event){
       if(event===''){

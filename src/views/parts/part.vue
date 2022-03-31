@@ -5,6 +5,7 @@
     <div>
       <el-input v-model="searchQuery.pId" placeholder="序列号" style="width: 8%" class="search" clearable></el-input>
       <el-input v-model="pGoodsNum" placeholder="请输入零件号" style="width: 15%" class="search" clearable></el-input>
+
       <el-autocomplete
         v-model="state"
         :fetch-suggestions="querySearch"
@@ -18,6 +19,7 @@
           <div>{{ item.pName }}</div>
         </template>
       </el-autocomplete>
+
       <el-cascader
         ref="pCatCascader"
         :options="categoryOption"

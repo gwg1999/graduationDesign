@@ -3,16 +3,18 @@
     <div class="app-container" >
       <!--      查询表单-->
       <el-form :inline="true" class="demo-form-inline" style="position: relative ">
-        <el-autocomplete
-          v-model="queryMemorandum.aName"
-          @change="handleOperator($event)"
-          :fetch-suggestions="querySearchAsync"
-          clearable
-          placeholder="请输入创建人员姓名"
-          :trigger-on-focus="false"
-          @select="handleSelect(queryMemorandum,$event)"
-        >
-        </el-autocomplete>
+          <el-select
+            v-model="queryMemorandum.operateId"
+            ref="agentSelect"
+            filterable clearable placeholder="请选择创建人姓名"
+            :filter-method="adminNameListFilter"
+          >
+            <el-option
+              v-for="admin in adminNameList"
+              :key="admin.aId"
+              :label="`${admin.aName}`"
+              :value="admin.aId"/>
+          </el-select>
         <el-form-item>
           <el-select v-model="queryMemorandum.status" clearable placeholder="是否解决"
                      @change="getList"
@@ -36,7 +38,7 @@
           <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="getList()">查 询</el-button>
         </el-form-item >
         <el-form-item   style="position: absolute ;right: 10px">
-            <el-button type="primary" icon="el-icon-circle-plus" @click="openAddMemorandum">添加</el-button>
+          <el-button type="primary" icon="el-icon-circle-plus" @click="openAddMemorandum">添加</el-button>
         </el-form-item >
       </el-form>
       <!--      备忘录表-->
@@ -123,12 +125,12 @@
               :value="admin.aId"/>
           </el-select>
         </el-form-item>
-<!--        <el-form-item label="解决状态" prop="status">-->
-<!--          <el-select v-model="addMemorandum.status" clearable placeholder="是否解决" style="width: 200px"  >-->
-<!--            <el-option :value="0" label="未解决"/>-->
-<!--            <el-option :value="1" label="已解决"/>-->
-<!--          </el-select>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="解决状态" prop="status">-->
+        <!--          <el-select v-model="addMemorandum.status" clearable placeholder="是否解决" style="width: 200px"  >-->
+        <!--            <el-option :value="0" label="未解决"/>-->
+        <!--            <el-option :value="1" label="已解决"/>-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
         <el-form-item label="备注" prop="note">
           <el-input v-model="addMemorandums.note" style="width: 90%" rows="5" type="textarea"/>
         </el-form-item>
@@ -148,6 +150,7 @@ import {commonList} from "@/views/Slips/myApi";
 export default {
   data(){
     return{
+      adminNameList:[],
       adminList:[],
       total:0,
       dialogMemorandumVisible:false,
@@ -178,10 +181,30 @@ export default {
     this.getList()
     this.getCommonList()
   },
-  watch:{
-
-  },
   methods:{
+    adminNameListFilter(query = '') {
+      if(query!==''){
+        let PinyinMatch = this.$pinyinmatch;
+        if (query) {
+          let result = [];
+          this.adminList.forEach(i => {
+            let m = PinyinMatch.match(i.aName, query);
+            if (m) {
+              result.push(i);
+            }
+          });
+          if(result.length>20){
+            this.adminNameList = result.slice(0, 20);
+          } else
+          {
+            this.adminNameList=result
+          }
+        }
+      }else {
+        this.adminNameList=[]
+      }
+    },
+
     handleOperator(event){
       if(event===''){
         this.queryMemorandum.operateId=undefined
@@ -198,12 +221,15 @@ export default {
         cb(res)
       })
     },
+
+
     handleSelect(item,event) {
       this.queryMemorandum.operateId=event.aId
       this.getList()
     },
     getCommonList(){
       commonList('admin/selectAdmin').then(res=>{
+        console.log(res)
         this.adminList=res
       })
     },
@@ -274,7 +300,7 @@ export default {
     },
     openAddMemorandum(){
       if(this.$refs['addMemorandums']!==undefined)
-        this.$refs['addMemorandums'].resetField()
+        this.$refs['addMemorandums'].resetFields()
       this.addDialogMemorandumVisible=true
     },
     addMemorandum(){

@@ -13,10 +13,12 @@
           <el-input-number v-model="editPartNum.sdNumber" :min="1" label="描述文字"></el-input-number>
         </el-form-item>
         <el-form-item label="零件价格" prop="sdPrice">
-          <el-input v-model="editPartNum.sdPrice"></el-input>
+          <el-input v-model="editPartNum.sdPrice"  style="margin-left: 3px;width: 200px"></el-input>
         </el-form-item>
         <el-form-item label="供货周期" prop="sdDeliveryCycle">
-          <el-input v-model="editPartNum.sdDeliveryCycle" ></el-input>
+          <el-select  v-model="editPartNum.sdDeliveryCycle" style="margin-left: 3px;width: 200px" clearable>
+            <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcAmount" ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -55,6 +57,7 @@
         <el-form-item label="供货周期" prop="sdDeliveryCycle">
           <el-input v-model="addPart.sdDeliveryCycle" style="width: 30%"></el-input>
         </el-form-item>
+
 <!--        <el-form-item label="发货周期" prop="indDeliveryNum">-->
 <!--          <el-input v-model="addPart.indDeliveryNum" style="width: 30%"></el-input>-->
 <!--        </el-form-item>-->
@@ -92,6 +95,7 @@
         <el-form-item label="供货周期" prop="sdDeliveryCycle">
           <el-input v-model="addWhole.sdDeliveryCycle" style="width: 30%"></el-input>
         </el-form-item>
+
         <el-form-item label="价格" prop="sdPrice">
           <el-input v-model="addWhole.sdPrice" style="width: 30%"></el-input>
         </el-form-item>
@@ -131,7 +135,12 @@
 <!--          <h3 v-else>整件</h3>-->
 <!--        </template>-->
 <!--      </el-table-column>-->
-      <el-table-column prop="sdDeliveryCycle" label="供货周期" width="130%"  align="center"/>
+<!--      <el-table-column prop="sdDeliveryCycle" label="供货周期" width="130%"  align="center"/>-->
+      <el-table-column prop="sdDeliveryCycle" label="供货周期" width="100px"  align="center">
+        <template slot-scope="scope">
+          {{ `${scope.row.sdDeliveryCycle}天`}}
+        </template>
+      </el-table-column>
 <!--      <el-table-column prop="indDeliveryNum" label="发货数量" width="120%" align="center" />-->
       <!--      <el-table-column prop="aPassword" label="用户密码" width="120%"  align="center"/>-->
       <el-table-column prop="sdPrice" label="零件价格" width="120%"  align="center"/>
