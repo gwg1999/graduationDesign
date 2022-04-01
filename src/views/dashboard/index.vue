@@ -60,7 +60,7 @@
             <el-select
               v-model="enquiryQuery.iFactoryId"
               ref="agentSelect"
-              filterable clearable placeholder="请选择客户单位"
+              filterable clearable placeholder="请填写工厂名称"
               :filter-method="factoryNameListFilter"
             >
               <el-option

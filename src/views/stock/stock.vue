@@ -93,7 +93,7 @@
           <el-select
             v-model="stockQuery.iFactoryId"
             ref="agentSelect"
-            filterable clearable placeholder="请选择客户单位"
+            filterable clearable placeholder="请填写工厂名称"
             :filter-method="factoryNameListFilter"
           >
             <el-option
@@ -102,6 +102,7 @@
               :label="`${factory.fName}`"
               :value="factory.fId"/>
           </el-select>
+
           <el-autocomplete
             v-model="stockQuery.adminName"
             @change="handleOperator1($event)"
@@ -114,7 +115,7 @@
           </el-autocomplete>
 
           <el-select v-model="stockQuery.iStatus" style="margin-left: 3px" placeholder="请选择订单状态" clearable>
-            <el-option label="未询价" :value="0"></el-option>
+            <el-option label="询价中" :value="0"></el-option>
             <el-option label="已询价" :value="1"></el-option>
           </el-select>
 
@@ -329,7 +330,6 @@ export default {
     getFactory(){
       PostData('/factory/selectAllByLike',{pageSize:0,pageNum:0})
         .then(res=>{
-          console.log(res.list)
           this.factoryList=res.list
         }).catch(err=>{
         this.$message.error(err.message);
@@ -337,6 +337,7 @@ export default {
     },
     //创建具体的方法
     getList() {
+      console.log(this.stockQuery)
       PostData('inquiry/queryInquiry',this.stockQuery)
         .then(res=>{
           this.list = res.list
@@ -371,7 +372,6 @@ export default {
     },
     search(){
       this.stockQuery.pageNum=1
-      console.log(this.stockQuery);
       this.getList()
     },
     editCancel(index,param){
