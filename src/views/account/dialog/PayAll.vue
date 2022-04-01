@@ -218,9 +218,6 @@ export default {
       }).then(()=>{
         this.chargeSettleInfo.chargeSettle.realIncome = this.chargeSettleInfo.chargeSettle.alreadyIncome
         this.chargeSettleInfo.chargeList = this.creditAllSelection
-        for(let charge of this.chargeSettleInfo.chargeList){
-          delete charge.createTime
-        }
         this.chargeSettleInfo.chargeSettle.customId = this.creditAllCondition.customId
         this.creditAllInnerVisible = true
         console.log('chargeSettleInfo:')
