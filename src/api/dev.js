@@ -5,12 +5,12 @@ const dev = {
 };
 
 const uat = {
-  baseUrl: "http://www.aishuhong.com:11504",
+  baseUrl: "http://www.aishuhong.com:11530",
   // cdnUrl:"测试环境cdn地址"
 };
 
 const prod = {
-  baseUrl: "http://www.aishuhong.com:11509",
+  baseUrl: "http://www.aishuhong.com:11530",
   // cdnUrl:"生产环境cdn地址"
 };
 

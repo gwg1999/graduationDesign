@@ -230,9 +230,7 @@ export default {
         this.chargeInfo.charge.alreadyIncome = this.chargeInfo.charge.realIncome = 0
         this.chargeInfo.charge.customId = this.creditPartSelection[0].OCustomerId
         this.chargeInfo.orderList = this.creditPartSelection
-        for(let order of this.chargeInfo.orderList){
-          delete order.oCreateTime
-        }
+
         this.chargeInfo.charge.supposeIncome = this.creditPartMoney
         console.log(this.creditPartSelection)
       })
@@ -277,13 +275,17 @@ export default {
       this.chargeInfo.charge.customId = this.creditPartCondition.OCustomerId
       console.log("chargeInfo");
       console.log(this.chargeInfo)
+      let postData = JSON.parse(JSON.stringify(this.chargeInfo))
+      for(let order of postData.orderList){
+        delete order.oCreateTime
+      }
       if(parseInt(this.chargeInfo.charge.alreadyIncome)>this.creditPartMoney){
         this.$message.error("已收金额大于应收金额，请重新确认")
       }else{
         this.$confirm('请确认金额','提示', {
           type:'warning'
         }).then(()=>{
-          PostData('/bill/charge',this.chargeInfo).then((res)=>{
+          PostData('/bill/charge',postData).then((res)=>{
             console.log(res)
             this.creditPartData = []
             this.$message.success('成功')

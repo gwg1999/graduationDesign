@@ -238,13 +238,17 @@ export default {
     payAllConfirm(){
       console.log('chargeSettleInfo:')
       console.log(this.chargeSettleInfo)
+      let postData = JSON.parse(JSON.stringify(this.chargeSettleInfo))
+      for(let charge of postData.chargeList){
+        delete charge.createTime
+      }
       if(parseInt(this.chargeSettleInfo.chargeSettle.alreadyIncome)!==this.creditAllMoney){
         this.$message.error("实收与应收不符，请确认金额")
       }else{
         this.$confirm('请确认是否结清', '提示', {
           type: 'warning'
         }).then(()=>{
-          PostData('/bill/chargeSettle', this.chargeSettleInfo).then(res=>{
+          PostData('/bill/chargeSettle', postData).then(res=>{
             console.log('res:')
             console.log(res);
             this.$message.success("结清成功")
