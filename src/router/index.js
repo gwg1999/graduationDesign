@@ -655,21 +655,6 @@ export const constantRoutes=[
       // },
     ]
   },
-  // {
-  //   path: '/statistics',
-  //   component: Layout,
-  //   redirect: '/statistics/statisticsManagement',
-  //   name:'统计',
-  //   meta:{title: '统计',icon: 'el-icon-s-promotion'},
-  //   children: [
-  //     {
-  //       path: 'statisticsManagement',
-  //       name: '统计管理',
-  //       component: () => import('@/views/statistics/statisticsManagement'),
-  //       meta: { title: '统计管理', icon: 'table'}
-  //     },
-  //   ]
-  // },
   {
     path: '/401',
     component: () => import('@/views/error-page/401'),

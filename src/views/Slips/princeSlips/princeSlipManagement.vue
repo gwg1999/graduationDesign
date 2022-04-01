@@ -366,7 +366,6 @@ export default {
           this.getList()
         })
       })
-
     },
     //打包
     openPackageGood(oId){

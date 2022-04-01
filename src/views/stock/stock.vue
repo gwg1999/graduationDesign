@@ -102,18 +102,6 @@
               :label="`${factory.fName}`"
               :value="factory.fId"/>
           </el-select>
-<!--          <el-autocomplete-->
-<!--            v-model="stockQuery.fName"-->
-<!--            @change="handleOperator($event)"-->
-<!--            :fetch-suggestions="querySearchAsync"-->
-<!--            clearable-->
-<!--            placeholder="请输入工厂名称"-->
-<!--            :trigger-on-focus="false"-->
-<!--            style="padding-right: 5px"-->
-<!--            @select="handleSelect1(stockQuery,$event)"-->
-<!--          >-->
-<!--          </el-autocomplete>-->
-
           <el-autocomplete
             v-model="stockQuery.adminName"
             @change="handleOperator1($event)"
@@ -147,9 +135,6 @@
         width="50%"
         align="center"
         type="index">
-        <!--        <template slot-scope="scope">-->
-        <!--          {{ (adminQuery.pageNum - 1) * adminQuery.pageSize + scope.$index + 1 }}-->
-        <!--        </template>-->
       </el-table-column>
       <el-table-column prop="factory.fName" label="工厂名" width="130"  align="center"/>
       <el-table-column prop="adminName" label="操作员" width="170%" align="center" />
@@ -449,7 +434,9 @@ export default {
         .catch(_ => {});
     },
     transOrder(data){
-      console.log(data)
+      if(this.$refs['buyList']!==undefined){
+        this.$refs['buyList'].resetFields()
+      }
       this.buyList.iId=data.iId
       this.buyList.sFactoryId=data.iFactoryId
       this.buyList.sCreateOperatorId=data.iCreateOperatorId
@@ -460,6 +447,7 @@ export default {
       this.buyList.sExistBill=0
       this.buyList.sCustomId=0
       this.buyList.sPrice=data.iPrice
+      this.buyList=JSON.parse(JSON.stringify(this.buyList))
       this.dialogVisible=true
     },
     submitForm() {

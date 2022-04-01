@@ -112,33 +112,34 @@
         <!--          {{ (adminQuery.pageNum - 1) * adminQuery.pageSize + scope.$index + 1 }}-->
         <!--        </template>-->
       </el-table-column>
-      <el-table-column prop="factory.fName" label="工厂名" width="130"  align="center"/>
-      <el-table-column prop="wareHouseName" label="仓库管理员" width="100" align="center" />
-      <el-table-column prop="adminName" label="操作员" width="100" align="center" />
+      <el-table-column prop="factory.fName" label="工厂名" width="130px"  align="center"/>
+      <el-table-column prop="wareHouseName" label="仓库管理员" width="100px" align="center" />
+      <el-table-column prop="adminName" label="操作员" width="100px" align="center" />
       <!--      <el-table-column prop="sOrderNumber" label="支付订单号" width="220%"  align="center"/>-->
       <!--      <el-table-column prop="sPaymentWay" label="付款方式" width="100%"  align="center"/>-->
       <!--      <el-table-column prop="sBuyWay" label="进货方式" width="100%"  align="center"/>-->
       <!--      <el-table-column prop="sInvoiceType" label="发票类型" width="80%"  align="center"/>-->
-      <el-table-column prop="sIsPayment" label="是否已支付" width="80%"  align="center">
+      <el-table-column prop="sIsPayment" label="是否已支付" width="80px"  align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.sIsPayment===0?'success':'danger'">
             {{scope.row.sIsPayment===0?'未支付':'已支付'}}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="sPrice" label="应付款" width="90%"  align="center"/>
-      <el-table-column prop="sStatus" label="订单状态" width="80%"  align="center">
+      <el-table-column prop="sPrice" label="应付款" width="80px"  align="center"/>
+      <el-table-column prop="sStatus" label="订单状态" width="80px"  align="center">
         <template slot-scope="scope">
           {{oderStatus(scope.row.sStatus)}}
         </template>
       </el-table-column>
-      <el-table-column label="进货零件" width="120" align="center">
+      <el-table-column label="进货零件" width="80px" align="center">
         <template slot-scope="scope">
           <router-link :to="{path:'/stock/buyPartList',query: {orderId:scope.row.sId,factoryId:scope.row.factoryId}}">
-            <el-button type="primary">查看</el-button>
+            <el-button size="mini" type="primary">查看</el-button>
           </router-link>
         </template>
       </el-table-column>
+
       <el-table-column label="图片" align="center" width="230">
         <template slot-scope="scope">
           <div>
@@ -156,11 +157,12 @@
           </div>
         </template>
       </el-table-column>
+
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" style="margin-right: 2%" @click="showDetails(scope.row)">修改</el-button>
-          <el-button type="warning" icon="el-icon-edit" style="margin-right: 2%" @click="recGoods(scope.row)">收 货</el-button>
-
+          <el-button type="primary" size="mini" icon="el-icon-edit" style="margin-right: 2%" @click="showDetails(scope.row)">修改</el-button>
+          <el-button type="warning" size="mini" icon="el-icon-edit" style="margin-right: 2%" @click="recGoods(scope.row)">收 货</el-button>
+          <el-button type="primary" size="mini" icon="el-icon-bottom" @click="enterAccount(scope.row)">入账</el-button>
           <!--          <el-button type="danger" icon="el-icon-delete" circle @click="deleteOder(scope.row.sId)"></el-button>-->
         </template>
       </el-table-column>
@@ -232,8 +234,6 @@ export default {
       dialogVisible:false,
       selectedVisible:false,
       buyQuery:{
-        adminName:'',
-        SStatus:null,
         pageSize: 10,
         pageNum: 1
       },
@@ -278,6 +278,27 @@ export default {
     // this.getPageTotal()
   },
   methods:{
+    //入账
+    enterAccount(params){
+      this.$confirm('是否确认入账'+'?','提示',{
+        confirmButtonText:'确定',
+        cancelButtonText:'取消',
+        type:'warning'
+      }).then(()=>{
+        console.log(params)
+        params.oCreateTime=undefined
+        params.oResultTime=undefined
+        params.sOrderStatus=2
+        params.sExistBill=1
+        PostData('/stock/updateStock',params).then((res)=>{
+          this.$message({
+            type:'success',
+            message:"入账成功"
+          })
+          this.getList()
+        })
+      })
+    },
     //工厂过滤的方法
     factoryNameListFilter(query = '') {
       if(query!==''){
@@ -334,6 +355,8 @@ export default {
     },
     //创建具体的方法
     getList() {
+      this.buyQuery.sExistBill=0
+      console.log(this.buyQuery)
       PostData('/stock/queryStock',qs.stringify(this.buyQuery))
         .then(res=>{
           this.list = res.list

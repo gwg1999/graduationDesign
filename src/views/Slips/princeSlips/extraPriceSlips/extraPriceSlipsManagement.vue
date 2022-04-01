@@ -8,6 +8,7 @@
             <el-option :value="0" label="销售单"></el-option>
             <el-option :value="1" label="进货单"></el-option>
             <el-option :value="2" label="退货单"></el-option>
+            <el-option :value="3" label="其他"></el-option>
           </el-select>
           <!--          <el-input v-model="queryPrinceSheet.type" @keyup.enter.native="getList()" clearable placeholder="客户名称" style="width: 150px"></el-input>-->
         </el-form-item>
@@ -34,7 +35,7 @@
         <el-table-column prop="note" label="备注"   align="center"/>
         <el-table-column prop="type" label="订单类型" width="80px" align="center">
           <template slot-scope="scope">
-            {{ scope.row.type===0?'销售单':scope.row.type===1?'进货单':'退货单'}}
+            {{ scope.row.type===0?'销售单':scope.row.type===1?'进货单':scope.row.type===2?'退货单':'其他'}}
           </template>
         </el-table-column>
 
@@ -87,10 +88,11 @@
             <el-select v-model="ExtraPrice.type" @change="slipsSelect($event)" clearable placeholder="请选择订单类型" style="width: 200px"  >
               <el-option :value="0" label="销售单"/>
               <el-option :value="1" label="进货单"/>
+              <el-option :value="3" label="其他"/>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="订单id" prop="orderId" style="width: 600px">
+          <el-form-item label="订单id" v-show="ExtraPrice.type!==3" prop="orderId" style="width: 600px">
             <el-select
               v-model="ExtraPrice.orderId"  filterable clearable placeholder="请选择订单"
              style="width: 600px">

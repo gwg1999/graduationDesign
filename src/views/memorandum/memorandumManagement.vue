@@ -58,7 +58,7 @@
         <el-table-column prop="admin.aName" label="创建人姓名" width="100px" align="center" />
         <el-table-column prop="note" label="备注"  align="center" />
         <el-table-column prop="createTime" label="创建时间" width="100px" align="center" />
-        <el-table-column label="备忘录状态" prop="status" width="80px" align="center">
+        <el-table-column label="状态" prop="status" width="80px" align="center">
           <template slot-scope="scope">
             <span v-if="scope.row.status ===1">
               <span style="color:#00B46D">已解决</span>
@@ -310,7 +310,7 @@ export default {
       },1000)
       this.$refs['addMemorandums'].validate(value=>{
         if(value){
-          this.addMemorandum.status=0
+          this.addMemorandums.status=0
           PostData('note/insert',this.addMemorandums).then(res=>{
             this.$message({
               type:'success',
