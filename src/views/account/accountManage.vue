@@ -106,12 +106,12 @@
 
 <!--    挂账结算弹窗-->
     <div>
-      <pay-part :part-visible="creditPartVisible" @cancelClick="creditPartVisible = false" :custom="orderQuery"></pay-part>
+      <pay-part :part-visible="creditPartVisible" @cancelClick="payPartClose" :custom="orderQuery"></pay-part>
     </div>
 
 <!--    挂账结清弹窗-->
     <div>
-      <pay-all :all-visible="creditAllVisible" @cancelClick="creditAllVisible = false" :customer="orderQuery"></pay-all>
+      <pay-all :all-visible="creditAllVisible" @cancelClick="payAllClose" :customer="orderQuery"></pay-all>
     </div>
 
 <!--    挂账交易记录弹窗-->
@@ -219,7 +219,7 @@ export default {
     },
 
     querySearch(queryString, cb){
-      PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 5,pageNum: 1}).then(res=>{
+      PostData('customer/selectAllByLike', {cuUnitName: queryString, pageSize: 10000,pageNum: 1}).then(res=>{
         let customers = res.list
         for(let i in customers){
           customers[i].value = customers[i].cuUnitName
@@ -236,6 +236,16 @@ export default {
       this.orderQuery.customerId = item.cuId
       this.orderQuery.name = item.cuUnitName
     },
+
+    payPartClose(){
+      this.creditPartVisible = false
+      this.getList()
+    },
+
+    payAllClose(){
+      this.creditAllVisible = false
+      this.getList()
+    }
   },
 }
 </script>
@@ -253,8 +263,8 @@ export default {
   border-left: black 1px solid;
 }
 .table-button-box{
-  margin-top: 10px;
-  margin-left: 10px;
+  display: flex;
+  justify-content: space-around;
 }
 .accountNumber{
   font-size: xx-large;

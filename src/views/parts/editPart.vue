@@ -61,6 +61,8 @@
     <el-button type="primary" @click="confirmUp">上传</el-button>
   </span>
     </el-dialog>
+
+
     <div style="width: 25%;float: left">
       <span class="demonstration">内部图片</span>
       <el-carousel :interval="2000" arrow="always">

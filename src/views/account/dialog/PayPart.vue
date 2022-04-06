@@ -227,11 +227,11 @@ export default {
         type: 'warning'
       }).then(()=>{
         this.innerVisible = true
-        this.chargeInfo.charge.alreadyIncome = this.chargeInfo.charge.realIncome = 0
+        this.chargeInfo.charge.alreadyIncome = this.chargeInfo.charge.realIncome = this.chargeInfo.charge.supposeIncome = this.creditPartMoney
         this.chargeInfo.charge.customId = this.creditPartSelection[0].OCustomerId
         this.chargeInfo.orderList = this.creditPartSelection
 
-        this.chargeInfo.charge.supposeIncome = this.creditPartMoney
+        // this.chargeInfo.charge.supposeIncome = this.creditPartMoney
         console.log(this.creditPartSelection)
       })
     },

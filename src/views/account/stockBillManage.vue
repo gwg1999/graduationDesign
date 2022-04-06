@@ -57,11 +57,10 @@
               {{ (orderQuery.pageNum - 1) * orderQuery.pageSize + scope.$index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column label="发货方式" align="center" prop="oDeliveryWay"></el-table-column>
-          <el-table-column label="支付方式" align="center" prop="oPaymentWay"></el-table-column>
+          <el-table-column label="支付方式" align="center" prop="sPaymentWay"></el-table-column>
           <el-table-column label="时间" align="center" prop="oCreateTime"></el-table-column>
-          <el-table-column label="应付" align="center" prop="oSupposeIncome"></el-table-column>
-          <el-table-column label="实付" align="center" prop="oRealIncome"></el-table-column>
+          <el-table-column label="应付" align="center" prop="sPrice"></el-table-column>
+          <el-table-column label="实付" align="center" prop="sRealIncome"></el-table-column>
           <!--          <el-table-column label="结清状态" align="center"></el-table-column>-->
         </el-table>
         <el-pagination
@@ -130,7 +129,7 @@ export default {
         customerId: null,
         name: null,
         closeStatus: 2,
-        dealType: null,  // 交易类型：挂账，线上，线下
+        dealType: null,  // 交易类型：线上，线下
         orderType: 1,  // 订单类型：进货单
         pageSize: 10,
         pageNum: 1,
@@ -138,10 +137,6 @@ export default {
         endTime: null,
       },
       dealType: [
-        {
-          label: '挂账',
-          value: 0
-        },
         {
           label: '线上',
           value: 1
@@ -173,6 +168,11 @@ export default {
       console.log(this.orderQuery)
       PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{
         this.accountDetail = res
+        for(let index in this.accountDetail){
+          if(this.accountDetail[index] instanceof Number){
+            this.accountDetail[index] = Math.abs(this.accountDetail[index])
+          }
+        }
         console.log(res)
         let temp = JSON.parse(res.stocks)
         this.orders = temp.list
@@ -187,7 +187,7 @@ export default {
     },
 
     querySearch(queryString, cb){
-      PostData('factory/selectAllByLike', {fName: queryString, pageSize: 5,pageNum: 1}).then(res=>{
+      PostData('factory/selectAllByLike', {fName: queryString, pageSize: 10000,pageNum: 1}).then(res=>{
         console.log(res)
         let customers = res.list
         for(let i in customers){
