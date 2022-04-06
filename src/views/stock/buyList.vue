@@ -67,6 +67,8 @@
             ref="agentSelect"
             filterable clearable placeholder="请填写工厂名称"
             :filter-method="factoryNameListFilter"
+            @hook:mounted="cancelReadOnly"
+            @visible-change="cancelReadOnly"
           >
             <el-option
               v-for="factory in factoryNameList"
@@ -278,6 +280,18 @@ export default {
     // this.getPageTotal()
   },
   methods:{
+    //ipad支持输入框
+    cancelReadOnly(onOff) {
+      this.$nextTick(() => {
+        if (!onOff) {
+          const Selects = this.$refs
+          if (Selects.agentSelect) {
+            const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }
+        }
+      })
+    },
     //入账
     enterAccount(params){
       this.$confirm('是否确认入账'+'?','提示',{

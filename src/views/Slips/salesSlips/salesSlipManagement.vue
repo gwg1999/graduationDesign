@@ -59,14 +59,17 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-dialog :visible.sync="dialogSalesSheetFormVisible" title="修改报价单" >
+      <el-dialog :visible.sync="dialogSalesSheetFormVisible" title="修改报价单"
+                 width="60%">
         <el-form :model="salesSlipsModify" label-width="120px" :rules="rules" ref="salesSlipsModify">
           <el-form-item label="客户名称" prop="customerName">
             <el-select
               v-model="salesSlipsModify.customerName"
               filterable
-              style="width:580px"
+              style="width:500px"
               :filter-method="customerNameListFilter"
+              @hook:mounted="cancelReadOnly"
+              @visible-change="cancelReadOnly"
               clearable placeholder="请选择客户名称">
               <el-option
                 v-for="customer in customerNameList"
@@ -84,12 +87,16 @@
         </div>
       </el-dialog>
       <!--转销售单-->
-      <el-dialog :visible.sync="dialogWarehouseOperatorFormVisible" title="转销售单">
+      <el-dialog :visible.sync="dialogWarehouseOperatorFormVisible" title="转销售单"
+                 width="60%">
         <el-form :model="warehouseOperatorModify" label-width="120px" :rules="rules" ref="warehouseOperatorModify">
-          <el-form-item label="选择仓库管理员" prop="oWarehouseOperaterId">
+          <el-form-item label="仓库管理员" prop="oWarehouseOperaterId">
             <el-select v-model="warehouseOperatorModify.oWarehouseOperaterId"
-                       style="width:580px"
+                       style="width:500px"
+                       ref="agentSelect"
                        :filter-method="warehouseOperatorListListFilter"
+                       @hook:mounted="cancelReadOnly"
+                       @visible-change="cancelReadOnly"
                        clearable filterable placeholder="选择仓库管理员" >
               <el-option
                 v-for="warehouseOperator in warehouseNameList"
@@ -223,6 +230,18 @@ export default {
         this.customerList=[]
       }
     },
+    //ipad支持输入框
+    cancelReadOnly(onOff) {
+      this.$nextTick(() => {
+        if (!onOff) {
+          const Selects = this.$refs
+          if (Selects.agentSelect) {
+            const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }
+        }
+      })
+    },
     warehouseOperatorListListFilter(query = '') {
       if(query!==''){
         let PinyinMatch = this.$pinyinmatch;
@@ -267,10 +286,10 @@ export default {
         if(valid) {
           this.warehouseOperatorBtnDisabled = true
           this.enable();
+          this.warehouseOperatorModify.isExistBill=0
           PostData("quotation/becomeOrder",this.warehouseOperatorModify).then(res=>{
             let note=''
             if(res.lackPartList&&res.lackPartList.length>0){
-              console.log(res)
               res.lackPartList.forEach((value) => {
                 let number = null
                 number = +value.lackNumber - (2 * value.lackNumber)

@@ -89,15 +89,15 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="customerName" label="客户" width="80px" align="center" />
-        <el-table-column prop="oCreateTime" label="创建时间"  width="100px"   align="center"/>
-        <el-table-column prop="oResultTime" label="发货时间" width="100px"  align="center"/>
+        <el-table-column prop="customerName" label="客户" width="120px" align="center" />
+        <el-table-column prop="oCreateTime" label="创建时间"  width="80px"   align="center"/>
+        <el-table-column prop="oResultTime" label="发货时间" width="80px"  align="center"/>
         <el-table-column prop="oIsPackage" label="是否打包" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.oIsPackage===0?'打包':'未打包'}}
           </template>
         </el-table-column>
-        <el-table-column prop="oStatus" label="订单状态" width="80" align="center">
+        <el-table-column prop="oStatus" label="订单状态" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.oStatus===1?'未发货':'已发货'}}
           </template>
@@ -147,9 +147,9 @@
               <el-option value="线上" label="线上"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="其他费用">
-            <el-input v-model="princeSheetModify.oOtherCostMoney"/>
-          </el-form-item>
+<!--          <el-form-item label="其他费用">-->
+<!--            <el-input v-model="princeSheetModify.oOtherCostMoney"/>-->
+<!--          </el-form-item>-->
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogPrinceSheetFormVisible = false">取 消</el-button>

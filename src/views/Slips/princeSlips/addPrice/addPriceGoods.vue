@@ -130,7 +130,7 @@
           <el-form>
             <div style="display: flex;justify-content: space-evenly;font-size: 4px">
               <el-form-item>
-                数量:<el-input-number   :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
+                数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item >
                 价格:<el-input style="width: 80px"  @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice"  size="small" ></el-input>

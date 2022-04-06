@@ -49,7 +49,8 @@
         </el-table-column>
       </el-table>
       <!--      修改额外订单信息-->
-      <el-dialog :visible.sync="dialogDamagePartsFormVisible" title="修改额外订单信息">
+      <el-dialog :visible.sync="dialogDamagePartsFormVisible" title="修改额外订单信息"
+      width="60%">
         <el-form :model="damagePartsModify" label-width="120px" :rules="rules" ref="damagePartsModify">
           <el-form-item label="数量" prop="number" style="width: 600px">
             <el-input @keyup.native="damagePartsModify.number = number(damagePartsModify.number)" v-model="damagePartsModify.number"/>
@@ -74,12 +75,16 @@
         @current-change="getList"
       />
       <!--      添加坏件-->
-      <el-dialog :visible.sync="dialogDamagePartsVisible" title="坏件添加" >
+      <el-dialog :visible.sync="dialogDamagePartsVisible" title="坏件添加" width="60%">
         <el-form :model="damageParts" label-width="80px" :rules="rules" ref="damageParts">
           <el-form-item label="名称" prop="partsId" style="width: 600px">
             <el-select
               v-model="damageParts.partsId" filterable clearable placeholder="请选零件"
-              :filter-method="partListFilter" style="width: 600px" @change="cacheInfo($event)">
+              ref="agentSelect"
+              :filter-method="partListFilter"
+              @hook:mounted="cancelReadOnly"
+              @visible-change="cancelReadOnly"
+              style="width: 600px" @change="cacheInfo($event)">
               <el-option
                 v-for="part in partList"
                 :key="part.pId"
@@ -194,6 +199,18 @@ export default {
         .then(res=>{
           this.partNameList=res.list
         })
+    },
+    //ipad支持输入框
+    cancelReadOnly(onOff) {
+      this.$nextTick(() => {
+        if (!onOff) {
+          const Selects = this.$refs
+          if (Selects.agentSelect) {
+            const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }
+        }
+      })
     },
     // 零件显示列表
     partListFilter(query = ''){

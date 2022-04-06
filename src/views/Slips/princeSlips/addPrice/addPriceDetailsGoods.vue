@@ -43,7 +43,7 @@
               fit
               v-show="levelIV.odType===1"
               highlight-current-row
-              style="width: 100%;font-size: 4px;line-height:20px;padding: 0">
+              style="width: 100%;padding: 0">
       <el-table-column
         label="序号"
         width="50%"

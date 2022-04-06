@@ -8,6 +8,8 @@
             ref="agentSelect"
             filterable clearable placeholder="请选择创建人姓名"
             :filter-method="adminNameListFilter"
+            @hook:mounted="cancelReadOnly"
+            @visible-change="cancelReadOnly"
           >
             <el-option
               v-for="admin in adminNameList"
@@ -182,6 +184,19 @@ export default {
     this.getCommonList()
   },
   methods:{
+    //ipad支持输入框
+    cancelReadOnly(onOff) {
+      this.$nextTick(() => {
+        if (!onOff) {
+          const Selects = this.$refs
+          if (Selects.agentSelect) {
+            const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }
+        }
+      })
+    },
+    //创建人姓名模糊查询
     adminNameListFilter(query = '') {
       if(query!==''){
         let PinyinMatch = this.$pinyinmatch;

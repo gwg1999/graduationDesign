@@ -126,16 +126,15 @@ export default {
     }
   },
   methods:{
+    //ipad支持输入框
     cancalReadOnly(onOff) {
       this.$nextTick(() => {
         if (!onOff) {
-          console.log(this)
           const Selects = this.$refs
-          // console.log(Selects)　　　　　　// 如果只有1个下拉框，这段就足够了---start
           if (Selects.agentSelect) {
             const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
             input.removeAttribute('readonly')
-          }　　　　　　// 如果只有1个下拉框，这段就足够了---end　　　　　　// 如果有多个，就加多几个，代码可以优化，我懒了
+          }　
           if (Selects.agent2Select) {
             const appinput = Selects.agent2Select.$el.querySelector('.el-input__inner')
             appinput.removeAttribute('readonly')

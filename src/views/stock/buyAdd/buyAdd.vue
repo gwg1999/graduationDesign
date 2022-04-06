@@ -22,7 +22,10 @@
         <el-form-item label="仓库管理员" prop="swarehouseOperaterId" style="width: 500px">
           <el-select
             v-model="priceSlip.swarehouseOperaterId" clearable
+            ref="agentSelect"
             :filter-method="warehouseOperatorListListFilter"
+            @hook:mounted="cancelReadOnly"
+            @visible-change="cancelReadOnly"
             filterable placeholder="请选择仓库管理员" style="width: 500px">
             <el-option
               v-for="WarehouseOperator in warehouseNameList"
@@ -32,9 +35,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="厂家名" prop="sfactoryId">
-          <!--            <el-input v-model="salesSlip.qNote" style="width: 90%" rows="5" type="textarea"/>-->
           <el-select
-            v-model="priceSlip.sfactoryId" filterable clearable placeholder="请选择厂家" style="width: 500px" :filter-method="factoryFilter">
+            v-model="priceSlip.sfactoryId" filterable clearable placeholder="请选择厂家" style="width: 500px"
+            ref="agentSelect1"
+            @hook:mounted="cancelReadOnly"
+            @visible-change="cancelReadOnly"
+            :filter-method="factoryFilter">
             <el-option
               v-for="factory in factoryList"
               :key="factory.fId"
@@ -94,10 +100,6 @@ export default {
       },
       //客户单位
       spaymentWay:[
-        {
-          label:'挂账',
-          value:'0'
-        },
         {
           label:'线上',
           value:'1'
@@ -174,6 +176,22 @@ export default {
       this.priceSlip.screateOperatorId=Cookie.get('aId')
       this.priceSlip.sCustomId=0
       // this.buyList.sCustomId=0
+    },
+    //ipad支持输入框
+    cancelReadOnly(onOff) {
+      this.$nextTick(() => {
+        if (!onOff) {
+          const Selects = this.$refs
+          if (Selects.agentSelect) {
+            const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }
+          if (Selects.agentSelect1) {
+            const input = Selects.agentSelect1.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }
+        }
+      })
     },
     warehouseOperatorListListFilter(query = '') {
       if(query!==''){

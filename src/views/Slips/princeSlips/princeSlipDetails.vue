@@ -46,6 +46,7 @@
         </el-table-column>
         <el-table-column prop="odNumber" label="数量" width="80px" align="center" />
         <el-table-column prop="odRetailPrice" label="实时售价" width="100px" align="center" />
+        <el-table-column prop="odCreateTime" width="110px"  label="创建时间"  align="center"/>
         <el-table-column prop="odStatus" label="零件状态" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.odStatus===0?'正常':scope.row.odStatus===1?'退货':'结束'}}
@@ -176,6 +177,10 @@ export default {
       princeSlips.queryAllDetails(this.queryPrinceSheet.odOrderId,this.queryPrinceSheet.pName,
         this.queryPrinceSheet.odType,this.queryPrinceSheet.pageNum,this.queryPrinceSheet.pageSize)
         .then(res=>{
+          console.log(res.list)
+          res.list.forEach(item=>{
+            item.odCreateTime = getTime(item.odCreateTime)
+          })
           this.princeSheetList=res.list
           this.total=res.total
         })

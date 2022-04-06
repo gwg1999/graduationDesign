@@ -62,7 +62,7 @@
             <el-input v-model="editModify.fName" style="width: 200px" disabled/>
           </el-form-item>
           <el-form-item label="操作员" prop="adminName">
-            <el-select v-model="editModify.adminName" style="margin-left: 3px;width: 200px"  placeholder="请选择操作员" clearable>
+            <el-select v-model="editModify.iCreateOperatorId" style="margin-left: 3px;width: 200px"  placeholder="请选择操作员" clearable>
               <el-option v-for="item in adminList"  :key="item.aId" :label="item.aName" :value="item.aId" ></el-option>
             </el-select>
           </el-form-item>
@@ -95,6 +95,8 @@
             ref="agentSelect"
             filterable clearable placeholder="请填写工厂名称"
             :filter-method="factoryNameListFilter"
+            @hook:mounted="cancelReadOnly"
+            @visible-change="cancelReadOnly"
           >
             <el-option
               v-for="factory in factoryNameList"
@@ -160,15 +162,15 @@
       <el-table-column label="询价零件" width="160%" align="center" prop="">
         <template slot-scope="scope">
           <router-link :to="{path:'showParts',query:{iId:JSON.stringify(scope.row.iId),factoryId:scope.row.iFactoryId}}">
-            <el-button type="primary" size="small" @click="">查看</el-button>
+            <el-button type="primary" size="mini" @click="">查看</el-button>
           </router-link>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" slot="reference" @click="showDetails(scope.row)" style="margin-right: 2%">修改</el-button>
-          <el-button type="primary" icon="el-icon-edit" style="margin-right: 2%" @click="transOrder(scope.row)">转为进货单</el-button>
-          <el-button type="danger" icon="el-icon-delete" circle @click="deleteOder(scope.row.iId)"></el-button>
+          <el-button size="mini" type="primary" icon="el-icon-edit" slot="reference" @click="showDetails(scope.row)" style="margin-right: 2%">修改</el-button>
+          <el-button  size="mini" type="primary" icon="el-icon-edit" style="margin-right: 2%" @click="transOrder(scope.row)">转为进货单</el-button>
+          <el-button  size="mini" type="danger" icon="el-icon-delete" circle @click="deleteOder(scope.row.iId)"></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -228,6 +230,9 @@ export default {
         sInvoiceType:[
           {required:true,message:'请选择发票类型',trigger:'blur'}
         ],
+        sFactoryId:[
+          {required:true,message:'请选择工厂',trigger:'blur'}
+        ],
       },
       visible:false,
       spaymentWay:[
@@ -276,6 +281,18 @@ export default {
     // this.getPageTotal()
   },
   methods:{
+    //ipad支持输入框
+    cancelReadOnly(onOff) {
+      this.$nextTick(() => {
+        if (!onOff) {
+          const Selects = this.$refs
+          if (Selects.agentSelect) {
+            const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }
+        }
+      })
+    },
     //工厂过滤
     factoryNameListFilter(query = '') {
       if(query!==''){
@@ -337,7 +354,6 @@ export default {
     },
     //创建具体的方法
     getList() {
-      console.log(this.stockQuery)
       PostData('inquiry/queryInquiry',this.stockQuery)
         .then(res=>{
           this.list = res.list
@@ -448,6 +464,7 @@ export default {
       this.buyList.sCustomId=0
       this.buyList.sPrice=data.iPrice
       this.buyList=JSON.parse(JSON.stringify(this.buyList))
+      console.log(this.buyList)
       this.dialogVisible=true
     },
     submitForm() {
@@ -465,7 +482,7 @@ export default {
         }
       });
     },
-    // 跳转详情页
+    // 询价单修改
     showDetails(data){
       this.dialogStockVisible=true
       this.editModify=JSON.parse(JSON.stringify(data))
@@ -474,9 +491,7 @@ export default {
     submitUpdate() {
       this.$refs['editModify'].validate((valid) => {
         if (valid) {
-          this.oder.iCreateTime=undefined
-          this.oder.iCreateOperatorId=this.oder.adminName
-          PostData('inquiry/ediInquiry',this.oder)
+          PostData('inquiry/ediInquiry',this.editModify)
             .then(res=>{
               this.$message({
                 type:'success',

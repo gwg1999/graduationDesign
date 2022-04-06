@@ -163,9 +163,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改</el-button>
-          <el-button type="danger" style="width: auto" @click="deletePart(scope.row.sdId)" v-if="scope.row.sdStatus!==2">删除该零件</el-button>
-          <el-button type="warning" style="width: auto" @click="received(scope.row)" v-if="scope.row.sdStatus!==2">收 货</el-button>
+          <el-button size="mini" type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改</el-button>
+          <el-button size="mini" :disabled="list.length<=1" type="danger" style="width: auto" @click="deletePart(scope.row.sdId)" v-if="scope.row.sdStatus!==2">删除该零件</el-button>
+          <el-button size="mini" type="warning" style="width: auto" @click="received(scope.row)" v-if="scope.row.sdStatus!==2">收 货</el-button>
         </template>
       </el-table-column>
     </el-table>

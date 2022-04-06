@@ -130,17 +130,10 @@
         <!--          {{ (adminQuery.pageNum - 1) * adminQuery.pageSize + scope.$index + 1 }}-->
         <!--        </template>-->
       </el-table-column>
-      <el-table-column prop="indPartsName" label="零件名" width="200%"  align="center"/>
-<!--      <el-table-column prop="type" label="类型" width="200%" align="center"/>-->
-<!--      <el-table-column prop="type" label="类型" width="120%"  align="center">-->
-<!--        <template slot-scope="scope">-->
-<!--          <h3 v-if="scope.row.type===0">整件</h3>-->
-<!--          <h3 v-if="scope.row.type===1">零件</h3>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
-      <el-table-column prop="indNumber" label="零件数量" width="120%"  align="center"/>
-      <el-table-column prop="indPrice" label="零件单价" width="120%"  align="center"/>
-      <el-table-column prop="indType" label="类型" width="120%"  align="center">
+      <el-table-column prop="indPartsName" label="零件名" width="200px"  align="center"/>
+      <el-table-column prop="indNumber" label="零件数量" width="120px"  align="center"/>
+      <el-table-column prop="indPrice" label="零件单价" width="120px"  align="center"/>
+      <el-table-column prop="indType" label="类型" width="120px"  align="center">
         <template slot-scope="scope">
           <h3 v-if="scope.row.indType===0">整件</h3>
           <h3 v-else>零件</h3>
@@ -151,7 +144,7 @@
           {{ `${scope.row.indDeliveryCycle}天`}}
         </template>
       </el-table-column>
-      <el-table-column prop="indIsDelivery" label="是否能供货" width="120%" align="center">
+      <el-table-column prop="indIsDelivery" label="是否能供货" width="120px" align="center">
         <template slot-scope="scope">
           <h3 v-if="scope.row.indIsDelivery===0">
             <el-tag type="danger">否</el-tag>
@@ -164,7 +157,7 @@
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
             <el-button size="mini"  icon="el-icon-edit" type="primary" style="width: auto" @click="editPartNumMethod(scope.row)">修改</el-button>
-            <el-button size="mini" icon="el-icon-delete" type="danger" style="width: auto" @click="deletePart(scope.$index)" v-show="list.length>1">删除该零件</el-button>
+            <el-button size="mini" icon="el-icon-delete" type="danger" style="width: auto" @click="deletePart(scope.$index)" :disabled="list.length<=1">删除该零件</el-button>
         </template>
       </el-table-column>
     </el-table>

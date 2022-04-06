@@ -73,7 +73,7 @@
               fit
               v-show="levelIV.odType===1"
               highlight-current-row
-              style="font-size: 4px;line-height:20px;padding: 0">
+              style="width: 100%;padding: 0">
       <el-table-column
         label="序号"
         width="50%"
@@ -132,7 +132,7 @@
       <el-table-column prop="pId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
-            <div style="display: flex;justify-content: space-around;font-size: 4px;height: 40px">
+            <div style="display: flex;justify-content: space-around;font-size: 4px">
               <el-form-item>
                 数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
               </el-form-item>
@@ -140,7 +140,7 @@
 <!--                供货周期:<el-input  @keyup.native="scope.row.sdDeliveryCycle = oninput(scope.row.sdDeliveryCycle)" v-model = "scope.row.sdDeliveryCycle" style="width: 80px;" size="small" ></el-input>-->
 <!--              </el-form-item>-->
               <el-form-item>
-                价格:<el-input  @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width: 100px;" size="small" ></el-input>
+                价格:<el-input  @keyup.native="scope.row.odRetailPrice = oninput(scope.row.odRetailPrice)" v-model = "scope.row.odRetailPrice" style="width:70px;padding: 0" size="small" ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>

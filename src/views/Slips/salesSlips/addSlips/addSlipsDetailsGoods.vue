@@ -11,10 +11,28 @@
         </el-select>
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
-        <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
+        <el-autocomplete
+          v-model="levelIV.pNumber"
+          :fetch-suggestions="querySearchAsync1"
+          clearable
+          placeholder="请输入零件号"
+          :trigger-on-focus="false"
+          @select="handleSelect2(levelIV,$event)"
+        >
+        </el-autocomplete>
+<!--        <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>-->
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 210px">
-        <el-input @keyup.enter.native="queryGoods" v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>
+        <el-autocomplete
+          v-model="levelIV.pName"
+          :fetch-suggestions="querySearchAsync2"
+          clearable
+          placeholder="请输入零件名"
+          :trigger-on-focus="false"
+          @select="handleSelect3(levelIV,$event)"
+        >
+        </el-autocomplete>
+<!--        <el-input @keyup.enter.native="queryGoods" v-model="levelIV.pName" clearable placeholder="请输入零件名" ></el-input>-->
       </el-form-item>
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
         <el-cascader
@@ -69,8 +87,8 @@
             <el-form-item label="备注:" style="height: 180px;width: 50%">
               <span>{{ props.row.pNote }}</span>
             </el-form-item>
-<!--            <el-form-item  style="height: 180px;width: 50%">-->
-<!--            </el-form-item>-->
+            <!--            <el-form-item  style="height: 180px;width: 50%">-->
+            <!--            </el-form-item>-->
             <el-form-item  style="width: 50%;height: 180px;" >
               <div class="demo-image__placeholder" style="width: 300px;height: 180px;margin-left: 50%">
                 <div class="block" style="width: 270px;height: 180px">
@@ -88,23 +106,23 @@
                 </div>
               </div>
             </el-form-item>
-<!--            <el-form-item label="外部图片:" style="width: 50%;height: 180px;" >-->
-<!--              <div class="demo-image__placeholder" style="width: 300px;height: 180px;margin-left: 25%">-->
-<!--                <div class="block" style="width: 270px;height: 180px">-->
-<!--                  <el-carousel trigger="click" height="180px">-->
-<!--                    <el-carousel-item v-for="item in props.row.pictures" :key="item.pId">-->
-<!--                      <el-image :src="item.path"-->
-<!--                                :preview-src-list="[item.path]"-->
-<!--                                style="height:95%;width: 95%;padding-top: 2px;padding-left: 10px">-->
-<!--                        <div slot="placeholder" class="image-slot">-->
-<!--                          加载中<span class="dot">...</span>-->
-<!--                        </div>-->
-<!--                      </el-image>-->
-<!--                    </el-carousel-item>-->
-<!--                  </el-carousel>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </el-form-item>-->
+            <!--            <el-form-item label="外部图片:" style="width: 50%;height: 180px;" >-->
+            <!--              <div class="demo-image__placeholder" style="width: 300px;height: 180px;margin-left: 25%">-->
+            <!--                <div class="block" style="width: 270px;height: 180px">-->
+            <!--                  <el-carousel trigger="click" height="180px">-->
+            <!--                    <el-carousel-item v-for="item in props.row.pictures" :key="item.pId">-->
+            <!--                      <el-image :src="item.path"-->
+            <!--                                :preview-src-list="[item.path]"-->
+            <!--                                style="height:95%;width: 95%;padding-top: 2px;padding-left: 10px">-->
+            <!--                        <div slot="placeholder" class="image-slot">-->
+            <!--                          加载中<span class="dot">...</span>-->
+            <!--                        </div>-->
+            <!--                      </el-image>-->
+            <!--                    </el-carousel-item>-->
+            <!--                  </el-carousel>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </el-form-item>-->
           </el-form>
         </template>
       </el-table-column>
@@ -138,12 +156,12 @@
     </el-table>
     <!--    整件添加表格-->
     <el-table
-              :data="wholeList"
-              border
-              v-show="levelIV.qdType===0"
-              fit
-              highlight-current-row
-              style="width: 100%">
+      :data="wholeList"
+      border
+      v-show="levelIV.qdType===0"
+      fit
+      highlight-current-row
+      style="width: 100%">
       <el-table-column
         label="序号"
         width="50%"
@@ -423,6 +441,7 @@ import {PostData} from "@/api";
 import {getTime,stopF5F6} from "@/views/Slips/myUtils"
 import Cookie from "js-cookie";
 import {validatePassCheck} from "@/views/Slips/ruleNumber";
+import qs from "qs";
 export default {
   data() {
     return {
@@ -491,6 +510,48 @@ export default {
     stopF5F6()
   },
   methods: {
+    //零件号
+    querySearchAsync1(queryString, cb) {
+      let adminQuery={}
+      adminQuery.pPartsStatus=1
+      adminQuery.pageSize=10
+      adminQuery.pageNum=1
+      adminQuery.pNumber=queryString
+      PostData('parts/selectAllByLike',qs.stringify(adminQuery)).then(res => {
+        res.list.forEach((v)=>{
+          v.value=v.pNumber
+        })
+        if(res.list.length>10) {
+          res.list = res.list.slice(0, 10);
+        }
+        cb(res.list)
+      })
+    },
+    handleSelect2(item,event) {
+      this.levelIV.pNumber=event.pNumber
+      this.queryGoods()
+    },
+    //零件名
+    querySearchAsync2(queryString, cb) {
+      let adminQuery={}
+      adminQuery.pPartsStatus=1
+      adminQuery.pageSize=10
+      adminQuery.pageNum=1
+      adminQuery.pName=queryString
+      PostData('parts/selectAllByLike',qs.stringify(adminQuery)).then(res => {
+        res.list.forEach((v)=>{
+          v.value=v.pName
+        })
+        if(res.list.length>10) {
+          res.list = res.list.slice(0, 10);
+        }
+        cb(res.list)
+      })
+    },
+    handleSelect3(item,event) {
+      this.levelIV.pName=event.pName
+      this.queryGoods()
+    },
     //购物车零件操作
     openPartRecordDialog(record){
       this.dialogPartsVisible=true

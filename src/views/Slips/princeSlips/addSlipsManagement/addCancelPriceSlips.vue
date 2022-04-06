@@ -3,9 +3,9 @@
     <div class="app-container">
       <el-form :inline="true" class="demo-form-inline" style="position: relative">
         <el-form-item   style="width: 210px">
-          <!--          <el-input @keyup.enter.native="queryGoods" v-model="queryDetails.pName" clearable placeholder="请输入零件名" ></el-input>-->
+          <!--<el-input @keyup.enter.native="queryGoods" v-model="queryDetails.pName" clearable placeholder="请输入零件名" ></el-input>-->
         </el-form-item>
-        <!--        <el-button type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>-->
+        <!--<el-button type="primary" style="position: absolute" icon="el-icon-search" @click="queryGoods">查询</el-button>-->
         <el-button type="primary" icon="el-icon-view" style="position: absolute;right:10px"  @click="showSelected">查看已选零件</el-button>
       </el-form>
       <el-table use-virtual
@@ -22,7 +22,7 @@
             {{ (queryDetails.pageNum - 1) * queryDetails.pageSize + scope.$index + 1 }}
           </template>
         </el-table-column>
-        <el-table-column prop="partName" label="零件名" width="500px" align="center" />
+        <el-table-column prop="partName" label="零件名" width="400px" align="center" />
         <el-table-column prop="odNumber" label="数量"  width="100px" align="center" />
         <el-table-column prop="odRetailPrice" label="价格"  width="100px" align="center" />
         <el-table-column prop="wId" label="零件数目和价格" align="center">
@@ -30,7 +30,7 @@
             <el-form>
               <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
                 <el-form-item>
-                  <!--                  数量:<el-input style="width: 100px" @keyup.native="scope.row.number = number(scope.row.number)"  v-model = "scope.row.number"  size="small"></el-input>-->
+                  <!--数量:<el-input style="width: 100px" @keyup.native="scope.row.number = number(scope.row.number)"  v-model = "scope.row.number"  size="small"></el-input>-->
                   数量:<el-input-number :min="0"  v-model="scope.row.number"  size="small"></el-input-number>
                 </el-form-item>
                 <el-form-item>

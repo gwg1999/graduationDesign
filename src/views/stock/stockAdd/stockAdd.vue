@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-steps :active="1" process-status="wait" align-center style="margin-bottom: 40px;">
-      <el-step title="填写报价单信息" />
+      <el-step title="填写询价单信息" />
       <el-step title="添加零件" />
     </el-steps>
     <div>
@@ -20,7 +20,11 @@
           <el-form-item label="厂家名" prop="factoryId">
 <!--            <el-input v-model="salesSlip.qNote" style="width: 90%" rows="5" type="textarea"/>-->
             <el-select
-              v-model="inPrice.factoryId" filterable clearable placeholder="请选择厂家" style="width: 640px" :filter-method="factoryFilter">
+              v-model="inPrice.factoryId" filterable clearable placeholder="请选择厂家" style="width: 640px"
+              ref="agentSelect"
+              @hook:mounted="cancelReadOnly"
+              @visible-change="cancelReadOnly"
+              :filter-method="factoryFilter">
               <el-option
                 v-for="factory in factoryList"
                 :key="factory.fId"
@@ -28,6 +32,12 @@
                 :value="factory.fId"/>
             </el-select>
           </el-form-item>
+          <el-form-item label="供货周期">
+            <el-select  v-model="inPrice.indDeliveryCycle" style="margin-left: 3px;width: 300px"  placeholder="请选择供货周期" clearable>
+              <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcAmount" ></el-option>
+            </el-select>
+          </el-form-item>
+
           <el-form-item label="备注">
             <el-input v-model="inPrice.iNote" style="width: 90%"  rows="5" type="textarea"/>
           </el-form-item>
@@ -42,12 +52,14 @@
 
 <script>
 import {commonList} from "@/views/Slips/myApi";
+import {PostData} from "@/api";
 
 export default {
   name: "stockAdd",
   data(){
     return{
       inPrice:{},
+      cycleList:[],
       totleCustomerList:[],
       customerList:[],
       factoryList:[],
@@ -86,6 +98,17 @@ export default {
         this.customerList=[]
       }
     },
+    cancelReadOnly(onOff) {
+      this.$nextTick(() => {
+        if (!onOff) {
+          const Selects = this.$refs
+          if (Selects.agentSelect) {
+            const input = Selects.agentSelect.$el.querySelector('.el-input__inner')
+            input.removeAttribute('readonly')
+          }
+        }
+      })
+    },
     factoryFilter(query = '') {
       if(query!==''){
         let PinyinMatch = this.$pinyinmatch;
@@ -110,13 +133,15 @@ export default {
     },
     getList(){
       commonList("customer/selectAllByLike").then(res=>{
-        // console.log(res.list);
         this.totleCustomerList=res.list
         console.log(this.totleCustomerList);
       })
       commonList("factory/selectAllByLike").then(res=>{
         this.totleFactoryList=res.list
         console.log(this.totleFactoryList);
+      })
+      PostData('returnCycle/selectAll',{pageNum:1,pageSize:10}).then(res=>{
+        this.cycleList=res.list
       })
     },
     saveSalesSlip() {

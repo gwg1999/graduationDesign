@@ -43,7 +43,7 @@
               fit
               v-show="levelIV.odType===1"
               highlight-current-row
-              style="width: 100%;font-size: 4px;line-height:20px;padding: 0">
+              style="width:100%;padding: 0">
       <el-table-column
         label="序号"
         width="50%"
@@ -106,27 +106,27 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column prop="pId" label="序列号" width="80px" align="center" />
+      <el-table-column prop="pId" label="序列号" width="70px" align="center" />
       <el-table-column prop="pNumber" label="零件号" width="120px" align="center" />
       <el-table-column prop="pName" label="零件名" width="130px" align="center" />
-      <el-table-column prop="place.plName" label="产地" width="60px"  align="center"/>
-      <el-table-column prop="unit.uName" label="单位" width="60px" align="center"/>
+      <el-table-column prop="place.plName" label="产地" width="50px"  align="center"/>
+      <el-table-column prop="unit.uName" label="单位" width="50px" align="center"/>
 <!--      <el-table-column prop="pLowPrice" label="一级价格" width="70px"  align="center"/>-->
 <!--      <el-table-column prop="pMiddlePrice" label="二级价格" width="70px" align="center" />-->
 <!--      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>-->
-      <el-table-column prop="pBuyingPrice" label="进价" width="60px"  align="center"/>
+      <el-table-column prop="pBuyingPrice" label="进价" width="50px"  align="center"/>
       <el-table-column prop="pRealInventory" label="库存数" width="60px"  align="center"/>
       <el-table-column prop="pId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
-            <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
+            <div style="display: flex;justify-content: space-evenly">
               <el-form-item>
                 数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  v-model = "scope.row.odNumber"  size="small"></el-input-number>
               </el-form-item>
               <el-form-item>
                 供货周期:
                 <el-select  v-model="scope.row.indDeliveryCycle" style="margin-left: 3px;width: 100px"   clearable>
-                  <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcId" ></el-option>
+                  <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcAmount" ></el-option>
                 </el-select>
 <!--                供货周期:<el-input  @keyup.native="scope.row.indDeliveryCycle = oninput(scope.row.indDeliveryCycle)" v-model = "scope.row.indDeliveryCycle" style="width: 80px;" size="small" ></el-input>-->
               </el-form-item>

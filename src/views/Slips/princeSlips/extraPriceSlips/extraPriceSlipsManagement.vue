@@ -41,9 +41,9 @@
 
         <el-table-column label="查看关联订单"  align="center" width="120px">
           <template slot-scope="scope">
-            <router-link :to="{path:'/Slips/extraPriceSlipsDetails',query:{orderId:scope.row.orderId,type:scope.row.type}}">
-              <el-button type="primary" size="mini" icon="el-icon-edit">查看详情</el-button>
-            </router-link>
+<!--            <router-link :to="{path:'/Slips/extraPriceSlipsDetails',query:{orderId:scope.row.orderId,type:scope.row.type}}">-->
+              <el-button type="primary" :disabled="scope.row.type===3" size="mini" icon="el-icon-edit" @click="checkDetails(scope.row)">查看详情</el-button>
+<!--            </router-link>-->
           </template>
         </el-table-column>
 
@@ -55,7 +55,8 @@
         </el-table-column>
       </el-table>
       <!--      修改额外订单信息-->
-      <el-dialog :visible.sync="dialogExtraPriceSheetFormVisible" title="修改其他费用信息">
+      <el-dialog :visible.sync="dialogExtraPriceSheetFormVisible" title="修改其他费用信息"
+     >
         <el-form :model="ExtraPriceSheetModify" label-width="120px" :rules="rules" ref="ExtraPriceSheetModify">
           <el-form-item label="支出费用" prop="number">
             <el-input @keyup.native="ExtraPriceSheetModify.number = oninput(ExtraPriceSheetModify.number)" v-model="ExtraPriceSheetModify.number"/>
@@ -82,7 +83,7 @@
 
 
       <!--     其他费用添加-->
-      <el-dialog :visible.sync="openAddExtraPriceDialog" title="其他费用添加" >
+      <el-dialog :visible.sync="openAddExtraPriceDialog" title="其他费用添加"  width="60%">
         <el-form :model="ExtraPrice" label-width="80px" :rules="rules" ref="ExtraPrice">
           <el-form-item  label="订单类型" style="width: 200px" prop="type">
             <el-select v-model="ExtraPrice.type" @change="slipsSelect($event)" clearable placeholder="请选择订单类型" style="width: 200px"  >
@@ -92,10 +93,10 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="订单id" v-show="ExtraPrice.type!==3" prop="orderId" style="width: 600px">
+          <el-form-item label="订单id" v-show="ExtraPrice.type!==3" prop="orderId" style="width: 400px">
             <el-select
               v-model="ExtraPrice.orderId"  filterable clearable placeholder="请选择订单"
-             style="width: 600px">
+             style="width: 400px">
               <el-option
                 v-for="part in priceList"
                 :key="part.oId"
@@ -162,6 +163,10 @@ export default {
     // this.priceSlipsList()
   },
   methods: {
+    //收货
+    checkDetails(params){
+      this.$router.push({path:'/Slips/extraPriceSlipsDetails',query:{orderId:params.orderId,type:params.type}})
+    },
     slipsSelect(params){
       if(params===0){
         new Promise((resolve,reject)=>{

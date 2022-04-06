@@ -111,15 +111,15 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="customerName" label="客户" width="80px" align="center" />
-        <el-table-column prop="oCreateTime" label="创建时间"  width="100px"   align="center"/>
-        <el-table-column prop="oResultTime" label="发货时间" width="100px"  align="center"/>
+        <el-table-column prop="customerName" label="客户" width="120px" align="center" />
+        <el-table-column prop="oCreateTime" label="创建时间"  width="80px"   align="center"/>
+        <el-table-column prop="oResultTime" label="发货时间" width="80px"  align="center"/>
         <el-table-column prop="oIsPackage" label="是否打包" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.oIsPackage===0?'打包':'未打包'}}
           </template>
         </el-table-column>
-        <el-table-column prop="oStatus" label="订单状态" width="80" align="center">
+        <el-table-column prop="oStatus" label="订单状态" width="80px" align="center">
           <template slot-scope="scope">
             {{ scope.row.oStatus===1?'未发货':'已发货'}}
           </template>
@@ -477,6 +477,7 @@ export default {
         this.queryPrinceSheet.endTimeSequence, this.queryPrinceSheet.pageNum,
         this.queryPrinceSheet.pageSize,this.queryPrinceSheet.isExistBill)
         .then(res=>{
+          console.log(res)
           this.total=res.total
           for (let i=0;i<res.list.length;i++){
             res.list[i].oCreateTime=getTime(res.list[i].oCreateTime)

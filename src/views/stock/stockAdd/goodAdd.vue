@@ -10,12 +10,6 @@
     </el-steps>
     <!--    查询表格数据-->
     <el-form :inline="true" class="demo-form-inline" style="position: relative ">
-<!--      <el-form-item>-->
-<!--        <el-select   v-model="levelIV.qdType"   clearable placeholder="选择商品类型" style="width: 130px" @change="changeTotal($event)" >-->
-<!--          <el-option :value="1" label="零件"/>-->
-<!--          <el-option :value="0" label="整件"/>-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
       <el-form-item   v-if="levelIV.qdType===1" style="width: 200px" >
         <el-input  @keyup.enter.native="queryGoods" v-model="levelIV.pNumber" clearable placeholder="请输入零件号" ></el-input>
       </el-form-item>
@@ -67,7 +61,7 @@
               fit
               v-show="levelIV.qdType===1"
               highlight-current-row
-              style="width: 100%;font-size: 4px;line-height:20px;padding: 0">
+              style="width:100%;padding: 0">
       <el-table-column
         label="序号"
         width="50%"
@@ -114,7 +108,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="pId" label="序列号" width="80px" align="center" />
-      <el-table-column prop="pNumber" label="零件号" width="150px" align="center" />
+      <el-table-column prop="pNumber" label="零件号" width="100px" align="center" />
       <el-table-column prop="pName" label="零件名" width="200px" align="center" />
       <el-table-column prop="place.plName" label="产地" width="80px"  align="center"/>
       <!--      <el-table-column prop="pCarName" label="车型号" width="80px"  align="center"/>-->
@@ -124,21 +118,21 @@
 <!--      <el-table-column prop="pHighPrice" label="三级价格" width="70px"  align="center"/>-->
       <el-table-column prop="pBuyingPrice" label="进价" width="70px"  align="center"/>
       <el-table-column prop="pRealInventory" label="库存数" width="70px"  align="center"/>
-      <el-table-column prop="pId" label="零件数目和价格" align="center">
+      <el-table-column prop="pId" label="数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
-            <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
+            <div style="display: flex;justify-content: space-evenly;font-size: 4px">
               <el-form-item>
-                数量:<el-input style="width: 100px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.qdNumber = number(scope.row.qdNumber)"  v-model = "scope.row.qdNumber"  size="small"></el-input>
+                数量:<el-input style="width: 80px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.qdNumber = number(scope.row.qdNumber)"  v-model = "scope.row.qdNumber"  size="small"></el-input>
               </el-form-item>
-              <el-form-item>
-                供货周期:
-                <el-select  v-model="scope.row.indDeliveryCycle" style="margin-left: 3px;width: 100px"  placeholder="请选择操作员" clearable>
-                  <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcId" ></el-option>
-                </el-select>
-<!--                cycleList-->
-<!--                供货周期:<el-input style="width: 80px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.indDeliveryCycle = number(scope.row.indDeliveryCycle)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input>-->
-              </el-form-item>
+<!--              <el-form-item>-->
+<!--                供货周期:-->
+<!--                <el-select  v-model="scope.row.indDeliveryCycle" style="margin-left: 3px;width: 100px"  placeholder="请选择操作员" clearable>-->
+<!--                  <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcId" ></el-option>-->
+<!--                </el-select>-->
+<!--&lt;!&ndash;                cycleList&ndash;&gt;-->
+<!--&lt;!&ndash;                供货周期:<el-input style="width: 80px"  @keyup.119.native="searchNoCustomerList(scope.row.pId)" @keyup.117.native="searchHistoryList(scope.row.pId)" @keyup.116.native="searchList(scope.row.pId)"  @keyup.native="scope.row.indDeliveryCycle = number(scope.row.indDeliveryCycle)"  v-model = "scope.row.indDeliveryCycle"  size="small"></el-input>&ndash;&gt;-->
+<!--              </el-form-item>-->
               <el-form-item>
                 价格:<el-input  @keyup.native="scope.row.price = oninput(scope.row.price)" v-model = "scope.row.price" style="width: 70px;" size="small" ></el-input>
               </el-form-item>
@@ -157,7 +151,7 @@
               v-show="levelIV.qdType===0"
               fit
               highlight-current-row
-              style="width: 100%">
+              style="width: 100%;;padding: 0">
       <el-table-column
         label="序号"
         width="50%"
@@ -166,13 +160,13 @@
           {{ (levelIV.pageNum - 1) * levelIV.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column prop="wName" label="整件名" width="500px" align="center" />
+      <el-table-column prop="wName" label="整件名" width="400px" align="center" />
       <el-table-column prop="wNumber" label="整件数量"  width="100px" align="center" />
       <el-table-column prop="wAlarmNumber" label="告警量"  width="100px" align="center" />
       <el-table-column prop="wId" label="零件数目和价格" align="center">
         <template slot-scope="scope">
           <el-form>
-            <div style="display: flex;justify-content: space-evenly;font-size: 4px;height: 40px">
+            <div style="display: flex;justify-content: space-evenly;font-size: 4px">
               <el-form-item>
                 数量:<el-input-number :min="0" @keyup.119.native="searchNoCustomerList(scope.row.wId)" @keyup.118.native="searchWhole(scope.row.wId)" @keyup.117.native="searchHistoryList(scope.row.wId)" @keyup.116.native="searchList(scope.row.wId)"  v-model = "scope.row.qdNumber"  size="small"></el-input-number>
               </el-form-item>
@@ -181,7 +175,7 @@
               </el-form-item>
 
               <el-form-item>
-                价格:<el-input @keyup.native="scope.row.price =oninput(scope.row.price)" v-model = "scope.row.price" style="width: 100px;" size="small" ></el-input>
+                价格:<el-input @keyup.native="scope.row.price =oninput(scope.row.price)" v-model = "scope.row.price" style="width:80px;padding: 0" size="small" ></el-input>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" size="mini" icon="el-icon-circle-plus" @click="addPart(scope.row)">添加</el-button>
@@ -520,6 +514,7 @@ export default {
   },
   created() {
     this.inPrice=this.$route.query.inPrice
+    console.log(this.inPrice)
     this.getList()
     this.queryGoods()
     stopF5F6()
@@ -688,29 +683,29 @@ export default {
             if(this.salesSlip.wholeDetailsList&&this.salesSlip.wholeDetailsList.length>0){
               this.salesSlip.wholeDetailsList.forEach((value)=>{
                 value.pName=value.wName
-                value.indDeliveryCycle=0
                 value.indCustomerId=this.inPrice.indCustomerId
                 value.indPartsId=value.pId
                 value.indType=0
                 value.indNumber=parseInt(value.qdNumber)
                 value.indPrice=value.price
-                value.indIsDelivery=0
+                value.indIsDelivery=1
                 value.indDeliveryNum=2
                 value.qdRealTimePrice=parseInt(value.price)
                 value.qdPartsId=value.wId
               })
             }
+            console.log(this.inPrice)
             this.salesSlip.quotationDetailList=[...this.salesSlip.quotationDetailList,...this.salesSlip.wholeDetailsList]
             if(this.salesSlip.quotationDetailList&&this.salesSlip.quotationDetailList.length>0) {
               this.salesSlip.quotationDetailList.forEach((value) => {
                 value.qdPartsSizeType=value.pPartsSizeType
                 value.indCustomerId=this.inPrice.indCustomerId
                 value.indPartsId=value.pId
-                // value.indDeliveryCycle=0
+                value.indDeliveryCycle= this.inPrice.indDeliveryCycle
                 value.indType=1
                 value.indNumber=parseInt(value.qdNumber)
                 value.indPrice=value.price
-                value.indIsDelivery=0
+                value.indIsDelivery=1
                 value.indDeliveryNum=2
                 value.qdRealTimePrice=parseInt(value.price)
                 let partPrince = parseInt(value.price)

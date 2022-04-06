@@ -59,12 +59,12 @@
       </el-table-column>
       <el-table-column prop="pId" label="序列号" width="80px" align="center" />
       <el-table-column prop="pNumber" label="零件号" width="120px" align="center" />
-      <el-table-column prop="pName" label="零件名" width="160px" align="center" />
-      <el-table-column prop="place.plName" label="产地或品牌" width="100px"  align="center"/>
+      <el-table-column prop="pName" label="零件名" width="130px" align="center" />
+      <el-table-column prop="place.plName" label="产地" width="60px"  align="center"/>
       <el-table-column prop="factory.fName" label="厂家" width="80px"  align="center"/>
       <el-table-column prop="unit.uName" label="单位" width="40px" align="center"/>
-      <el-table-column prop="pBuyingPrice" label="进价" width="100px"  align="center"/>
-      <el-table-column prop="pRealInventory" label="实际库存数" width="100px"  align="center"/>
+      <el-table-column prop="pBuyingPrice" label="进价" width="60px"  align="center"/>
+      <el-table-column prop="pRealInventory" label="库存数" width="80px"  align="center"/>
       <el-table-column prop="pictures" label="内部图片" width="200px" height="180px" align="center">
         <template slot-scope="scope">
           <div class="block" style="width: 180px;height: 180px">
