@@ -26,7 +26,7 @@
                 v-for="item in paymentWay"
                 :key="item.label"
                 :label="item.label"
-                :value="item.value"
+                :value="item.label"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -63,7 +63,7 @@
           <el-table-column label="进货方式" align="center" prop="sBuyWay"></el-table-column>
           <el-table-column label="支付方式" align="center">
             <template slot-scope="scope">
-              {{scope.row.sPaymentWay==='1'?'线上':'线下'}}
+              {{scope.row.sPaymentWay==='1'?'线上':(scope.row.sPaymentWay==='2'?'线下':scope.row.sPaymentWay)}}
             </template>
           </el-table-column>
           <el-table-column label="订单状态" align="center">
@@ -97,10 +97,10 @@
           <div class="partAccount" style="font-size: x-large">
             金额详细统计
           </div>
-          <div class="partAccount">
-            挂账应付(￥)：
-            <div class="accountNumber" style="color: red">{{accountDetail.chargeNumber}}</div>
-          </div>
+<!--          <div class="partAccount">-->
+<!--            挂账应付(￥)：-->
+<!--            <div class="accountNumber" style="color: red">{{accountDetail.chargeNumber}}</div>-->
+<!--          </div>-->
           <div class="partAccount">
             线上应付(￥)：
             <div class="accountNumber" style="color: red">{{accountDetail.onlineNumber}}</div>
@@ -180,6 +180,7 @@ export default {
   },
   methods: {
     getList(){
+      this.orderQuery.paymentWay = (this.orderQuery.paymentWay || null)
       console.log('orderQuery:')
       console.log(this.orderQuery)
       PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{

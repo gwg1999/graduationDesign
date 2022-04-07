@@ -27,7 +27,7 @@
                 v-for="item in paymentWay"
                 :key="item.label"
                 :label="item.label"
-                :value="item.value"
+                :value="item.label"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -64,6 +64,68 @@
           <el-table-column label="时间" align="center" prop="oCreateTime"></el-table-column>
           <el-table-column label="应收" align="center" prop="oSupposeIncome"></el-table-column>
           <el-table-column label="实收" align="center" prop="oRealIncome"></el-table-column>
+          <el-table-column type="expand" label="查看详情" width="100px">
+            <template slot-scope="props">
+              <el-form label-position="right" inline class="demo-table-expand" label-width="150px" >
+                <el-form-item label="创建人员:">
+                  <span>{{ props.row.createPeopleName }}</span>
+                </el-form-item>
+                <el-form-item label="仓库操作人员:">
+                  <span>{{ props.row.warehouseOperaterName }}</span>
+                </el-form-item>
+                <el-form-item label="应收价:">
+                  <span>{{ props.row.oSupposeIncome }}</span>
+                </el-form-item>
+                <el-form-item label="实收价:">
+                  <span>{{ props.row.oRealIncome }}</span>
+                </el-form-item>
+                <el-form-item label="支付方式:">
+                  <span>{{ props.row.oPaymentWay }}</span>
+                </el-form-item>
+                <el-form-item label="发货方式:">
+                  <span>{{ props.row.oDeliveryWay }}</span>
+                </el-form-item>
+                <el-form-item label="发票类型:">
+                  <span>{{ props.row.oInvoiceTypeId===0?'无':props.row.oInvoiceTypeId===1?'普通发票':'增值税发票' }}</span>
+                </el-form-item>
+                <el-form-item label="备忘录:">
+                  <span>{{ props.row.oNote }}</span>
+                </el-form-item>
+                <el-form-item label="客户其他费用总金额:">
+                  <span>{{ props.row.oOtherCostMoney }}</span>
+                </el-form-item>
+                <el-form-item label="支付订单编号:">
+                  <span>{{ props.row.oOrderNumber }}</span>
+                </el-form-item>
+                <el-form-item label="打包图片:"  style="width: 50%;height: 180px">
+                  <div class="demo-image__placeholder" style="width: 300px;height: 180px">
+                    <div class="block" style="width: 180px;height: 180px">
+                      <el-image :src="props.row.packageUrl"
+                                :preview-src-list="[props.row.packageUrl]"
+                                style="height:90%;width: 90%;padding-top: 10px;margin-left: 20px">
+                        <div slot="placeholder" class="image-slot">
+                          加载中<span class="dot">...</span>
+                        </div>
+                      </el-image>
+                    </div>
+                  </div>
+                </el-form-item>
+                <el-form-item label="发货图片:" style="width: 50%;height: 180px">
+                  <div class="demo-image__placeholder" style="width: 300px;height: 180px">
+                    <div class="block" style="width: 180px;height: 180px">
+                      <el-image :src="props.row.deliverUrl"
+                                :preview-src-list="[props.row.deliverUrl]"
+                                style="height:90%;width: 90%;padding-top: 10px;margin-left: 20px">
+                        <div slot="placeholder" class="image-slot">
+                          加载中<span class="dot">...</span>
+                        </div>
+                      </el-image>
+                    </div>
+                  </div>
+                </el-form-item>
+              </el-form>
+            </template>
+          </el-table-column>
 <!--          <el-table-column label="结清状态" align="center"></el-table-column>-->
         </el-table>
         <el-pagination
@@ -201,8 +263,10 @@ export default {
   },
   methods: {
     getList(){
+      this.orderQuery.paymentWay = (this.orderQuery.paymentWay || null)
       console.log('orderQuery:')
       console.log(this.orderQuery)
+
       PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{
         this.accountDetail = res
         console.log(res)
@@ -288,10 +352,21 @@ export default {
   /*margin-left: 10px;*/
   /*height: 60px;*/
 }
-/*.content-box{*/
-/*  position: absolute;*/
-/*  top: 60px;*/
-/*  bottom: 0px;*/
-/*  left: 10px;*/
-/*}*/
+.demo-table-expand {
+  border-top: 1px solid #000000;
+  border-left:1px solid #000000;
+  border-right:1px solid #000000;
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  border-bottom: 1px solid #000000;
+  border-right:1px solid #000000;
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>
