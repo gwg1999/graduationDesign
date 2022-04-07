@@ -32,7 +32,7 @@
                 :value="factory.fId"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="供货周期">
+          <el-form-item label="供货周期" prop="indDeliveryCycle">
             <el-select  v-model="inPrice.indDeliveryCycle" style="margin-left: 3px;width: 300px"  placeholder="请选择供货周期" clearable>
               <el-option v-for="item in cycleList"  :key="item.rcId" :label="`${item.rcAmount}${item.rcType}`" :value="item.rcAmount" ></el-option>
             </el-select>
@@ -67,7 +67,10 @@ export default {
       rules:{
         factoryId: [
           { required: true, message: '请选择客户厂家', trigger: 'change' }
-        ]
+        ],
+        indDeliveryCycle:[
+          { required: true, message: '请选择供货周期', trigger: 'change' }
+        ],
       }
     }
   },

@@ -37,7 +37,7 @@
               v-for="item in spaymentWay"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
+              :value="item.label">
             </el-option>
           </el-select>
         </el-form-item>
@@ -236,10 +236,6 @@ export default {
       },
       visible:false,
       spaymentWay:[
-        {
-          label:'挂账',
-          value:'0'
-        },
         {
           label:'线上',
           value:'1'

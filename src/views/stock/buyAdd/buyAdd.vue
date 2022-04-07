@@ -54,9 +54,19 @@
               v-for="item in spaymentWay"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
+              :value="item.label">
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="发票类型" >
+          <el-select v-model="priceSlip.sInvoiceType"   clearable placeholder="发票类型" style="width: 200px"  >
+            <el-option :value="0" label="无"/>
+            <el-option :value="1" label="普通发票"/>
+            <el-option :value="2" label="增值税发票"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="进货方式" >
+          <el-input  v-model="priceSlip.sBuyWay" style="width: 200px"/>
         </el-form-item>
         <el-form-item label="备注信息" prop="snote">
           <el-input v-model="priceSlip.snote" type="textarea"/>

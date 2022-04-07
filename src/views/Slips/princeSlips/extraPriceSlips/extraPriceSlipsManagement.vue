@@ -93,7 +93,7 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="订单id" v-show="ExtraPrice.type!==3" prop="orderId" style="width: 400px">
+          <el-form-item  label="订单id" v-show="flag" prop="orderId" style="width:300px">
             <el-select
               v-model="ExtraPrice.orderId"  filterable clearable placeholder="请选择订单"
              style="width: 400px">
@@ -130,12 +130,15 @@ import qs from "qs";
 export default {
   data(){
     return {
+      flag:false,
       //其他
       priceList:[],
       priceListOther:[],
       //其他费用添加弹框
       openAddExtraPriceDialog:false,
-      ExtraPrice:{},
+      ExtraPrice:{
+
+      },
       //列表总数
       total:0,
       ExtraPriceSheetBtnDisabled:false,
@@ -153,7 +156,11 @@ export default {
         ],
         type:[
           {required:true,message:'请选择订单类型',trigger:"change"}
-        ]
+        ],
+        orderId:
+          [
+            {required:true,message:'请选择订单id',trigger:"change"}
+          ],
       }
 
     }
@@ -168,8 +175,11 @@ export default {
       this.$router.push({path:'/Slips/extraPriceSlipsDetails',query:{orderId:params.orderId,type:params.type}})
     },
     slipsSelect(params){
+      this.ExtraPrice.orderId=undefined
+      this.ExtraPrice=JSON.parse(JSON.stringify(this.ExtraPrice))
       if(params===0){
         new Promise((resolve,reject)=>{
+          this.flag=true
           princeSlips.queryAll(this.queryPrinceSheet.name,this.queryPrinceSheet.beginTime
             ,this.queryPrinceSheet.endTime,0,
             0, 1,
@@ -180,8 +190,9 @@ export default {
         }).then(res=>{
           this.priceList=res
         })
-      }else{
+      }else if(params===1){
         new Promise((resolve,reject)=>{
+          this.flag=true
           PostData('/stock/queryStock',qs.stringify({pageSize: 100000,
             pageNum: 1}))
             .then(res=>{
@@ -193,6 +204,8 @@ export default {
         }).then(res=>{
           this.priceList=res
         })
+      }else{
+        this.flag=false
       }
     },
     //添加其他费用
