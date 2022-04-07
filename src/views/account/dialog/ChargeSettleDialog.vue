@@ -111,6 +111,11 @@ export default {
 
     chargeSearch(page){
       this.chargeQuery.pageNum = page
+      console.log(this.chargeQuery)
+      if(this.tempDate){
+        this.chargeQuery.startTime = parseTime(this.tempDate[0], '{y}-{m}-{d}')
+        this.chargeQuery.endTime = parseTime(this.tempDate[1], '{y}-{m}-{d}')
+      }
       PostData('/bill/getChargeSettleList', this.chargeQuery).then(res=>{
         console.log(res)
         this.pageTotal = res.total

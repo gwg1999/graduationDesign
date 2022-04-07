@@ -181,6 +181,10 @@ export default {
   methods: {
     getList(){
       this.orderQuery.paymentWay = (this.orderQuery.paymentWay || null)
+      if(this.tempDate){
+        this.orderQuery.startTime = parseTime(this.tempDate[0],'{y}-{m}-{d}')
+        this.orderQuery.endTime = parseTime(this.tempDate[1],'{y}-{m}-{d}')
+      }
       console.log('orderQuery:')
       console.log(this.orderQuery)
       PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{

@@ -266,7 +266,10 @@ export default {
       this.orderQuery.paymentWay = (this.orderQuery.paymentWay || null)
       console.log('orderQuery:')
       console.log(this.orderQuery)
-
+      if(this.tempDate){
+        this.orderQuery.startTime = parseTime(this.tempDate[0],'{y}-{m}-{d}')
+        this.orderQuery.endTime = parseTime(this.tempDate[1],'{y}-{m}-{d}')
+      }
       PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{
         this.accountDetail = res
         console.log(res)
@@ -319,8 +322,8 @@ export default {
   width: 80%;
   float: left;
   /*border-right: solid black 1px;*/
-  height: 100%;
-
+  /*height: 100%;*/
+  max-height: 400px;
 }
 .total-box{
   overflow: hidden;
