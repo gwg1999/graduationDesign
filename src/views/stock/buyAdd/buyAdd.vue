@@ -54,7 +54,7 @@
               v-for="item in spaymentWay"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
+              :value="item.label">
             </el-option>
           </el-select>
         </el-form-item>
