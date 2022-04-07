@@ -21,9 +21,9 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="交易类型">
-            <el-select v-model="orderQuery.dealType" placeholder="请选择类型" clearable>
+            <el-select v-model="orderQuery.paymentWay" placeholder="请选择类型" clearable>
               <el-option
-                v-for="item in dealType"
+                v-for="item in paymentWay"
                 :key="item.label"
                 :label="item.label"
                 :value="item.value"
@@ -57,10 +57,26 @@
               {{ (orderQuery.pageNum - 1) * orderQuery.pageSize + scope.$index + 1 }}
             </template>
           </el-table-column>
-          <el-table-column label="支付方式" align="center" prop="sPaymentWay"></el-table-column>
-          <el-table-column label="时间" align="center" prop="oCreateTime"></el-table-column>
-          <el-table-column label="应付" align="center" prop="sPrice"></el-table-column>
-          <el-table-column label="实付" align="center" prop="sRealIncome"></el-table-column>
+
+          <el-table-column label="时间" align="center" prop="sCreateTime"></el-table-column>
+          <el-table-column label="总价" align="center" prop="sPrice"></el-table-column>
+          <el-table-column label="进货方式" align="center" prop="sBuyWay"></el-table-column>
+          <el-table-column label="支付方式" align="center">
+            <template slot-scope="scope">
+              {{scope.row.sPaymentWay==='1'?'线上':'线下'}}
+            </template>
+          </el-table-column>
+          <el-table-column label="订单状态" align="center">
+            <template slot-scope="scope">
+              <el-tag :type="scope.row.sStatus===1?'danger':'success'">{{scope.row.sStatus===1?'未发货':'已发货'}}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="支付状态" align="center">
+            <template slot-scope="scope">
+              <el-tag :type="scope.row.sIsPayment===0?'danger':'success'">{{scope.row.sIsPayment===0?'未付':'已付'}}</el-tag>
+            </template>
+          </el-table-column>
+
           <!--          <el-table-column label="结清状态" align="center"></el-table-column>-->
         </el-table>
         <el-pagination
@@ -129,14 +145,14 @@ export default {
         customerId: null,
         name: null,
         closeStatus: 2,
-        dealType: null,  // 交易类型：线上，线下
+        paymentWay: null,  // 交易类型：线上，线下
         orderType: 1,  // 订单类型：进货单
         pageSize: 10,
         pageNum: 1,
         startTime: null,
         endTime: null,
       },
-      dealType: [
+      paymentWay: [
         {
           label: '线上',
           value: 1
@@ -169,7 +185,7 @@ export default {
       PostData('/bill/getBillOrderList', this.orderQuery).then(res=>{
         this.accountDetail = res
         for(let index in this.accountDetail){
-          if(this.accountDetail[index] instanceof Number){
+          if('number'=== typeof this.accountDetail[index]){
             this.accountDetail[index] = Math.abs(this.accountDetail[index])
           }
         }
@@ -177,7 +193,7 @@ export default {
         let temp = JSON.parse(res.stocks)
         this.orders = temp.list
         for(let order of this.orders){
-          order.oCreateTime = parseTime(order.oCreateTime,'{y}-{m}-{d} {h}:{i}:{s}')
+          order.sCreateTime = parseTime(order.sCreateTime,'{y}-{m}-{d} {h}:{i}:{s}')
         }
         this.pageTotal = temp.total
         console.log(temp)
@@ -202,7 +218,8 @@ export default {
     handleSelect(item){
       console.log('selectItem:')
       console.log(item)
-      this.orderQuery.customerId = item.cuId
+      this.orderQuery.factoryId = item.fId
+      // this.orderQuery.customerId = item.fId
     },
   },
 }

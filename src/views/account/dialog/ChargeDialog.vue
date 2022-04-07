@@ -22,7 +22,7 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="chargeSearch">查询</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="chargeSearch(1)">查询</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -109,7 +109,9 @@ export default {
       console.log('测试')
     },
     // 搜索挂账交易记录信息
-    chargeSearch(){
+    chargeSearch(page=1){
+      console.log(page)
+      this.chargeQuery.pageNum = page
       if(this.tempDate){
         this.chargeQuery.startTime = parseTime(this.tempDate[0], '{y}-{m}-{d}')
         this.chargeQuery.endTime = parseTime(this.tempDate[1], '{y}-{m}-{d}')

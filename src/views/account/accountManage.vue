@@ -22,9 +22,9 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item label="交易类型">
-            <el-select v-model="orderQuery.dealType" placeholder="请选择类型" clearable>
+            <el-select v-model="orderQuery.paymentWay" placeholder="请选择类型" clearable>
               <el-option
-                v-for="item in dealType"
+                v-for="item in paymentWay"
                 :key="item.label"
                 :label="item.label"
                 :value="item.value"
@@ -152,7 +152,7 @@ export default {
         customerId: null,
         name: null,
         closeStatus: 2,
-        dealType: null,  // 交易类型：挂账，线上，线下
+        paymentWay: null,  // 交易类型：挂账，线上，线下
         orderType: 0,  // 订单类型：销售单
         pageSize: 10,
         pageNum: 1,
@@ -169,7 +169,7 @@ export default {
           value: 1
         }
       ],
-      dealType: [
+      paymentWay: [
         {
           label: '挂账',
           value: 0
