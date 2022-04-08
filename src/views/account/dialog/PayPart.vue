@@ -198,8 +198,10 @@ export default {
     // 挂账结算查询
     creditPartSearch(){
       if(this.tempDate1){
-        this.creditPartCondition.beginTime = parseTime(this.tempDate1[0],'{y}-{m}-{d}')
+        this.creditPartCondition.startTime = parseTime(this.tempDate1[0],'{y}-{m}-{d}')
         this.creditPartCondition.endTime = parseTime(this.tempDate1[1],'{y}-{m}-{d}')
+      }else{
+        this.creditPartCondition.startTime = this.creditPartCondition.endTime = null
       }
       console.log(this.creditPartCondition)
       PostData('/order/getOrderByObject', qs.stringify(this.creditPartCondition)).then(res=>{

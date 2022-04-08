@@ -48,6 +48,7 @@
           border
           fit
           highlight-current-row
+          height="30rem"
           style="width: 100%">
           <el-table-column
             label="序号"
@@ -184,6 +185,8 @@ export default {
       if(this.tempDate){
         this.orderQuery.startTime = parseTime(this.tempDate[0],'{y}-{m}-{d}')
         this.orderQuery.endTime = parseTime(this.tempDate[1],'{y}-{m}-{d}')
+      }else{
+        this.orderQuery.startTime = this.orderQuery.endTime = null
       }
       console.log('orderQuery:')
       console.log(this.orderQuery)

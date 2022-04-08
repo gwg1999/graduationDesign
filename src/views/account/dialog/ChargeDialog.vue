@@ -115,6 +115,8 @@ export default {
       if(this.tempDate){
         this.chargeQuery.startTime = parseTime(this.tempDate[0], '{y}-{m}-{d}')
         this.chargeQuery.endTime = parseTime(this.tempDate[1], '{y}-{m}-{d}')
+      }else{
+        this.chargeQuery.startTime = this.chargeQuery.endTime = null
       }
       if(!this.chargeQuery.customId){
         this.$message.warning('请选择客户后再次搜索')

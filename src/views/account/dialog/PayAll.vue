@@ -179,6 +179,8 @@ export default {
         this.creditAllCondition.startTime = parseTime(this.tempDate2[0], '{y}-{m}-{d}')
         this.creditAllCondition.endTime = parseTime(this.tempDate2[1], '{y}-{m}-{d}')
         console.log(this.creditAllCondition)
+      }else{
+        this.creditAllCondition.startTime = this.creditAllCondition.endTime = null
       }
       if(!this.creditAllCondition.name){
         this.$message.warning('请选择客户后搜索')
