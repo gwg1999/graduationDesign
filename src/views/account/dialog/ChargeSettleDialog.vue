@@ -60,6 +60,22 @@
         <el-button type="primary" @click="chargeClose">确认</el-button>
       </div>
     </el-dialog>
+
+    <div>
+      <el-dialog width="30%" title="订单信息" :visible.sync="chargeListVisible" append-to-body>
+        <el-table
+          fit
+          stripe
+          highlight-current-row
+          :data="chargeListData"
+          height="20rem"
+          ref="orderTable1">
+          <el-table-column label="订单号"></el-table-column>
+          <el-table-column label="时间"></el-table-column>
+          <el-table-column label="发货方式"></el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -82,6 +98,8 @@ export default {
       chargeSettleData: [],
       tempDate: null,
       pageTotal: 0,
+      chargeListData: [],
+      chargeListVisible:false,
     }
   },
   props: {

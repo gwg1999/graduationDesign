@@ -46,6 +46,7 @@
               <el-tag :type="scope.row.oStatus===1?'info':'success'">{{scope.row.oStatus===1?'未发货':'已发货'}}</el-tag>
             </template>
           </el-table-column>
+
         </el-table>
 <!--        <el-pagination-->
 <!--          layout="total, prev, pager, next, jumper"-->
@@ -60,7 +61,6 @@
         <el-button type="primary" @click="creditPartCancel">取消</el-button>
         <el-button type="primary" @click="creditPartConfirm">确认</el-button>
       </div>
-
 
       <el-dialog width="30%" title="结算金额" :visible.sync="innerVisible" append-to-body>
         <el-form label-width="60px" :rules="creditPartRules" :model="chargeInfo.charge" ref="payForm">

@@ -38,6 +38,11 @@
           <el-table-column label="应收" align="center" prop="supposeIncome"></el-table-column>
           <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
           <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
+          <el-table-column type="expand">
+            <template slot="scope">
+
+            </template>
+          </el-table-column>
         </el-table>
       </div>
       <div style="text-align: right;margin-top: 10px">

@@ -45,6 +45,11 @@
           <el-table-column label="应收" align="center" prop="supposeIncome"></el-table-column>
           <el-table-column label="实收" align="center" prop="realIncome"></el-table-column>
           <el-table-column label="已收" align="center" prop="alreadyIncome"></el-table-column>
+          <el-table-column align="center" width="60" label="详情">
+            <template slot-scope="scope">
+              <el-button type="text" icon="el-icon-info" circle @click="showOrderList(scope.$index)"></el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <el-pagination
           layout="total, prev, pager, next, jumper"
@@ -60,6 +65,22 @@
         <el-button type="primary" @click="chargeClose">确认</el-button>
       </div>
     </el-dialog>
+
+    <div>
+      <el-dialog width="30%" title="订单信息" :visible.sync="orderVisible" append-to-body>
+        <el-table
+          fit
+          stripe
+          highlight-current-row
+          :data="orderListData"
+          height="20rem"
+          ref="orderTable1">
+          <el-table-column label="订单号"></el-table-column>
+          <el-table-column label="时间"></el-table-column>
+          <el-table-column label="发货方式"></el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -90,6 +111,8 @@ export default {
       },
       pageTotal: 0,
       dialogVisible: false,
+      orderVisible: false,
+      orderListData: [],
     }
   },
   props: {
@@ -105,9 +128,22 @@ export default {
     }
   },
   methods: {
-    test(){
-      console.log('测试')
+
+    showOrderList(index){
+      let creditDeal = JSON.parse(JSON.stringify(this.chargeData[index]))
+      this.orderVisible = true
+      console.log(creditDeal)
+      let data = {
+        orderType: 0,
+        pageSize:10000,
+        pageNum:1,
+        creditDealId: creditDeal.id
+      }
+      // PostData('bill/getChargeOrderList',data).then((res)=>{
+      //   console.log(res)
+      // })
     },
+
     // 搜索挂账交易记录信息
     chargeSearch(page=1){
       console.log(page)
