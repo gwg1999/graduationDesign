@@ -1,4 +1,4 @@
-import {  constantRoutes } from '@/router'
+import {asyncRoutes, constantRoutes} from '@/router'
 // import sAdministrator from '../../router/modules/sAdministrator'
 // import buyer from '../../router/modules/buyer'
 // import sale from '../../router/modules/sale'
@@ -77,11 +77,15 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
+      console.log('roles')
+      console.log(roles)
       if (roles.includes('admin')) {
         accessedRoutes = asyncRoutes || []
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
+      console.log('accessedRoutes:')
+      console.log(accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })

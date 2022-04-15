@@ -8,7 +8,7 @@ const state = {
   name: 'admin',
   avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
   introduction: 'I am a super administrator',
-  roles: ['admin'],
+  roles: [],
   info:{}
 }
 
@@ -44,13 +44,14 @@ const actions = {
         // this.$router.replace('/')
         // console.log("enter login")
      // login({ aUsername: aUsername.trim(), aPassword: aPassword.trim()})
-        this.roles=response
+        this.roles = response
+        console.log('response')
         // console.log(response)
         Cookie.set('aId',response.aId)
         // console.log('aId:'+response.aId)
         // console.log('response:'+response)
         commit('SET_INFO',response)
-        // commit('SET_ROLES','admin')
+        // commit('SET_ROLES',['admin'])
         // commit('SET_ROLES',response.aPermission)
         if(this.roles.length===0){
           alert('账号或者密码错误，请重新输入')
@@ -79,28 +80,30 @@ const actions = {
   },
 
   // get user info
-  //getInfo({commit, state }) {
-   // return new Promise((resolve, reject) => {
+  getInfo({commit, state }) {
+   return new Promise((resolve, reject) => {
+     commit('SET_ROLES',['admin'])
+     resolve()
      // getInfo(state.token).then(response => {
-       // const { data } = response
-
-       // if (!data) {
-        //  reject('Verification failed, please Login again.')
-       // }
-
-       // const { roles, name, avatar, introduction } = data
-
-        // roles must be a non-empty array
-       // if (!roles || roles.length <= 0) {
-       //   reject('getInfo: roles must be a non-null array!')
-      //  }
-
-
+     //   const { data } = response
+     //
+     //   if (!data) {
+     //     reject('Verification failed, please Login again.')
+     //   }
+     //
+     //   const { roles, name, avatar, introduction } = data
+     //
+     //    // roles must be a non-empty array
+     //   if (!roles || roles.length <= 0) {
+     //     reject('getInfo: roles must be a non-null array!')
+     //   }
+     //
+     //
      // }).catch(error => {
      //   reject(error)
      // })
-   // })
-  //},
+   })
+  },
 
   // user logout
   logout({ commit, state, dispatch }) {
