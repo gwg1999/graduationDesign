@@ -64,6 +64,7 @@ export default {
         animation-timing-function: linear;
         animation-fill-mode: forwards;
         animation-delay: 1s;
+        animation-iteration-count: infinite;
       }
       &.mid {
         width: 46px;
@@ -75,6 +76,7 @@ export default {
         animation-timing-function: linear;
         animation-fill-mode: forwards;
         animation-delay: 1.2s;
+        animation-iteration-count: infinite;
       }
       &.right {
         width: 62px;
@@ -86,6 +88,7 @@ export default {
         animation-timing-function: linear;
         animation-fill-mode: forwards;
         animation-delay: 1s;
+        animation-iteration-count: infinite;
       }
       @keyframes cloudLeft {
         0% {

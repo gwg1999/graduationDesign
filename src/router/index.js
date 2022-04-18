@@ -80,7 +80,7 @@ export const constantRoutes=[
     hidden: true
   },
 
-  { path: '*', redirect: '/404', hidden: true }
+  // { path: '*', redirect: '/404', hidden: true }
 ]
 
 export const asyncRoutes=[
@@ -103,7 +103,27 @@ export const asyncRoutes=[
         meta: {title:'测试页',icon:'dashboard'}
       }
     ]
-  }
+  },
+  {
+    path: '/security',
+    component: Layout,
+    redirect: '/security/index',
+    alwaysShow: true,
+    name: 'Security',
+    meta: {
+      title: 'Permission',
+      icon: 'lock',
+      roles: ['manager']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/managerPage/SecurityPage'),
+        name: 'SecurityPage',
+        meta: {title:'安全'}
+      }
+    ]
+  },
 ]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
