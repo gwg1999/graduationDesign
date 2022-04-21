@@ -55,25 +55,25 @@
 
       </el-tab-pane>
 <!--      <el-tab-pane key="tab2" tab="手机号登陆">-->
-        <el-tab-pane label="短信登录" name="second" :key="'second'">
-          <un-processed v-if="isSecond"/>
-          <el-form-item prop="mobile">
-                <span class="svg-container">
-                  <svg-icon icon-class="user" />
-                </span>
-            <el-input ref="mobile" v-model="loginForm.mobile" placeholder="请输入手机号" name="mobile" type="text" tabindex="1" auto-complete="on"/>
-          </el-form-item>
-          <el-form-item prop="code">
-                <span class="svg-container">
-                  <svg-icon icon-class="password" />
-                </span>
-            <el-input ref="code" v-model="loginForm.code" type="text" placeholder="请输入验证码" name="code" abindex="2" maxlength="6" auto-complete="on" @keyup.enter.native="handleLogin" />
-            <span class="show-pwd">
-                  <el-button :loading="sending" :disabled="sendDisabled" size="small" @click="onSendSms">{{sendButtonText}}</el-button>
-                </span>
-          </el-form-item>
-          <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-        </el-tab-pane>
+<!--        <el-tab-pane label="短信登录" name="second" :key="'second'">-->
+<!--          <un-processed v-if="isSecond"/>-->
+<!--          <el-form-item prop="mobile">-->
+<!--                <span class="svg-container">-->
+<!--                  <svg-icon icon-class="user" />-->
+<!--                </span>-->
+<!--            <el-input ref="mobile" v-model="loginForm.mobile" placeholder="请输入手机号" name="mobile" type="text" tabindex="1" auto-complete="on"/>-->
+<!--          </el-form-item>-->
+<!--          <el-form-item prop="code">-->
+<!--                <span class="svg-container">-->
+<!--                  <svg-icon icon-class="password" />-->
+<!--                </span>-->
+<!--            <el-input ref="code" v-model="loginForm.code" type="text" placeholder="请输入验证码" name="code" abindex="2" maxlength="6" auto-complete="on" @keyup.enter.native="handleLogin" />-->
+<!--            <span class="show-pwd">-->
+<!--                  <el-button :loading="sending" :disabled="sendDisabled" size="small" @click="onSendSms">{{sendButtonText}}</el-button>-->
+<!--                </span>-->
+<!--          </el-form-item>-->
+<!--          <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>-->
+<!--        </el-tab-pane>-->
       </el-tabs>
     </el-form>
 

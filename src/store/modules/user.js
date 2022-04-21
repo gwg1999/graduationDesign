@@ -46,7 +46,7 @@ const actions = {
      // login({ aUsername: aUsername.trim(), aPassword: aPassword.trim()})
         this.roles = response
         console.log('response')
-        // console.log(response)
+        console.log(response)
         Cookie.set('aId',response.aId)
         // console.log('aId:'+response.aId)
         // console.log('response:'+response)
@@ -82,7 +82,7 @@ const actions = {
   // get user info
   getInfo({commit, state }) {
    return new Promise((resolve, reject) => {
-     commit('SET_ROLES',['admin'])
+     commit('SET_ROLES',['teacher'])
      resolve()
      // getInfo(state.token).then(response => {
      //   const { data } = response

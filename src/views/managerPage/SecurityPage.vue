@@ -6,6 +6,9 @@
           <el-input v-model="securityQuery.location"></el-input>
         </el-form-item>
         <el-form-item>
+
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" @click="getSecurityList">查询</el-button>
         </el-form-item>
       </el-form>
@@ -14,7 +17,7 @@
       <el-table fit highlight-current-row max-height="30rem" :data="securityData" border>
         <el-table-column align="center" width="80">
           <template v-slot="scope">
-            {{scope.$index+1}}
+            {{scope}}
           </template>
         </el-table-column>
         <el-table-column label="汇报人" prop="findPerson" align="center"></el-table-column>

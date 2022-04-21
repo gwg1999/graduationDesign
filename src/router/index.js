@@ -124,6 +124,26 @@ export const asyncRoutes=[
       }
     ]
   },
+  {
+    path: '/equipment',
+    component: Layout,
+    redirect: '/equipment/index',
+    alwaysShow: true,
+    name: 'Security',
+    meta: {
+      title: 'Equipment',
+      icon: 'lock',
+      roles: ['manager','teacher']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/Equipment/EquipmentManage'),
+        name: 'EquipmentPage',
+        meta: {title:'设备'}
+      }
+    ]
+  },
 ]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
