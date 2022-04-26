@@ -66,6 +66,33 @@ export const constantRoutes=[
     ]
   },
 
+  {
+    path: '/library',
+    component: Layout,
+    redirect: '/library/index',
+    alwaysShow: true,
+    name: 'Library',
+    meta: {
+      title: 'Library',
+      icon: 'lock'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/LibraryPage/libraryPage'),
+        name: 'library',
+        meta: {title:'实验室信息',icon:'dashboard'}
+      },
+      {
+        path: 'libraryInfo',
+        hidden: true,
+        component: () => import('@/views/LibraryPage/libraryPage'),
+        meta: {title: '实验室预定', icon: 'dashboard'},
+        name: 'libSchedule'
+      }
+    ]
+  },
+
 
 
   {
@@ -85,35 +112,15 @@ export const constantRoutes=[
 
 export const asyncRoutes=[
   {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/page',
-    alwaysShow: true,
-    name: 'Permission',
-    meta: {
-      title: 'Permission',
-      icon: 'lock',
-      roles: ['student']
-    },
-    children: [
-      {
-        path: 'page',
-        component: () => import('@/views/managerPage/PermissionTest'),
-        name: 'test',
-        meta: {title:'测试页',icon:'dashboard'}
-      }
-    ]
-  },
-  {
     path: '/security',
     component: Layout,
     redirect: '/security/index',
     alwaysShow: true,
     name: 'Security',
     meta: {
-      title: 'Permission',
+      title: 'Security',
       icon: 'lock',
-      roles: ['manager']
+      roles: ['manager','teacher']
     },
     children: [
       {
@@ -129,7 +136,7 @@ export const asyncRoutes=[
     component: Layout,
     redirect: '/equipment/index',
     alwaysShow: true,
-    name: 'Security',
+    name: 'equipment',
     meta: {
       title: 'Equipment',
       icon: 'lock',
@@ -141,6 +148,66 @@ export const asyncRoutes=[
         component: () => import('@/views/Equipment/EquipmentManage'),
         name: 'EquipmentPage',
         meta: {title:'设备'}
+      }
+    ]
+  },
+  {
+    path: '/staffManage',
+    component: Layout,
+    redirect: '/staffManage/index',
+    alwaysShow: true,
+    name: 'staffManage',
+    meta: {
+      title: '人员管理',
+      icon: 'lock',
+      roles: ['manager','teacher']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/staffManage/staffManage'),
+        name: 'staffManage',
+        meta: { title: '人员管理'}
+      }
+    ]
+  },
+  {
+    path: '/report',
+    component: Layout,
+    redirect: '/report/index',
+    alwaysShow: true,
+    name: 'report',
+    meta: {
+      title: '报告批改',
+      icon: 'lock',
+      roles: ['manager','teacher']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/reportCorrecting/index'),
+        name: 'staffManage',
+        meta: { title: '报告批改'}
+      }
+    ]
+  },
+  {
+    path: '/uploadReport',
+    component: Layout,
+    redirect: '/uploadReport/index',
+    alwaysShow: true,
+    name: 'uploadReport',
+    meta: {
+      title: '报告上传',
+      icon: 'lock',
+      roles: ['manager','teacher']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/reportCorrecting/uploadReport'),
+        name: 'uploadReport',
+        meta: { title: '报告上传'}
       }
     ]
   },

@@ -2,11 +2,13 @@
   <div>
     <div class="formBox">
       <el-form :inline="true">
-        <el-form-item>
+        <el-form-item label="实验室位置">
           <el-input v-model="securityQuery.location"></el-input>
         </el-form-item>
         <el-form-item>
+        <el-form-item label="状态">
 
+        </el-form-item>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="getSecurityList">查询</el-button>

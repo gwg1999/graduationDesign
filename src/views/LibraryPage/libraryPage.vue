@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="formBox">
+    <div class="formBox" style="padding: 10px">
       <el-form :inline="true">
         <el-form-item>
 
@@ -13,14 +13,25 @@
 
     <div class="tableBox">
       <el-table :data="libraryData" fit highlight-current-row border>
-        <el-table-column>
+        <el-table-column width="80" align="center">
           <template v-slot="scope">
             {{scope.$index+1}}
           </template>
         </el-table-column>
-        <el-table-column label="位置" align="center" prop="libraryLoc"></el-table-column>
+        <el-table-column label="位置" align="center">
+          <template v-slot="scope">
+            {{scope.row.buildingLoc}}-{{scope.row.classroomLoc}}
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center" prop="status">
+          <template v-slot="scope">
+            <div>
+              <el-tag :type="tagDic[scope.row.status].type">{{tagDic[scope.row.status].str}}</el-tag>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="当前人数" align="center" prop="presentNum"></el-table-column>
-        <el-table-column>
+        <el-table-column label="操作" align="center">
           <template v-slot="scope">
             <div>
               <el-button type="primary" v-if="roles==='manager'" @click="modifyLib(scope.$index)">修改信息</el-button>
@@ -31,17 +42,37 @@
         </el-table-column>
       </el-table>
     </div>
+
+    <div>
+      <el-dialog :visible.sync="dialogVisible" title="实验室信息">
+
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+
 export default {
   name: "libraryPage",
   data(){
     return {
-      libraryData: [],
+      libraryData: [
+        {
+          buildingLoc: '七教',
+          classroomLoc: '402',
+          presentNum: 0,
+          status: 1,
+        }
+      ],
       libraryQuery: {},
-      roles: this.$store.getters.roles[0]
+      roles: this.$store.getters.roles[0],
+      library: {},
+      tagDic: [
+        {type:'info',str: '维修中'},
+        {type: 'success', str: '空闲'},
+        {type: 'warning', str: '占用中'},
+      ]
     }
   },
   created(){
@@ -65,7 +96,7 @@ export default {
       console.log(this.roles)
     },
     modifyLib(index){
-      let lib = JSON.parse(JSON.stringify(this.libraryData[index]))
+      this.library = JSON.parse(JSON.stringify(this.libraryData[index]))
 
     },
   }
