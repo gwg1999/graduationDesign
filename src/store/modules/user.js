@@ -40,14 +40,15 @@ const actions = {
   //  const { aUsername, aPassword } = userInfo
 
     return new Promise((resolve, reject) => {
-      PostData('admin/login',userInfo).then(response => {
+      PostData('user/login',userInfo).then(response => {
         // this.$router.replace('/')
         // console.log("enter login")
      // login({ aUsername: aUsername.trim(), aPassword: aPassword.trim()})
-        this.roles = response
+        this.roles = response.roles
         console.log('response')
         console.log(response)
-        Cookie.set('aId',response.aId)
+        Cookie.set('aId',response.index)
+        localStorage.setItem('id',response.index)
         // console.log('aId:'+response.aId)
         // console.log('response:'+response)
         commit('SET_INFO',response)

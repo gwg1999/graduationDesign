@@ -148,6 +148,13 @@ export const asyncRoutes=[
         component: () => import('@/views/Equipment/EquipmentManage'),
         name: 'EquipmentPage',
         meta: {title:'设备'}
+      },
+      {
+        path: 'info',
+        component: () => import('@/views/Equipment/borrowRecord'),
+        name: 'EquipmentInfo',
+        hidden: true,
+        meta: { title: '设备信息'}
       }
     ]
   },

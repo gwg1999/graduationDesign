@@ -2,8 +2,11 @@
   <div>
     <div class="formBox" style="padding: 10px">
       <el-form :inline="true">
-        <el-form-item>
-
+        <el-form-item label="楼号">
+          <el-input v-model="libraryQuery.buildingLoc"></el-input>
+        </el-form-item>
+        <el-form-item label="教室号">
+          <el-input v-model="libraryQuery.classroomLoc"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="getLibraryList(1)">查询</el-button>
@@ -53,6 +56,8 @@
 
 <script>
 
+import {PostData} from "@/api";
+
 export default {
   name: "libraryPage",
   data(){
@@ -65,7 +70,10 @@ export default {
           status: 1,
         }
       ],
-      libraryQuery: {},
+      libraryQuery: {
+        buildingLoc: null,
+        classroomLoc: null,
+      },
       roles: this.$store.getters.roles[0],
       library: {},
       tagDic: [
@@ -90,7 +98,10 @@ export default {
     },
 
     getLibraryList(page=1){
-      console.log(page)
+      this.libraryQuery.pageNum = page
+      PostData('/library/getAll',this.libraryQuery).then(res=>{
+        this.libraryData = res
+      })
     },
     scheduleLib(){
       console.log(this.roles)

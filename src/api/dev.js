@@ -1,11 +1,11 @@
 const dev = {
-  baseUrl: "http://www.aishuhong.com:11531/api",
+  baseUrl: "http://localhost:7001",
   // baseUrl: "http://ip地址:9001/api",
   // cdnUrl:"开发环境的cdn地址",
 };
 
 const uat = {
-  baseUrl: "http://www.aishuhong.com:11531/api",
+  baseUrl: "http://localhost:7001",
   // cdnUrl:"测试环境cdn地址"
 };
 
