@@ -84,11 +84,18 @@ export const constantRoutes=[
         meta: {title:'实验室信息',icon:'dashboard'}
       },
       {
-        path: 'libraryInfo',
+        path: 'libraryReserve',
         hidden: true,
-        component: () => import('@/views/LibraryPage/libraryPage'),
+        component: () => import('@/views/LibraryPage/libraryReserve'),
         meta: {title: '实验室预定', icon: 'dashboard'},
-        name: 'libSchedule'
+        name: 'libraryReserve'
+      },
+      {
+        path: 'libraryReserveManage',
+        hidden: true,
+        component: () => import('@/views/LibraryPage/libraryReserveManage'),
+        meta: {title: '实验室预定管理', icon: 'dashboard'},
+        name: 'libraryReserveManage',
       }
     ]
   },
@@ -127,10 +134,18 @@ export const asyncRoutes=[
         path: 'index',
         component: () => import('@/views/managerPage/SecurityPage'),
         name: 'SecurityPage',
-        meta: {title:'安全'}
+        meta: {title:'安全',roles: ['manager','teacher']}
+      },
+      {
+        path: 'submit',
+        component: () => import('@/views/managerPage/submitSecurity'),
+        name: 'submitSecurity',
+        meta: {title:'安全汇报',roles: ['manager','teacher']}
       }
     ]
   },
+
+
   {
     path: '/equipment',
     component: Layout,
