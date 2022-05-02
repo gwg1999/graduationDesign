@@ -33,15 +33,26 @@
             {{scope.row.library.building_loc+'-'+scope.row.library.classroom_loc}}
           </template>
         </el-table-column>
+        <el-table-column label="实验室介绍" align="center">
+          <template v-slot="scope">
+            <p style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{scope.row.library.notes}}</p>
+          </template>
+        </el-table-column>
       </el-table>
-      <el-pagination
-        layout="total,prev,pager,next"
-        :total="total"
-        :page-size="reserveQuery.pageSize"
-        :current-page="reserveQuery.pageNum"
-        @current-change="getAllReserve"
-        class="pagination"
-      ></el-pagination>
+      <div style="overflow: hidden">
+        <el-pagination
+          layout="total,prev,pager,next"
+          :total="total"
+          :page-size="reserveQuery.pageSize"
+          :current-page="reserveQuery.pageNum"
+          @current-change="getAllReserve"
+          class="pagination"
+        ></el-pagination>
+      </div>
+
+      <div style="overflow: hidden">
+        <el-button type="primary" style="float: right" @click="turnBack()">返回</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -94,6 +105,10 @@ export default {
         console.log(res)
       })
     },
+
+    turnBack(){
+      this.$router.push('/library/index')
+    }
   }
 }
 </script>

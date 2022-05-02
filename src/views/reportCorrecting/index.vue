@@ -23,11 +23,11 @@
             {{scope.$index}}
           </template>
         </el-table-column>
-        <el-table-column label="课程名" align="center" prop="courseName"></el-table-column>
-        <el-table-column label="学生名" align="center" prop="studentName"></el-table-column>
-        <el-table-column label="报告文件" align="center">
+        <el-table-column label="课程名" align="center" prop="course.courseName"></el-table-column>
+        <el-table-column label="学生名" align="center" prop="student.username"></el-table-column>
+        <el-table-column label="报告文件(点击下载)" align="center">
           <template v-slot="scope">
-            <a :href="scope.row.baseURL" :download="scope.row.fileName">{{scope.row.fileName}}</a>
+            <a :href="scope.row.filePath" :download="scope.row.fileName">{{scope.row.fileName}}</a>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
@@ -36,6 +36,17 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <div style="overflow: hidden">
+        <el-pagination
+          layout="total,prev,pager,next"
+          :total="total"
+          :page-size="reportQuery.pageSize"
+          :current-page="reportQuery.pageNum"
+          @current-change="getReportList"
+          class="pagination"
+        ></el-pagination>
+      </div>
     </div>
 
 
@@ -52,28 +63,26 @@
 </template>
 
 <script>
+import {PostData} from "@/api";
+
 export default {
   name: "index",
   data(){
     return {
       reportQuery: {},
-      reportData:[
-        {
-          courseName: '测试1',
-          studentName: '张三',
-          fileName: '测试文件'
-        }
-      ],
+      reportData:[],
       dialogVisible: false,
       formData: {},
+      total: 0,
     }
   },
   created(){
     this.reportQuery = new this.queryObject()
+    this.getReportList(1)
   },
   methods: {
     queryObject(){
-      this.teacherId = localStorage.getItem('teacherId') || ''
+      this.teacherId = parseInt(localStorage.getItem('id')) || ''
       this.courseName = null
       this.studentName = null
       this.pageSize = 10
@@ -81,7 +90,12 @@ export default {
     },
     getReportList(page=1){
       this.reportQuery.pageNum = page
-      console.log('getReportList')
+      console.log('reportQuery',this.reportQuery)
+      PostData('/report/getReportList',this.reportQuery).then(res=>{
+        this.reportData = res[0]
+        this.total = res[1]
+        console.log(res)
+      })
     },
     correctReport(report){
       this.dialogVisible = true
@@ -99,5 +113,8 @@ export default {
 }
 .formInput{
   width: 120px;
+}
+.pagination{
+  float: right;
 }
 </style>
