@@ -11,7 +11,7 @@
         <el-form-item>
           <el-button type="primary" @click="getLibraryList(1)">查询</el-button>
           <el-button type="primary" @click="getReserveRecord">预定信息</el-button>
-          <el-button type="primary" @click="getAllReserve">查看所有预定</el-button>
+          <el-button type="primary" @click="getAllReserve" v-if="roles==='manager'">查看所有预定</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -20,7 +20,7 @@
       <el-table :data="libraryData" fit highlight-current-row border>
         <el-table-column width="80" align="center">
           <template v-slot="scope">
-            {{scope.$index+1}}
+            {{scope.$index+(libraryQuery.pageNum-1)*libraryQuery.pageSize+1}}
           </template>
         </el-table-column>
         <el-table-column label="位置" align="center">

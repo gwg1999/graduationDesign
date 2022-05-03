@@ -179,7 +179,7 @@ export default {
     //   })
     // },
 
-  onSendSms() {
+    onSendSms() {
       this.loginWay = false;
       this.$refs.loginForm.validateField("mobile", err => {
         if (!err) {
@@ -224,7 +224,7 @@ export default {
           //PostData('/admin/login',this.param).then(res=>{
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              this.$router.push('/homePage/index')
               this.loading = false
             })
             .catch(() => {
@@ -248,29 +248,14 @@ export default {
     handleClick(tab) {
       if (tab.name === 'first') {
         this.isFirst = true
-        this.isSecond = false }
+        this.isSecond = false
+      }
       else if (tab.name === 'second') {
         this.isFirst = false
-        this.isSecond = true } } }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
-
+        this.isSecond = true
+      }
+    }
+  }
 }
 </script>
 

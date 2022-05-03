@@ -21,12 +21,12 @@
       <el-table :data="reportData" highlight-current-row fit border>
         <el-table-column align="center" width="80">
           <template v-slot="scope">
-            {{scope.$index}}
+            {{scope.$index+(reportQuery.pageNum-1)*reportQuery.pageSize+1}}
           </template>
         </el-table-column>
         <el-table-column label="课程名" align="center" prop="course.courseName"></el-table-column>
         <el-table-column label="导师姓名" align="center" prop="teacher.username"></el-table-column>
-        <el-table-column label="实验报告(点击下载)">
+        <el-table-column label="实验报告(点击下载)" align="center">
           <template v-slot="scope">
             <a :href="scope.row.filePath" :download="scope.row.fileName">{{scope.row.fileName}}</a>
           </template>
@@ -55,10 +55,22 @@
       <el-dialog title="报告上传" :visible.sync="reportVisible">
         <el-form label-width="120px" ref="uploadForm" :model="formData">
           <el-form-item label="批改老师：" prop="teacherName">
-            <el-input v-model="formData.teacherName" style="width: 200px"></el-input>
+            <el-autocomplete
+              class="inline-input"
+              v-model="formData.teacherName"
+              :fetch-suggestions="teacherQueryString"
+              placeholder="请输入内容"
+              @select="selectTeacher"
+            ></el-autocomplete>
           </el-form-item>
           <el-form-item label="课程：" prop="courseName">
-            <el-input v-model="formData.courseName" style="width: 200px"></el-input>
+            <el-autocomplete
+              class="inline-input"
+              v-model="formData.courseName"
+              :fetch-suggestions="courseQueryString"
+              placeholder="请输入内容"
+              @select="selectCourse"
+            ></el-autocomplete>
           </el-form-item>
           <el-form-item>
             <input type="file" v-show="false" @change="changeFile($event)" ref="fileInput"></input>
@@ -99,13 +111,14 @@ export default {
   },
   methods: {
     queryInit(){
-      this.pageSize = 10
+      this.pageSize = 5
       this.pageNum = 1
       this.teacherName = null
       this.courseName = null
     },
     getReportList(page=1){
       this.reportQuery.pageNum = page
+      console.log('reportQuery',this.reportQuery)
       PostData('/report/getReportList',this.reportQuery).then(res=>{
         console.log(res)
         this.reportData = res[0]
@@ -134,17 +147,50 @@ export default {
       form.append('file',this.files)
       console.log('files:',form)
       axios.post('http://localhost:7001/report/upload',form,{headers: {'Content-Type': 'multipart/form-data'}}).then(res=>{
-        PostData('/report/uploadAgain',{teacherId: 1,courseId: 1}).then(res=>{
+        console.log('res',res)
+        this.formData.index = res.data.index;
+        this.formData.studentId = parseInt(localStorage.getItem('id'))
+        PostData('/report/uploadAgain',this.formData).then(res=>{
           this.$message.success('提交成功')
           this.$refs.uploadForm.resetFields()
           this.files = null
           this.reportVisible = false
+          this.getReportList(this.reportQuery.pageNum)
         }).catch(()=>{
           this.$message.error('上传失败，请重试')
         })
       }).catch(()=>{
         this.$message.error('上传失败，请重试')
       })
+    },
+
+    teacherQueryString(queryString,cb){
+
+      PostData('/user/getTeachers',{teacherName: queryString}).then(res=>{
+        console.log(res)
+        let teachers = res
+        teachers.forEach((item)=>{
+          item.value = item.username
+        })
+        cb(teachers)
+      })
+    },
+    selectTeacher(item){
+      this.formData.teacherId = item.index
+    },
+
+    courseQueryString(queryString,cb){
+      PostData('/course/getCourses',{courseName: queryString}).then(res=>{
+        console.log(res)
+        let courses = res
+        courses.forEach((item)=>{
+          item.value = item.courseName
+        })
+        cb(courses)
+      })
+    },
+    selectCourse(item){
+      this.formData.courseId = item.courseId
     },
   },
 }

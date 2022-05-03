@@ -31,7 +31,7 @@
       >
         <el-table-column width="80" align="center">
           <template v-slot="scope">
-            {{scope.$index+1}}
+            {{scope.$index+(equipmentQuery.pageNum-1)*equipmentQuery.pageSize+1}}
           </template>
         </el-table-column>
         <el-table-column align="center" label="设备名" prop="equipmentName"></el-table-column>
@@ -40,8 +40,8 @@
         <el-table-column label="操作" align="center">
           <template v-slot="scope">
             <div>
-              <el-button type="primary" @click="checkInfo(scope.row)" v-if="roles==='teacher'">查看详情</el-button>
-              <el-button type="primary" @click="lendEquip(scope.$index)" v-if="roles==='teacher'">外借</el-button>
+              <el-button type="primary" @click="checkInfo(scope.row)" v-if="roles==='manager'">查看详情</el-button>
+              <el-button type="primary" @click="lendEquip(scope.$index)" v-if="roles==='teacher'">借用</el-button>
             </div>
           </template>
         </el-table-column>

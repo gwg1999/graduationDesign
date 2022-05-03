@@ -20,7 +20,7 @@
       <el-table highlight-current-row fit border :data="recordData">
         <el-table-column width="80" align="center">
           <template v-slot="scope">
-            {{ scope.$index }}
+            {{scope.$index+(recordQuery.pageNum-1)*recordQuery.pageSize+1}}
           </template>
         </el-table-column>
         <el-table-column label="借用人" align="center" prop="borrower2.username"></el-table-column>

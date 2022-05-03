@@ -1,4 +1,3 @@
-import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 import Cookie from "js-cookie";
@@ -83,8 +82,15 @@ const actions = {
   // get user info
   getInfo({commit, state }) {
    return new Promise((resolve, reject) => {
-     commit('SET_ROLES',['teacher'])
-     resolve()
+     PostData('/user/getInfo',{index: parseInt(localStorage.getItem('id'))}).then(res=>{
+       let role = []
+       role.push(res.roles)
+       commit('SET_ROLES',role)
+       resolve()
+     }).catch(err=>{
+       console.log(err)
+       reject()
+     })
      // getInfo(state.token).then(response => {
      //   const { data } = response
      //
@@ -109,15 +115,13 @@ const actions = {
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      logout().then(() => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resetRouter()
-        dispatch('tagsView/delAllViews', null, { root: true })
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+      console.log('set_roles')
+      removeToken()
+      resetRouter()
+      dispatch('tagsView/delAllViews', null, { root: true })
+      resolve()
     })
   },
 

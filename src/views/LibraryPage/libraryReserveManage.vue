@@ -17,7 +17,7 @@
       <el-table :data="libReserveData" highlight-current-row fit border>
         <el-table-column align="center" width="80">
           <template v-slot="scope">
-            {{scope.$index}}
+            {{scope.$index+(reserveQuery.pageNum-1)*reserveQuery.pageSize+1}}
           </template>
         </el-table-column>
         <el-table-column label="预定教师" align="center" prop="user.username"></el-table-column>

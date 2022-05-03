@@ -30,16 +30,18 @@ router.beforeEach(async(to, from, next) => {
 
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
+      console.log('hasRoles',store.getters.roles)
       if (hasRoles) {
-        console.log('hasRoles')
         next()
       } else {
         try {
           // alert("dsad")
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
-          const roles = ['teacher']
+
           await store.dispatch('user/getInfo')  // generate accessible routes map based on roles
+
+          const roles = store.getters.roles
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
           // console.log('accessRoutes')
           // console.log(accessRoutes)

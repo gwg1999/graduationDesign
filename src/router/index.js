@@ -52,13 +52,13 @@ export const constantRoutes=[
   },
 
   {
-    path: '/',
+    path: '/homePage',
     component: Layout,
-    // redirect: '/dashboard',
+    redirect: '/homePage/index',
     children: [
       {
         // path: 'dashboard',
-        path: '/',
+        path: 'index',
         component: () => import('@/views/dashboard/index'),
         name: '首页',
         meta: { title: '首页', icon: 'dashboard', affix: true }
@@ -127,20 +127,20 @@ export const asyncRoutes=[
     meta: {
       title: 'Security',
       icon: 'lock',
-      roles: ['manager','teacher']
+      roles: ['manager','teacher','student']
     },
     children: [
       {
         path: 'index',
         component: () => import('@/views/managerPage/SecurityPage'),
         name: 'SecurityPage',
-        meta: {title:'安全',roles: ['manager','teacher']}
+        meta: {title:'安全检查',roles: ['manager']}
       },
       {
         path: 'submit',
         component: () => import('@/views/managerPage/submitSecurity'),
         name: 'submitSecurity',
-        meta: {title:'安全汇报',roles: ['manager','teacher']}
+        meta: {title:'安全汇报',roles: ['teacher','student']}
       }
     ]
   },
@@ -182,7 +182,7 @@ export const asyncRoutes=[
     meta: {
       title: '人员管理',
       icon: 'lock',
-      roles: ['manager','teacher']
+      roles: ['manager']
     },
     children: [
       {
@@ -202,7 +202,7 @@ export const asyncRoutes=[
     meta: {
       title: '报告批改',
       icon: 'lock',
-      roles: ['manager','teacher']
+      roles: ['teacher']
     },
     children: [
       {
@@ -222,7 +222,7 @@ export const asyncRoutes=[
     meta: {
       title: '报告上传',
       icon: 'lock',
-      roles: ['manager','teacher']
+      roles: ['student']
     },
     children: [
       {

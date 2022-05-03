@@ -20,7 +20,7 @@
       <el-table fit highlight-current-row max-height="30rem" :data="securityData" border>
         <el-table-column align="center" width="80">
           <template v-slot="scope">
-            {{scope.$index+1}}
+            {{scope.$index+(securityQuery.pageNum-1)*securityQuery.pageSize+1}}
           </template>
         </el-table-column>
         <el-table-column label="汇报人" prop="findPerson.username" align="center"></el-table-column>

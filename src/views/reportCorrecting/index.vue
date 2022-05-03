@@ -20,11 +20,19 @@
       <el-table :data="reportData" highlight-current-row fit border>
         <el-table-column width="80" align="center">
           <template v-slot="scope">
-            {{scope.$index}}
+            {{scope.$index+(reportQuery.pageNum-1)*reportQuery.pageSize+1}}
           </template>
         </el-table-column>
         <el-table-column label="课程名" align="center" prop="course.courseName"></el-table-column>
         <el-table-column label="学生名" align="center" prop="student.username"></el-table-column>
+        <el-table-column label="成绩" align="center">
+          <template v-slot="scope">
+            <div>
+              <span v-if="scope.row.score">{{scope.row.score}}</span>
+              <el-tag type="danger" v-else>未批改</el-tag>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="报告文件(点击下载)" align="center">
           <template v-slot="scope">
             <a :href="scope.row.filePath" :download="scope.row.fileName">{{scope.row.fileName}}</a>
@@ -56,6 +64,9 @@
           <el-form-item label="成绩">
             <el-input v-model="formData.score" placeholder="请输入成绩" class="formInput"></el-input>
           </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitScore">确认</el-button>
+          </el-form-item>
         </el-form>
       </el-dialog>
     </div>
@@ -85,7 +96,7 @@ export default {
       this.teacherId = parseInt(localStorage.getItem('id')) || ''
       this.courseName = null
       this.studentName = null
-      this.pageSize = 10
+      this.pageSize = 5
       this.pageNum = 1
     },
     getReportList(page=1){
@@ -101,6 +112,14 @@ export default {
       this.dialogVisible = true
       this.formData = JSON.parse(JSON.stringify(report))
     },
+
+    submitScore(){
+      PostData('/report/submitScore',this.formData).then(res=>{
+        this.dialogVisible = false
+        this.getReportList(this.reportQuery.pageNum)
+        console.log(res)
+      })
+    }
   }
 }
 </script>
