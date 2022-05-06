@@ -2,6 +2,8 @@
  * Created by PanJiaChen on 16/11/18.
  */
 
+import {PostData} from "@/api";
+
 /**
  * @param {string} path
  * @returns {Boolean}
@@ -85,4 +87,20 @@ export function isArray(arg) {
     return Object.prototype.toString.call(arg) === '[object Array]'
   }
   return Array.isArray(arg)
+}
+
+export function validPhone(rule,phone,callback){
+  const reg = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0,5-9]))\d{8}$/
+  console.log(reg.test(phone))
+  if(reg.test(phone)){
+    callback(new Error('手机号输入错误'))
+  }
+  PostData('/user/getUsers',{phone:phone}).then(res=>{
+    if(res[1]>0 && res[0][0].index !== parseInt(localStorage.getItem('id'))){
+      console.log(res)
+      callback(new Error('手机号已存在'))
+    }else{
+      callback()
+    }
+  })
 }

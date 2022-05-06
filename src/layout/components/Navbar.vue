@@ -83,7 +83,7 @@ export default {
       // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     personalInformation(){
-      this.$router.push('/maintain/personalInformation')
+      this.$router.push('/personInfo/index')
     }
   }
 }

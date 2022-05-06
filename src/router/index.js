@@ -73,8 +73,8 @@ export const constantRoutes=[
     alwaysShow: true,
     name: 'Library',
     meta: {
-      title: 'Library',
-      icon: 'lock'
+      title: '实验室',
+      icon: 'el-icon-reading'
     },
     children: [
       {
@@ -96,6 +96,26 @@ export const constantRoutes=[
         component: () => import('@/views/LibraryPage/libraryReserveManage'),
         meta: {title: '实验室预定管理', icon: 'dashboard'},
         name: 'libraryReserveManage',
+      }
+    ]
+  },
+
+  {
+    path: '/personInfo',
+    redirect: '/personInfo/index',
+    component: Layout,
+    hidden:true,
+    name: 'PersonInfo',
+    meta: {
+      title: '个人信息',
+    },
+    children: [
+      {
+        path: 'index',
+        hidden: true,
+        component: () => import('@/views/staffManage/PersonInfo'),
+        meta: {title: '个人信息', icon: 'dashboard'},
+        name: 'personInfo',
       }
     ]
   },
@@ -125,8 +145,8 @@ export const asyncRoutes=[
     alwaysShow: true,
     name: 'Security',
     meta: {
-      title: 'Security',
-      icon: 'lock',
+      title: '安全',
+      icon: 'el-icon-warning-outline',
       roles: ['manager','teacher','student']
     },
     children: [
@@ -153,8 +173,8 @@ export const asyncRoutes=[
     alwaysShow: true,
     name: 'equipment',
     meta: {
-      title: 'Equipment',
-      icon: 'lock',
+      title: '设备',
+      icon: 'el-icon-printer',
       roles: ['manager','teacher']
     },
     children: [
@@ -181,7 +201,7 @@ export const asyncRoutes=[
     name: 'staffManage',
     meta: {
       title: '人员管理',
-      icon: 'lock',
+      icon: 'el-icon-user',
       roles: ['manager']
     },
     children: [
@@ -201,7 +221,7 @@ export const asyncRoutes=[
     name: 'report',
     meta: {
       title: '报告批改',
-      icon: 'lock',
+      icon: 'el-icon-document',
       roles: ['teacher']
     },
     children: [
@@ -221,7 +241,7 @@ export const asyncRoutes=[
     name: 'uploadReport',
     meta: {
       title: '报告上传',
-      icon: 'lock',
+      icon: 'el-icon-upload2',
       roles: ['student']
     },
     children: [

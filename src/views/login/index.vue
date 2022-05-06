@@ -5,7 +5,7 @@
     </div>
     <el-form ref="loginForm" :model="loginForm"  class="login-form" autocomplete="on" label-position="left" >
       <div class="title-container">
-        <h3 class="title">汽配进销存</h3>
+        <h3 class="title">高校实验室管理系统</h3>
       </div>
       <el-tabs
         v-model="activeName" @tab-click="handleClick" type="border-card" class="tabs"

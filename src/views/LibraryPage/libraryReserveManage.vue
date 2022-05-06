@@ -38,6 +38,9 @@
             <p style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{scope.row.library.notes}}</p>
           </template>
         </el-table-column>
+        <el-table-column label="操作" align="center">
+          <el-button type="primary">审核</el-button>
+        </el-table-column>
       </el-table>
       <div style="overflow: hidden">
         <el-pagination

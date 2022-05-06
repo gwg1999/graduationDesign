@@ -10,7 +10,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="getLibraryList(1)">查询</el-button>
-          <el-button type="primary" @click="getReserveRecord">预定信息</el-button>
+          <el-button type="primary" @click="getReserveRecord" v-if="roles==='teacher'">预定信息</el-button>
           <el-button type="primary" @click="getAllReserve" v-if="roles==='manager'">查看所有预定</el-button>
         </el-form-item>
       </el-form>
@@ -44,7 +44,7 @@
           <template v-slot="scope">
             <div>
               <el-button type="primary" v-if="roles==='teacher'" @click="scheduleLib(scope.row)">预定</el-button>
-              <el-button type="primary" v-if="roles==='teacher'" @click="modifyLib(scope.row)">查看信息</el-button>
+              <el-button type="primary" v-if="roles==='manager'" @click="modifyLib(scope.row)">修改信息</el-button>
             </div>
           </template>
         </el-table-column>
@@ -86,6 +86,32 @@
         </el-table>
       </el-dialog>
     </div>
+
+    <div>
+      <el-dialog :visible.sync="modifyVisible" title="信息修改">
+        <el-form label-width="120px" :model="formData">
+          <el-form-item label="实验室位置">
+            <span>{{formData.building_loc + '-' + formData.classroom_loc}}</span>
+          </el-form-item>
+          <el-form-item label="实验室名称" prop="libraryName">
+            <el-input v-model="formData.libraryName"></el-input>
+          </el-form-item>
+          <el-form-item label="实验室状态" prop="status">
+            <el-select v-model="formData.status">
+              <el-option :value="1" label="空闲"></el-option>
+              <el-option :value="0" label="维护中"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="实验室介绍" prop="notes">
+            <el-input v-model="formData.notes"></el-input>
+<!--            <textarea v-model="formData.notes"></textarea>-->
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitModify">提交</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -103,6 +129,8 @@ export default {
       roles: this.$store.getters.roles[0],
       library: {},
       dialogVisible: false,
+      modifyVisible: false,
+      formData: {},
       total: 0,
       tagDic: [
         {type:'info',str: '维修中'},
@@ -125,7 +153,6 @@ export default {
 
     getReserveRecord(){
       PostData('/library/getByTeacher',{teacherId: localStorage.getItem('id')}).then(res=>{
-        console.log(res)
         this.reserveData = res
       })
       this.dialogVisible = true
@@ -140,15 +167,18 @@ export default {
       PostData('/library/getAll',this.libraryQuery).then(res=>{
         this.libraryData = res[0]
         this.total = res[1]
-        console.log(res)
       })
     },
     scheduleLib(library){
-      console.log('library',library)
       this.$router.push({path: '/library/libraryReserve',query: {libraryId: library.libraryId}})
     },
     modifyLib(library){
-      this.$router.push({path: '/library/libraryReserveManage',query: {libraryId: library.libraryId}})
+      this.formData = JSON.parse(JSON.stringify(library))
+      this.modifyVisible = true
+    },
+
+    submitModify(){
+
     },
 
     getAllReserve(){
