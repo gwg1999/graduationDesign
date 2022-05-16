@@ -78,6 +78,15 @@
               {{scope.row.reserveDate+'第'+scope.row.reserveTime+'节'}}
             </template>
           </el-table-column>
+          <el-table-column label="状态" align="center">
+            <template v-slot="scope">
+              <div>
+                <el-tag :type="scope.row.status===0?'warning':scope.row.status===1?'success':'danger'">
+                  {{ scope.row.status===0?'审核中':scope.row.status===1?'已通过':'已驳回' }}
+                </el-tag>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="操作" align="center">
             <template v-slot="scope">
               <el-button type="primary" @click="cancelReserve(scope.row)">取消预订</el-button>
@@ -154,6 +163,7 @@ export default {
     getReserveRecord(){
       PostData('/library/getByTeacher',{teacherId: localStorage.getItem('id')}).then(res=>{
         this.reserveData = res
+        console.log(res)
       })
       this.dialogVisible = true
     },

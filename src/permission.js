@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
+const whiteList = ['/login'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
@@ -27,14 +27,15 @@ router.beforeEach(async(to, from, next) => {
       next({ path: '/' })
       NProgress.done() // hack: https://github.com/PanJiaChen/vue-element-admin/pull/2939
     } else {
-
       // determine whether the user has obtained his permission roles through getInfo
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       console.log('hasRoles',store.getters.roles)
       if (hasRoles) {
+        console.log('hasRoles')
         next()
       } else {
         try {
+          console.log('noRoles')
           // alert("dsad")
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
@@ -66,10 +67,12 @@ router.beforeEach(async(to, from, next) => {
 
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
+      console.log('no token but whitelist')
       next()
     } else {
       // other pages that do not have permission to access are redirected to the login page.
-      next(`/login?redirect=${to.path}`)
+      console.log('not token and not whitelist')
+      next(`/login`)
       NProgress.done()
     }
   }

@@ -73,7 +73,7 @@
             ></el-autocomplete>
           </el-form-item>
           <el-form-item>
-            <input type="file" v-show="false" @change="changeFile($event)" ref="fileInput"></input>
+            <input type="file" v-show="false" @change="changeFile($event)" ref="fileInput" accept=".doc,.docx"></input>
             <p v-if="files">{{files.name}}</p>
             <el-button @click="uploadImgs" type="primary">{{ files?'重新上传':'上传文件' }}</el-button>
           </el-form-item>
@@ -140,6 +140,11 @@ export default {
 
     changeFile: function (e) {
       this.files = e.target.files[0];
+      let end = this.files.name.split('.')
+      if(end[-1]!=='doc' && end[-1]!=='docx'){
+        this.$message.error('文件格式错误，请选择doc或者docx文件')
+        this.files = null
+      }
     },
 
     submitForm(){

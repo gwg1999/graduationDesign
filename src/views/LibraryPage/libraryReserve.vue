@@ -157,10 +157,13 @@ export default {
     },
 
     reserveLibrary(){
-      console.log(this.formData)
       PostData('library/libraryReserve',this.formData).then(res=>{
-        this.dialogVisible = false
-        this.getReserveList(1)
+        if(res.index){
+          this.dialogVisible = false
+          this.getReserveList(1)
+        }else{
+          this.$message.error(res)
+        }
       })
     },
     getReserveList(page=1){

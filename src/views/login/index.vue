@@ -224,7 +224,9 @@ export default {
           //PostData('/admin/login',this.param).then(res=>{
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push('/homePage/index')
+              this.loginForm.aPassword = null
+              this.loginForm.aUsername = null
+              this.$router.replace('/homePage/index')
               this.loading = false
             })
             .catch(() => {
@@ -245,6 +247,7 @@ export default {
         return acc
       }, {})
     },
+
     handleClick(tab) {
       if (tab.name === 'first') {
         this.isFirst = true

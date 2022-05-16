@@ -38,8 +38,20 @@
             <p style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{scope.row.library.notes}}</p>
           </template>
         </el-table-column>
+        <el-table-column align="center" label="状态">
+          <template v-slot="scope">
+            <el-tag :type="scope.row.status===0?'warning':scope.row.status===1?'success':'danger'">
+              {{ scope.row.status===0?'审核中':scope.row.status===1?'已通过':'已驳回' }}
+            </el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" align="center">
-          <el-button type="primary">审核</el-button>
+          <template v-slot="scope">
+            <div v-if="scope.row.status===0">
+              <el-button type="primary" @click="auditing(scope.row,1)">通过</el-button>
+              <el-button type="primary" @click="auditing(scope.row,2)">驳回</el-button>
+            </div>
+          </template>
         </el-table-column>
       </el-table>
       <div style="overflow: hidden">
@@ -96,7 +108,7 @@ export default {
   },
   methods: {
     queryInit(){
-      this.pageSize = 2
+      this.pageSize = 5
       this.pageNum = 1
       this.username = null
     },
@@ -111,6 +123,16 @@ export default {
 
     turnBack(){
       this.$router.push('/library/index')
+    },
+
+    auditing(reserveRecord,status){
+      let temp = JSON.parse(JSON.stringify(reserveRecord))
+      temp.status = status
+      console.log('temp:',temp)
+      PostData('/libraryReserve/auditing',temp).then(res=>{
+        console.log(res)
+        this.getAllReserve(this.reserveQuery.pageNum)
+      })
     }
   }
 }

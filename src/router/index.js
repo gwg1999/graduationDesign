@@ -57,7 +57,6 @@ export const constantRoutes=[
     redirect: '/homePage/index',
     children: [
       {
-        // path: 'dashboard',
         path: 'index',
         component: () => import('@/views/dashboard/index'),
         name: '首页',
@@ -134,7 +133,7 @@ export const constantRoutes=[
     hidden: true
   },
 
-  // { path: '*', redirect: '/404', hidden: true }
+
 ]
 
 export const asyncRoutes=[
@@ -165,6 +164,26 @@ export const asyncRoutes=[
     ]
   },
 
+  {
+    path: '/course',
+    redirect: '/course/index',
+    component: Layout,
+    alwaysShow: true,
+    name: 'course',
+    meta: {
+      title: '课程',
+      icon: 'el-icon-s-grid',
+      roles: ['teacher']
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/course/index'),
+        name: 'courseIndex',
+        meta: {title: '课程'}
+      }
+    ]
+  },
 
   {
     path: '/equipment',
@@ -253,6 +272,8 @@ export const asyncRoutes=[
       }
     ]
   },
+
+  { path: '*', redirect: '/404', hidden: true }
 ]
 const createRouter = () => new Router({
   // mode: 'history', // require service support
